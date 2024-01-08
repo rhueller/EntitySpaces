@@ -29,10 +29,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 using System.Collections.Generic;
-
 using EntitySpaces.Interfaces;
-
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace EntitySpaces.MySQLProvider
 {

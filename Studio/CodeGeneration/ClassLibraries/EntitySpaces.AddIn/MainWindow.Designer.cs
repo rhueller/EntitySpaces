@@ -40,7 +40,7 @@
             this.tabTemplates = new System.Windows.Forms.TabPage();
             this.ucTemplates = new EntitySpaces.AddIn.ucTemplates();
             this.tabSettings = new System.Windows.Forms.TabPage();
-            this.ucSettings = new EntitySpaces.AddIn.ucSettings();
+            this.ucSettings = new EntitySpaces.AddIn.UcSettings();
             this.tabMetadata = new System.Windows.Forms.TabPage();
             this.ucMetadata = new EntitySpaces.AddIn.ucMetadata();
             this.tabLanguageMappings = new System.Windows.Forms.TabPage();
@@ -429,7 +429,7 @@
         private ucMetadata ucMetadata;
         private ucMappings ucMappings;
         private ucTemplates ucTemplates;
-        private ucSettings ucSettings;
+        private UcSettings ucSettings;
         private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TextBox textBoxError;

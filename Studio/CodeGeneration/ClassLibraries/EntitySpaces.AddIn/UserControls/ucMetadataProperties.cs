@@ -12,7 +12,7 @@ namespace EntitySpaces.AddIn
 {
     internal partial class ucMetadataProperties : UserControl
     {
-        private int _currentHashCode = Int32.MinValue;
+        private int _currentHashCode = int.MinValue;
  
         public ucMetadataProperties()
         {
@@ -32,7 +32,7 @@ namespace EntitySpaces.AddIn
 
         public void ClearOrRefresh()
         {
-            if (_currentHashCode != Int32.MinValue)
+            if (_currentHashCode != int.MinValue)
             {
                 this.Refresh();
             }
@@ -44,7 +44,7 @@ namespace EntitySpaces.AddIn
 
         public void Clear()
         {
-            _currentHashCode = Int32.MinValue;
+            _currentHashCode = int.MinValue;
             this.propGrid.SelectedObject = null;
             this.Text = "esMeta Properties";
         }

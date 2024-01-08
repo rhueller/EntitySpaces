@@ -11,7 +11,7 @@
     <NoStandardLibraries>false</NoStandardLibraries>
     <AssemblyName>EntitySpaces2019.AddIn</AssemblyName>
     <RootNamespace>EntitySpaces.AddIn</RootNamespace>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\StrongNameKey\EntitySpaces.snk</AssemblyOriginatorKeyFile>
     <ApplicationIcon>default.ico</ApplicationIcon>
@@ -240,6 +240,7 @@
     <Content Include="esIcon.ico" />
     <Content Include="Icons\background.png" />
     <Content Include="Icons\blog.png" />
+    <None Include="app.config" />
     <None Include="Icons\check.png" />
     <Content Include="Icons\column_many.png" />
     <Content Include="Icons\column_single.png" />

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.ucSettings1 = new EntitySpaces.AddIn.ucSettings();
+            this.ucSettings1 = new EntitySpaces.AddIn.UcSettings();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -85,7 +85,7 @@
 
         #endregion
 
-        private ucSettings ucSettings1;
+        private UcSettings ucSettings1;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOk;
     }

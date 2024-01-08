@@ -1,29 +1,23 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.IO;
-using System.Text;
 using System.Reflection;
 using System.Windows.Forms;
 
 using Microsoft.Win32;
 
 using EntitySpaces.MetadataEngine;
-using System.Xml.Serialization;
 
 namespace EntitySpaces.AddIn
 {
-    internal partial class ucSettings : esUserControl
+    internal partial class UcSettings : esUserControl
     {
-        private Root root;
-        private MostRecentlyUsedList mru;
+        private Root _root;
+        private MostRecentlyUsedList _mru;
 
-        public ucSettings()
+        public UcSettings()
         {
-            if (!this.DesignMode)
+            if (!DesignMode)
             {
                 InitializeComponent();
             }
@@ -31,39 +25,30 @@ namespace EntitySpaces.AddIn
 
         public esSettings Settings 
         {
-            get { return settings; }
-            set { settings = value; }
+            get => _settings;
+            set => _settings = value;
         }
-        private esSettings settings;
+        private esSettings _settings;
 
 
         private void ShowError(Exception ex)
         {
-            if (MainWindow != null)
-            {
-                MainWindow.ShowError(ex);
-            }
+            MainWindow?.ShowError(ex);
         }
 
         private void HideErrorOrStatusMessage()
         {
-            if (MainWindow != null)
-            {
-                MainWindow.HideErrorOrStatusMessage();
-            }
+            MainWindow?.HideErrorOrStatusMessage();
         }
 
         private void NofityControlsThatSettingsChanged()
         {
-            if (MainWindow != null)
-            {
-                MainWindow.NofityControlsThatSettingsChanged();
-            }
+            MainWindow?.NofityControlsThatSettingsChanged();
         }
 
         private void ucSettings_Load(object sender, EventArgs e)
         {
-            if (!this.DesignMode)
+            if (!DesignMode)
             {
                 Cursor oldCursor = Cursor.Current;
 
@@ -71,7 +56,7 @@ namespace EntitySpaces.AddIn
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
-                    this.mru = new MostRecentlyUsedList();
+                    _mru = new MostRecentlyUsedList();
 
                     comboBoxDriver.Items.Add(new DictionaryEntry("<None>", null));
                     comboBoxDriver.Items.Add(new DictionaryEntry(Settings.DriverName("Access"), "Access"));
@@ -95,13 +80,13 @@ namespace EntitySpaces.AddIn
                     SetOleDbButton();
 
                     DictionaryEntry de = (DictionaryEntry)comboBoxDriver.SelectedItem;
-                    this.lblSelectedDriver.Text = (string)de.Value;
+                    lblSelectedDriver.Text = (string)de.Value;
 
                     LoadMruList();
                 }
                 catch (Exception ex)
                 {
-                    this.ShowError(ex);
+                    ShowError(ex);
                 }
                 finally
                 {
@@ -190,7 +175,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
         }
 
@@ -308,7 +293,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
         }
 
@@ -319,7 +304,7 @@ namespace EntitySpaces.AddIn
                 DictionaryEntry de = (DictionaryEntry)comboBoxDriver.SelectedItem;
                 string driver = (string)de.Value;
 
-                if (String.IsNullOrEmpty(driver))
+                if (string.IsNullOrEmpty(driver))
                 {
                     buttonOleDB.Enabled = false;
                     return;
@@ -340,7 +325,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
         }
 
@@ -438,7 +423,7 @@ namespace EntitySpaces.AddIn
 
                     textBoxConnectionHelp.Text = "";
 
-                    if (String.IsNullOrEmpty(driver))
+                    if (string.IsNullOrEmpty(driver))
                     {
                         textBoxConnectionHelp.Text = "Select a driver from the dropdown above.";
                     }
@@ -509,7 +494,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
         }
 
@@ -527,7 +512,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
             finally
             {
@@ -549,7 +534,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
             finally
             {
@@ -576,13 +561,13 @@ namespace EntitySpaces.AddIn
                     Settings.Save(saveFileDialog1.FileName);
                     NofityControlsThatSettingsChanged();
 
-                    mru.Push(saveFileDialog1.FileName);
+                    _mru.Push(saveFileDialog1.FileName);
                     SaveMruList();
                 }
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
             finally
             {
@@ -609,7 +594,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
             finally
             {
@@ -625,19 +610,19 @@ namespace EntitySpaces.AddIn
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                this.MainWindow.Settings = Settings = esSettings.Load(filename);
+                MainWindow.Settings = Settings = esSettings.Load(filename);
 
                 PopulateUI();
                 NofityControlsThatSettingsChanged();
 
-                mru.Push(filename);
+                _mru.Push(filename);
                 SaveMruList();
             }
             catch (Exception ex)
             {
-                mru.Remove(filename);
-                this.SaveMruList();
-                this.ShowError(ex);
+                _mru.Remove(filename);
+                SaveMruList();
+                ShowError(ex);
             }
             finally
             {
@@ -657,9 +642,9 @@ namespace EntitySpaces.AddIn
                 {
                     driver = (string)de.Value;
                 }
-                connstr = this.textBoxConnectionString.Text;
+                connstr = textBoxConnectionString.Text;
 
-                if (String.IsNullOrEmpty(driver))
+                if (string.IsNullOrEmpty(driver))
                 {
                     throw new Exception("You Must Choose a Driver");
                 }
@@ -692,16 +677,16 @@ namespace EntitySpaces.AddIn
                     Root tempRoot = new Root(Settings);
                     if (tempRoot.Connect(driver, connString))
                     {
-                        this.textBoxConnectionString.Text = connString;
+                        textBoxConnectionString.Text = connString;
 
-                        this.root = new Root(Settings);
-                        this.root.Connect(driver, connString);
+                        _root = new Root(Settings);
+                        _root.Connect(driver, connString);
                     }
                 }
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
             catch { }
         }
@@ -720,9 +705,9 @@ namespace EntitySpaces.AddIn
                 DictionaryEntry de = (DictionaryEntry)comboBoxDriver.SelectedItem;
                 string driver = (string)de.Value;
 
-                if (!String.IsNullOrEmpty(driver) &&
-                    this.textBoxConnectionString.Text != String.Empty &&
-                    tempRoot.Connect(driver, this.textBoxConnectionString.Text))
+                if (!string.IsNullOrEmpty(driver) &&
+                    textBoxConnectionString.Text != string.Empty &&
+                    tempRoot.Connect(driver, textBoxConnectionString.Text))
                 {
                     esSettingsDriverInfo driverInfo = Settings.FindDriverInfoCollection(driver);
                     if (driverInfo != null)
@@ -739,7 +724,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
             finally
             {
@@ -815,7 +800,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
         }
 
@@ -834,7 +819,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
         }
 
@@ -853,7 +838,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
         }
 
@@ -872,7 +857,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
         }
 
@@ -894,7 +879,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
         }
 
@@ -915,7 +900,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
         }
 
@@ -928,7 +913,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
         }
 
@@ -944,24 +929,24 @@ namespace EntitySpaces.AddIn
 
         private void BuildSampleProcs()
         {
-            string sample = String.Empty;
+            string sample = string.Empty;
 
-            sample += BuildSampleProc(this.textBoxProcInsert);
-            sample += BuildSampleProc(this.textBoxProcUpdate);
-            sample += BuildSampleProc(this.textBoxProcDelete);
-            sample += BuildSampleProc(this.textBoxProcLoadAll);
-            sample += BuildSampleProc(this.textBoxProcLoadByPK);
+            sample += BuildSampleProc(textBoxProcInsert);
+            sample += BuildSampleProc(textBoxProcUpdate);
+            sample += BuildSampleProc(textBoxProcDelete);
+            sample += BuildSampleProc(textBoxProcLoadAll);
+            sample += BuildSampleProc(textBoxProcLoadByPK);
 
-            this.labelProcSample.Text = sample;
+            labelProcSample.Text = sample;
         }
 
         private string BuildSampleProc(TextBox textbox)
         {
-            string sample = String.Empty;
+            string sample = string.Empty;
 
-            sample += this.textBoxProcPrefix.Text;
+            sample += textBoxProcPrefix.Text;
 
-            if (!this.checkBoxProcVerbFirst.Checked)
+            if (!checkBoxProcVerbFirst.Checked)
             {
                 sample += "Employees";
                 sample += textbox.Text;
@@ -972,7 +957,7 @@ namespace EntitySpaces.AddIn
                 sample += "Employees";
             }
 
-            sample += this.textBoxProcSuffix.Text;
+            sample += textBoxProcSuffix.Text;
 
             sample += Environment.NewLine;
 
@@ -1021,14 +1006,14 @@ namespace EntitySpaces.AddIn
 
         private void BuildSampleHierarchical()
         {
-            string sampleTypes = String.Empty;
+            string sampleTypes = string.Empty;
 
             sampleTypes += " ManyToOne:" + Environment.NewLine;
             sampleTypes += " ZeroToMany:" + Environment.NewLine;
 
-            this.labelHierTypes.Text = sampleTypes;
+            labelHierTypes.Text = sampleTypes;
 
-            string sample = String.Empty;
+            string sample = string.Empty;
 
             sample += BuildSampleManyToOne();
             sample += BuildSampleZeroToMany();
@@ -1036,25 +1021,25 @@ namespace EntitySpaces.AddIn
             //sample += BuildSampleOneParent();
             //sample += BuildSampleOneChild();
 
-            this.labelHierSample.Text = sample;
+            labelHierSample.Text = sample;
         }
 
         private string BuildSampleManyToOne()
         {
-            string sample = String.Empty;
+            string sample = string.Empty;
             string table = "Employees";
             string column = "ReportsTo";
 
             sample += "emp.";
 
-            if (this.checkBoxUseUpToPrefix.Checked)
+            if (checkBoxUseUpToPrefix.Checked)
             {
                 sample += "UpTo";
             }
 
-            sample += this.textBoxOnePrefix.Text;
+            sample += textBoxOnePrefix.Text;
 
-            if (this.checkBoxSwapNames.Checked)
+            if (checkBoxSwapNames.Checked)
             {
                 sample += column;
             }
@@ -1063,10 +1048,10 @@ namespace EntitySpaces.AddIn
                 sample += table;
             }
 
-            sample += this.textBoxOneSuffix.Text;
-            sample += this.textBoxOneSeparator.Text;
+            sample += textBoxOneSuffix.Text;
+            sample += textBoxOneSeparator.Text;
 
-            if (this.checkBoxSwapNames.Checked)
+            if (checkBoxSwapNames.Checked)
             {
                 sample += table;
             }
@@ -1084,14 +1069,14 @@ namespace EntitySpaces.AddIn
 
         private string BuildSampleZeroToMany()
         {
-            string sample = String.Empty;
+            string sample = string.Empty;
             string table = "Employees";
             string column = "ReportsTo";
 
             sample += "emp.";
-            sample += this.textBoxManyPrefix.Text;
+            sample += textBoxManyPrefix.Text;
 
-            if (this.checkBoxSwapNames.Checked)
+            if (checkBoxSwapNames.Checked)
             {
                 sample += column;
             }
@@ -1100,10 +1085,10 @@ namespace EntitySpaces.AddIn
                 sample += table;
             }
 
-            sample += this.textBoxManySuffix.Text;
-            sample += this.textBoxManySeparator.Text;
+            sample += textBoxManySuffix.Text;
+            sample += textBoxManySeparator.Text;
 
-            if (this.checkBoxSwapNames.Checked)
+            if (checkBoxSwapNames.Checked)
             {
                 sample += table;
             }
@@ -1125,7 +1110,7 @@ namespace EntitySpaces.AddIn
             {
                 if (key == null) return;
 
-                mru.Load(key, "Settings_");
+                _mru.Load(key, "Settings_");
                 PopulateMruMenu();
             }
         }
@@ -1136,23 +1121,23 @@ namespace EntitySpaces.AddIn
             {
                 if (key == null) return;
 
-                mru.Save(key, "Settings_");
+                _mru.Save(key, "Settings_");
                 PopulateMruMenu();
             }
         }
 
         private void PopulateMruMenu()
         {
-            this.menuMRU.Items.Clear();
+            menuMRU.Items.Clear();
 
-            foreach (string project in mru)
+            foreach (string project in _mru)
             {
                 if (project == null) continue;
 
                 try
                 {
                     FileInfo info = new FileInfo(project);
-                    ToolStripItem item = this.menuMRU.Items.Add(info.Name);
+                    ToolStripItem item = menuMRU.Items.Add(info.Name);
                     item.ToolTipText = project;
                     item.Image = Resource.check;
                 }
@@ -1165,12 +1150,12 @@ namespace EntitySpaces.AddIn
             try
             {
                 string settingsFile = e.ClickedItem.ToolTipText;
-                this.mru.Remove(settingsFile);  // OpenProject will reinsert him at the top
-                this.OpenSettingsFile(settingsFile);
+                _mru.Remove(settingsFile);  // OpenProject will reinsert him at the top
+                OpenSettingsFile(settingsFile);
             }
             catch (Exception ex)
             {
-                this.ShowError(ex);
+                ShowError(ex);
             }
         }
 
@@ -1224,12 +1209,12 @@ namespace EntitySpaces.AddIn
         {
             bool isChecked = chkDateAddedEnabled.Checked;
 
-            this.txtDateAddedColumnName.Enabled = isChecked;
-            this.chkDateAddedClientSideEnabled.Enabled = isChecked;
-            this.chkDateAddedServerSideEnabled.Enabled = isChecked;
-            this.txtDateAddedServerSideText.Enabled = isChecked;
-            this.rdoDateAddedClientSideNow.Enabled = isChecked;
-            this.rdoDateAddedClientSideUtcNow.Enabled = isChecked;
+            txtDateAddedColumnName.Enabled = isChecked;
+            chkDateAddedClientSideEnabled.Enabled = isChecked;
+            chkDateAddedServerSideEnabled.Enabled = isChecked;
+            txtDateAddedServerSideText.Enabled = isChecked;
+            rdoDateAddedClientSideNow.Enabled = isChecked;
+            rdoDateAddedClientSideUtcNow.Enabled = isChecked;
         }
 
         private bool inCheckChanged = false;
@@ -1258,12 +1243,12 @@ namespace EntitySpaces.AddIn
         {
             bool isChecked = chkDateModifiedEnabled.Checked;
 
-            this.txtDateModifiedColumnName.Enabled = isChecked;
-            this.chkDateModifiedClientSideEnabled.Enabled = isChecked;
-            this.chkDateModifiedServerSideEnabled.Enabled = isChecked;
-            this.txtDateModifiedServerSideText.Enabled = isChecked;
-            this.rdoDateModifiedClientSideNow.Enabled = isChecked;
-            this.rdoDateModifiedClientSideUtcNow.Enabled = isChecked;
+            txtDateModifiedColumnName.Enabled = isChecked;
+            chkDateModifiedClientSideEnabled.Enabled = isChecked;
+            chkDateModifiedServerSideEnabled.Enabled = isChecked;
+            txtDateModifiedServerSideText.Enabled = isChecked;
+            rdoDateModifiedClientSideNow.Enabled = isChecked;
+            rdoDateModifiedClientSideUtcNow.Enabled = isChecked;
         }
 
         private void chkDateModifiedServerSideEnabled_CheckedChanged(object sender, EventArgs e)
@@ -1271,7 +1256,7 @@ namespace EntitySpaces.AddIn
             if (!inCheckChanged)
             {
                 inCheckChanged = true;
-                this.chkDateModifiedClientSideEnabled.Checked = !chkDateModifiedClientSideEnabled.Checked;
+                chkDateModifiedClientSideEnabled.Checked = !chkDateModifiedClientSideEnabled.Checked;
                 inCheckChanged = false;
             }
         }
@@ -1290,20 +1275,20 @@ namespace EntitySpaces.AddIn
         {
             bool isChecked = chkAddedByEnabled.Checked;
 
-            this.txtAddedByColumnName.Enabled = isChecked;
-            this.chkAddedByServerSide.Enabled = isChecked;
-            this.txtAddedByServerSideText.Enabled = isChecked;
-            this.chkAddedByEventHandler.Enabled = isChecked;
+            txtAddedByColumnName.Enabled = isChecked;
+            chkAddedByServerSide.Enabled = isChecked;
+            txtAddedByServerSideText.Enabled = isChecked;
+            chkAddedByEventHandler.Enabled = isChecked;
         }
 
         private void chkModifiedByEnabled_CheckedChanged(object sender, EventArgs e)
         {
             bool isChecked = chkModifiedByEnabled.Checked;
 
-            this.txtModifiedByColumnName.Enabled = isChecked;
-            this.chkModifiedByServerSide.Enabled = isChecked;
-            this.txtModifiedByServerSideText.Enabled = isChecked;
-            this.chkModifiedByEventHandler.Enabled = isChecked;
+            txtModifiedByColumnName.Enabled = isChecked;
+            chkModifiedByServerSide.Enabled = isChecked;
+            txtModifiedByServerSideText.Enabled = isChecked;
+            chkModifiedByEventHandler.Enabled = isChecked;
         }
 
         private void chkAddedByServerSide_CheckedChanged(object sender, EventArgs e)
@@ -1311,7 +1296,7 @@ namespace EntitySpaces.AddIn
             if (!inCheckChanged)
             {
                 inCheckChanged = true;
-                this.chkAddedByEventHandler.Checked = !chkAddedByEventHandler.Checked;
+                chkAddedByEventHandler.Checked = !chkAddedByEventHandler.Checked;
                 inCheckChanged = false;
             }
         }
@@ -1321,7 +1306,7 @@ namespace EntitySpaces.AddIn
             if (!inCheckChanged)
             {
                 inCheckChanged = true;
-                this.chkAddedByServerSide.Checked = !chkAddedByServerSide.Checked;
+                chkAddedByServerSide.Checked = !chkAddedByServerSide.Checked;
                 inCheckChanged = false;
             }
         }
@@ -1331,7 +1316,7 @@ namespace EntitySpaces.AddIn
             if (!inCheckChanged)
             {
                 inCheckChanged = true;
-                this.chkModifiedByEventHandler.Checked = !chkModifiedByEventHandler.Checked;
+                chkModifiedByEventHandler.Checked = !chkModifiedByEventHandler.Checked;
                 inCheckChanged = false;
             }
         }
@@ -1341,7 +1326,7 @@ namespace EntitySpaces.AddIn
             if (!inCheckChanged)
             {
                 inCheckChanged = true;
-                this.chkModifiedByServerSide.Checked = !chkModifiedByServerSide.Checked;
+                chkModifiedByServerSide.Checked = !chkModifiedByServerSide.Checked;
                 inCheckChanged = false;
             }
         }

@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ucProjects));
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Project");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Project");
             this.menuFolder = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.executeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -84,6 +84,7 @@
             this.MoveDownMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuFolder.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
@@ -93,6 +94,7 @@
             // 
             // menuFolder
             // 
+            this.menuFolder.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuFolder.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.executeMenuItem,
             this.toolStripSeparator2,
@@ -108,26 +110,26 @@
             this.FolderMoveUpMenuItem,
             this.FolderMoveDownMenuItem});
             this.menuFolder.Name = "contextMenuStrip";
-            this.menuFolder.Size = new System.Drawing.Size(199, 226);
+            this.menuFolder.Size = new System.Drawing.Size(288, 316);
             // 
             // executeMenuItem
             // 
             this.executeMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("executeMenuItem.Image")));
             this.executeMenuItem.Name = "executeMenuItem";
-            this.executeMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.executeMenuItem.Size = new System.Drawing.Size(287, 32);
             this.executeMenuItem.Text = "Execute";
             this.executeMenuItem.Click += new System.EventHandler(this.ExecuteMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(284, 6);
             // 
             // addFolderMenuItem
             // 
             this.addFolderMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("addFolderMenuItem.Image")));
             this.addFolderMenuItem.Name = "addFolderMenuItem";
-            this.addFolderMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.addFolderMenuItem.Size = new System.Drawing.Size(287, 32);
             this.addFolderMenuItem.Text = "Add Folder";
             this.addFolderMenuItem.Click += new System.EventHandler(this.AddFolder_Click);
             // 
@@ -135,20 +137,20 @@
             // 
             this.recordMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("recordMenuItem.Image")));
             this.recordMenuItem.Name = "recordMenuItem";
-            this.recordMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.recordMenuItem.Size = new System.Drawing.Size(287, 32);
             this.recordMenuItem.Text = "Record Template";
             this.recordMenuItem.Click += new System.EventHandler(this.ButtonRecord_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(284, 6);
             // 
             // expandAllMenuItem
             // 
             this.expandAllMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("expandAllMenuItem.Image")));
             this.expandAllMenuItem.Name = "expandAllMenuItem";
-            this.expandAllMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.expandAllMenuItem.Size = new System.Drawing.Size(287, 32);
             this.expandAllMenuItem.Text = "Expand All";
             this.expandAllMenuItem.Click += new System.EventHandler(this.expandAllMenuItem_Click);
             // 
@@ -156,7 +158,7 @@
             // 
             this.renameMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("renameMenuItem.Image")));
             this.renameMenuItem.Name = "renameMenuItem";
-            this.renameMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.renameMenuItem.Size = new System.Drawing.Size(287, 32);
             this.renameMenuItem.Text = "Rename";
             this.renameMenuItem.Click += new System.EventHandler(this.RenameMenuItem_Click);
             // 
@@ -164,33 +166,33 @@
             // 
             this.copyPathToClipboardToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("copyPathToClipboardToolStripMenuItem.Image")));
             this.copyPathToClipboardToolStripMenuItem.Name = "copyPathToClipboardToolStripMenuItem";
-            this.copyPathToClipboardToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.copyPathToClipboardToolStripMenuItem.Size = new System.Drawing.Size(287, 32);
             this.copyPathToClipboardToolStripMenuItem.Text = "Copy Path to Clipboard";
             this.copyPathToClipboardToolStripMenuItem.Click += new System.EventHandler(this.CopyNodePath);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(284, 6);
             // 
             // deleteMenuItem
             // 
             this.deleteMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("deleteMenuItem.Image")));
             this.deleteMenuItem.Name = "deleteMenuItem";
-            this.deleteMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.deleteMenuItem.Size = new System.Drawing.Size(287, 32);
             this.deleteMenuItem.Text = "Delete";
             this.deleteMenuItem.Click += new System.EventHandler(this.DeleteMenuItem_Click);
             // 
             // toolStripSeparator11
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator11.Size = new System.Drawing.Size(284, 6);
             // 
             // FolderMoveUpMenuItem
             // 
             this.FolderMoveUpMenuItem.Image = global::EntitySpaces.AddIn.Resource.nav_up;
             this.FolderMoveUpMenuItem.Name = "FolderMoveUpMenuItem";
-            this.FolderMoveUpMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.FolderMoveUpMenuItem.Size = new System.Drawing.Size(287, 32);
             this.FolderMoveUpMenuItem.Text = "Move Up";
             this.FolderMoveUpMenuItem.ToolTipText = "Move the Selected Node Up";
             this.FolderMoveUpMenuItem.Click += new System.EventHandler(this.FolderMoveUpMenuItem_Click);
@@ -199,7 +201,7 @@
             // 
             this.FolderMoveDownMenuItem.Image = global::EntitySpaces.AddIn.Resource.nav_down;
             this.FolderMoveDownMenuItem.Name = "FolderMoveDownMenuItem";
-            this.FolderMoveDownMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.FolderMoveDownMenuItem.Size = new System.Drawing.Size(287, 32);
             this.FolderMoveDownMenuItem.Text = "Move Down";
             this.FolderMoveDownMenuItem.ToolTipText = "Move the Selected Node Down";
             this.FolderMoveDownMenuItem.Click += new System.EventHandler(this.FolderMoveDownMenuItem_Click);
@@ -207,6 +209,7 @@
             // toolStrip1
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ButtonMRU,
             this.toolStripSeparator8,
@@ -225,7 +228,8 @@
             this.ButtonExecute});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(371, 25);
+            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.toolStrip1.Size = new System.Drawing.Size(1122, 33);
             this.toolStrip1.TabIndex = 6;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -237,11 +241,12 @@
             this.ButtonMRU.Image = ((System.Drawing.Image)(resources.GetObject("ButtonMRU.Image")));
             this.ButtonMRU.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonMRU.Name = "ButtonMRU";
-            this.ButtonMRU.Size = new System.Drawing.Size(29, 22);
+            this.ButtonMRU.Size = new System.Drawing.Size(42, 28);
             this.ButtonMRU.Text = "Most Recently Used Projects";
             // 
             // menuMRU
             // 
+            this.menuMRU.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuMRU.Name = "menuMRU";
             this.menuMRU.OwnerItem = this.ButtonMRU;
             this.menuMRU.Size = new System.Drawing.Size(61, 4);
@@ -250,7 +255,7 @@
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(6, 33);
             // 
             // ButtonProjectOpen
             // 
@@ -258,7 +263,7 @@
             this.ButtonProjectOpen.Image = ((System.Drawing.Image)(resources.GetObject("ButtonProjectOpen.Image")));
             this.ButtonProjectOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonProjectOpen.Name = "ButtonProjectOpen";
-            this.ButtonProjectOpen.Size = new System.Drawing.Size(23, 22);
+            this.ButtonProjectOpen.Size = new System.Drawing.Size(34, 28);
             this.ButtonProjectOpen.Text = "toolStripButton1";
             this.ButtonProjectOpen.ToolTipText = "Open a Project";
             this.ButtonProjectOpen.Click += new System.EventHandler(this.ButtonProjectOpen_Click);
@@ -270,14 +275,14 @@
             this.ButtonClear.Image = ((System.Drawing.Image)(resources.GetObject("ButtonClear.Image")));
             this.ButtonClear.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonClear.Name = "ButtonClear";
-            this.ButtonClear.Size = new System.Drawing.Size(23, 22);
+            this.ButtonClear.Size = new System.Drawing.Size(34, 28);
             this.ButtonClear.Text = "Reset Project to New";
             this.ButtonClear.Click += new System.EventHandler(this.ButtonClear_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(6, 33);
             // 
             // ButtonSave
             // 
@@ -286,7 +291,7 @@
             this.ButtonSave.Image = ((System.Drawing.Image)(resources.GetObject("ButtonSave.Image")));
             this.ButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonSave.Name = "ButtonSave";
-            this.ButtonSave.Size = new System.Drawing.Size(23, 22);
+            this.ButtonSave.Size = new System.Drawing.Size(34, 28);
             this.ButtonSave.Text = "toolStripButton3";
             this.ButtonSave.ToolTipText = "Save";
             this.ButtonSave.Click += new System.EventHandler(this.ButtonSave_Click);
@@ -297,7 +302,7 @@
             this.ButtonSaveAs.Image = ((System.Drawing.Image)(resources.GetObject("ButtonSaveAs.Image")));
             this.ButtonSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonSaveAs.Name = "ButtonSaveAs";
-            this.ButtonSaveAs.Size = new System.Drawing.Size(23, 22);
+            this.ButtonSaveAs.Size = new System.Drawing.Size(34, 28);
             this.ButtonSaveAs.Text = "toolStripButton2";
             this.ButtonSaveAs.ToolTipText = "Save As";
             this.ButtonSaveAs.Click += new System.EventHandler(this.ButtonSaveAs_Click);
@@ -305,7 +310,7 @@
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 33);
             // 
             // ButtonOpenFolder
             // 
@@ -313,14 +318,14 @@
             this.ButtonOpenFolder.Image = ((System.Drawing.Image)(resources.GetObject("ButtonOpenFolder.Image")));
             this.ButtonOpenFolder.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonOpenFolder.Name = "ButtonOpenFolder";
-            this.ButtonOpenFolder.Size = new System.Drawing.Size(23, 22);
+            this.ButtonOpenFolder.Size = new System.Drawing.Size(34, 28);
             this.ButtonOpenFolder.Text = "Open Default Output Folder";
             this.ButtonOpenFolder.Click += new System.EventHandler(this.ButtonOpenFolder_Click);
             // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(6, 33);
             // 
             // ButtonMoveUp
             // 
@@ -328,7 +333,7 @@
             this.ButtonMoveUp.Image = global::EntitySpaces.AddIn.Resource.nav_up;
             this.ButtonMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonMoveUp.Name = "ButtonMoveUp";
-            this.ButtonMoveUp.Size = new System.Drawing.Size(23, 22);
+            this.ButtonMoveUp.Size = new System.Drawing.Size(34, 28);
             this.ButtonMoveUp.ToolTipText = "Move the Selected Node Up";
             this.ButtonMoveUp.Click += new System.EventHandler(this.ButtonMoveUp_Click);
             // 
@@ -338,14 +343,14 @@
             this.ButtonMoveDown.Image = global::EntitySpaces.AddIn.Resource.nav_down;
             this.ButtonMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonMoveDown.Name = "ButtonMoveDown";
-            this.ButtonMoveDown.Size = new System.Drawing.Size(23, 22);
+            this.ButtonMoveDown.Size = new System.Drawing.Size(34, 28);
             this.ButtonMoveDown.ToolTipText = "Move the Selected Node Down";
             this.ButtonMoveDown.Click += new System.EventHandler(this.ButtonMoveDown_Click);
             // 
             // toolStripSeparator12
             // 
             this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator12.Size = new System.Drawing.Size(6, 33);
             // 
             // ButtonRecord
             // 
@@ -354,7 +359,7 @@
             this.ButtonRecord.Image = ((System.Drawing.Image)(resources.GetObject("ButtonRecord.Image")));
             this.ButtonRecord.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonRecord.Name = "ButtonRecord";
-            this.ButtonRecord.Size = new System.Drawing.Size(23, 22);
+            this.ButtonRecord.Size = new System.Drawing.Size(34, 28);
             this.ButtonRecord.Text = "toolStripButton2";
             this.ButtonRecord.ToolTipText = "Record a Template";
             this.ButtonRecord.Click += new System.EventHandler(this.ButtonRecord_Click);
@@ -366,7 +371,7 @@
             this.ButtonExecute.Image = ((System.Drawing.Image)(resources.GetObject("ButtonExecute.Image")));
             this.ButtonExecute.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonExecute.Name = "ButtonExecute";
-            this.ButtonExecute.Size = new System.Drawing.Size(23, 22);
+            this.ButtonExecute.Size = new System.Drawing.Size(34, 28);
             this.ButtonExecute.Text = "toolStripButton1";
             this.ButtonExecute.ToolTipText = "Execute Project Starting at the Selected Node";
             this.ButtonExecute.Click += new System.EventHandler(this.ExecuteMenuItem_Click);
@@ -374,7 +379,8 @@
             // splitContainer
             // 
             this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer.Location = new System.Drawing.Point(0, 25);
+            this.splitContainer.Location = new System.Drawing.Point(0, 33);
+            this.splitContainer.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.splitContainer.Name = "splitContainer";
             this.splitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -386,38 +392,40 @@
             // 
             this.splitContainer.Panel2.Controls.Add(this.tableLayoutPanel1);
             this.splitContainer.Panel2Collapsed = true;
-            this.splitContainer.Size = new System.Drawing.Size(371, 520);
+            this.splitContainer.Size = new System.Drawing.Size(1122, 758);
             this.splitContainer.SplitterDistance = 240;
+            this.splitContainer.SplitterWidth = 6;
             this.splitContainer.TabIndex = 8;
             // 
             // projectTree
             // 
             this.projectTree.AllowDrop = true;
-            this.projectTree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.projectTree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.projectTree.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.projectTree.ContextMenuStrip = this.menuFolder;
             this.projectTree.HideSelection = false;
             this.projectTree.ImageIndex = 0;
             this.projectTree.ImageList = this.imageList;
             this.projectTree.LabelEdit = true;
-            this.projectTree.Location = new System.Drawing.Point(0, 10);
+            this.projectTree.Location = new System.Drawing.Point(0, 15);
+            this.projectTree.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.projectTree.Name = "projectTree";
-            treeNode2.ContextMenuStrip = this.menuFolder;
-            treeNode2.Name = "Node1";
-            treeNode2.Text = "Project";
+            treeNode1.ContextMenuStrip = this.menuFolder;
+            treeNode1.Name = "Node1";
+            treeNode1.Text = "Project";
             this.projectTree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            treeNode1});
             this.projectTree.SelectedImageIndex = 0;
             this.projectTree.ShowNodeToolTips = true;
-            this.projectTree.Size = new System.Drawing.Size(371, 520);
+            this.projectTree.Size = new System.Drawing.Size(1122, 758);
             this.projectTree.TabIndex = 0;
-            this.projectTree.DragDrop += new System.Windows.Forms.DragEventHandler(this.ProjectTree_DragDrop);
-            this.projectTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ProjectTree_AfterSelect);
-            this.projectTree.DragEnter += new System.Windows.Forms.DragEventHandler(this.ProjectTree_DragEnter);
-            this.projectTree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.ProjectTree_NodeMouseClick);
             this.projectTree.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.ProjectTree_ItemDrag);
+            this.projectTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ProjectTree_AfterSelect);
+            this.projectTree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.ProjectTree_NodeMouseClick);
+            this.projectTree.DragDrop += new System.Windows.Forms.DragEventHandler(this.ProjectTree_DragDrop);
+            this.projectTree.DragEnter += new System.Windows.Forms.DragEventHandler(this.ProjectTree_DragEnter);
             // 
             // imageList
             // 
@@ -438,20 +446,22 @@
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(150, 46);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(225, 71);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // buttonRecordCancel
             // 
             this.buttonRecordCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRecordCancel.Location = new System.Drawing.Point(3, 20);
+            this.buttonRecordCancel.Location = new System.Drawing.Point(7, 31);
+            this.buttonRecordCancel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonRecordCancel.Name = "buttonRecordCancel";
-            this.buttonRecordCancel.Size = new System.Drawing.Size(63, 23);
+            this.buttonRecordCancel.Size = new System.Drawing.Size(94, 35);
             this.buttonRecordCancel.TabIndex = 7;
             this.buttonRecordCancel.Text = "Cancel";
             this.buttonRecordCancel.UseVisualStyleBackColor = true;
@@ -461,10 +471,11 @@
             // 
             this.buttonRecordOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRecordOk.Enabled = false;
-            this.buttonRecordOk.Location = new System.Drawing.Point(72, 20);
+            this.buttonRecordOk.Location = new System.Drawing.Point(109, 31);
+            this.buttonRecordOk.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonRecordOk.Name = "buttonRecordOk";
             this.buttonRecordOk.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.buttonRecordOk.Size = new System.Drawing.Size(75, 23);
+            this.buttonRecordOk.Size = new System.Drawing.Size(112, 35);
             this.buttonRecordOk.TabIndex = 6;
             this.buttonRecordOk.Text = "Ok";
             this.buttonRecordOk.UseVisualStyleBackColor = true;
@@ -475,9 +486,10 @@
             this.tree.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tableLayoutPanel1.SetColumnSpan(this.tree, 2);
             this.tree.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tree.Location = new System.Drawing.Point(3, 33);
+            this.tree.Location = new System.Drawing.Point(4, 51);
+            this.tree.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tree.Name = "tree";
-            this.tree.Size = new System.Drawing.Size(144, 1);
+            this.tree.Size = new System.Drawing.Size(217, 1);
             this.tree.TabIndex = 5;
             this.tree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.Tree_AfterSelect);
             // 
@@ -488,16 +500,18 @@
             this.label1.Dock = System.Windows.Forms.DockStyle.Top;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Blue;
-            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Location = new System.Drawing.Point(4, 0);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Padding = new System.Windows.Forms.Padding(0, 8, 0, 0);
-            this.label1.Size = new System.Drawing.Size(144, 30);
+            this.label1.Padding = new System.Windows.Forms.Padding(0, 12, 0, 0);
+            this.label1.Size = new System.Drawing.Size(217, 46);
             this.label1.TabIndex = 8;
             this.label1.Text = "Please Select a Template and Click Ok";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // menuTemplate
             // 
+            this.menuTemplate.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuTemplate.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.toolStripSeparator1,
@@ -511,26 +525,26 @@
             this.MoveUpMenuItem,
             this.MoveDownMenuItem});
             this.menuTemplate.Name = "contextMenuStrip";
-            this.menuTemplate.Size = new System.Drawing.Size(199, 220);
+            this.menuTemplate.Size = new System.Drawing.Size(288, 278);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem1.Image")));
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(198, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(287, 32);
             this.toolStripMenuItem1.Text = "Execute";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.ExecuteMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(284, 6);
             // 
             // EditMenuItem
             // 
             this.EditMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("EditMenuItem.Image")));
             this.EditMenuItem.Name = "EditMenuItem";
-            this.EditMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.EditMenuItem.Size = new System.Drawing.Size(287, 32);
             this.EditMenuItem.Text = "Edit Template";
             this.EditMenuItem.Click += new System.EventHandler(this.EditTemplatesMenuItem_Click);
             // 
@@ -538,7 +552,7 @@
             // 
             this.editSettingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("editSettingsToolStripMenuItem.Image")));
             this.editSettingsToolStripMenuItem.Name = "editSettingsToolStripMenuItem";
-            this.editSettingsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.editSettingsToolStripMenuItem.Size = new System.Drawing.Size(287, 32);
             this.editSettingsToolStripMenuItem.Text = "Edit Settings";
             this.editSettingsToolStripMenuItem.Click += new System.EventHandler(this.EditSettingsMenuItem_Click);
             // 
@@ -546,7 +560,7 @@
             // 
             this.renameToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("renameToolStripMenuItem.Image")));
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(287, 32);
             this.renameToolStripMenuItem.Text = "Rename";
             this.renameToolStripMenuItem.Click += new System.EventHandler(this.RenameMenuItem_Click);
             // 
@@ -554,33 +568,33 @@
             // 
             this.toolStripMenuItem2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem2.Image")));
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(198, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(287, 32);
             this.toolStripMenuItem2.Text = "Copy Path to Clipboard";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.CopyNodePath);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(284, 6);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem5.Image")));
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(198, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(287, 32);
             this.toolStripMenuItem5.Text = "Delete";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.DeleteMenuItem_Click);
             // 
             // toolStripSeparator10
             // 
             this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator10.Size = new System.Drawing.Size(284, 6);
             // 
             // MoveUpMenuItem
             // 
             this.MoveUpMenuItem.Image = global::EntitySpaces.AddIn.Resource.nav_up;
             this.MoveUpMenuItem.Name = "MoveUpMenuItem";
-            this.MoveUpMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.MoveUpMenuItem.Size = new System.Drawing.Size(287, 32);
             this.MoveUpMenuItem.Text = "Move up";
             this.MoveUpMenuItem.ToolTipText = "Move the Selected Node Up";
             this.MoveUpMenuItem.Click += new System.EventHandler(this.MoveUpMenuItem_Click);
@@ -589,7 +603,7 @@
             // 
             this.MoveDownMenuItem.Image = global::EntitySpaces.AddIn.Resource.nav_down;
             this.MoveDownMenuItem.Name = "MoveDownMenuItem";
-            this.MoveDownMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.MoveDownMenuItem.Size = new System.Drawing.Size(287, 32);
             this.MoveDownMenuItem.Text = "Move Down";
             this.MoveDownMenuItem.ToolTipText = "Move the Selected Node Down";
             this.MoveDownMenuItem.Click += new System.EventHandler(this.MoveDownMenuItem_Click);
@@ -597,19 +611,21 @@
             // ucProjects
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.toolStrip1);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "ucProjects";
-            this.Size = new System.Drawing.Size(371, 545);
+            this.Size = new System.Drawing.Size(1122, 791);
             this.Load += new System.EventHandler(this.ucProjects_Load);
             this.menuFolder.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.splitContainer.Panel1.ResumeLayout(false);
             this.splitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
             this.splitContainer.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
