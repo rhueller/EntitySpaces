@@ -74,9 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="esProject.cs" />
-    <Compile Include="esProject2010.cs" />
     <Compile Include="esProjectNode.cs" />
-    <Compile Include="esProjectNode2010.cs" />
     <Compile Include="IProjectNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

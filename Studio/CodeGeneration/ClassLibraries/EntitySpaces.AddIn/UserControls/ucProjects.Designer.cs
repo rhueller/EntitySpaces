@@ -1,6 +1,6 @@
-﻿namespace EntitySpaces.AddIn
+﻿namespace EntitySpaces.AddIn.UserControls
 {
-    partial class ucProjects
+    partial class UcProjects
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ucProjects));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UcProjects));
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Project");
             this.menuFolder = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.executeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,7 +68,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.buttonRecordCancel = new System.Windows.Forms.Button();
             this.buttonRecordOk = new System.Windows.Forms.Button();
-            this.tree = new EntitySpaces.AddIn.ucTemplateControl();
+            this.tree = new EntitySpaces.AddIn.UcTemplateControl();
             this.label1 = new System.Windows.Forms.Label();
             this.menuTemplate = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -617,7 +617,7 @@
             this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.toolStrip1);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.Name = "ucProjects";
+            this.Name = "UcProjects";
             this.Size = new System.Drawing.Size(1122, 791);
             this.Load += new System.EventHandler(this.ucProjects_Load);
             this.menuFolder.ResumeLayout(false);
@@ -657,7 +657,7 @@
         private System.Windows.Forms.ToolStripButton ButtonProjectOpen;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton ButtonSaveAs;
-        private ucTemplateControl tree;
+        private UcTemplateControl tree;
         private System.Windows.Forms.ContextMenuStrip menuTemplate;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;

@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 
 using EntitySpaces.AddIn.TemplateUI;
 using EntitySpaces.CodeGenerator;
-using EntitySpaces.Common;
 using EntitySpaces.MetadataEngine;
 
 using EntitySpaces.AddIn.ES2019;
@@ -19,70 +16,63 @@ namespace EntitySpaces.AddIn
 
     internal class TemplateDisplaySurface
     {
-        static private TemplateUICollection coll = new TemplateUICollection();
-        static private MainWindow MainWindow;
+        private static readonly TemplateUICollection Coll = new TemplateUICollection();
+        private static MainWindow _mainWindow;
 
-        static public Dictionary<Guid, Hashtable> CachedInput = new Dictionary<Guid, Hashtable>();
-        public SortedList<int, UserControl> CurrentUIControls = new SortedList<int, UserControl>();
-        public Root esMeta = null;
+        private static Dictionary<Guid, Hashtable> _cachedInput = new Dictionary<Guid, Hashtable>();
+        private readonly SortedList<int, UserControl> _currentUiControls = new SortedList<int, UserControl>();
+        public Root EsMeta;
         public Template Template;
 
 
-        static internal void Initialize(MainWindow mainWindow)
+        internal static void Initialize(MainWindow mainWindow)
         {
-            TemplateDisplaySurface.MainWindow = mainWindow;
+            _mainWindow = mainWindow;
         }
 
-        internal TemplateDisplaySurface()
-        {
-
-        }
-
-        public void DisplayTemplateUI
+        public void DisplayTemplateUi
         (
             bool useCachedInput, 
             Hashtable input,
             esSettings settings,
             Template template, 
-            OnTemplateExecute OnExecuteCallback, 
-            OnTemplateCancel OnCancelCallback
+            OnTemplateExecute onExecuteCallback, 
+            OnTemplateCancel onCancelCallback
         )
         {
             try
             {
-                this.Template = template;
+                Template = template;
 
-                TemplateDisplaySurface.MainWindow.OnTemplateExecuteCallback = OnExecuteCallback;
-                TemplateDisplaySurface.MainWindow.OnTemplateCancelCallback = OnCancelCallback;
-                TemplateDisplaySurface.MainWindow.CurrentTemplateDisplaySurface = this;
+                _mainWindow.OnTemplateExecuteCallback = onExecuteCallback;
+                _mainWindow.OnTemplateCancelCallback = onCancelCallback;
+                _mainWindow.CurrentTemplateDisplaySurface = this;
 
                 if (template != null)
                 {
-                    CurrentUIControls.Clear();
+                    _currentUiControls.Clear();
                     PopulateTemplateInfoCollection();
 
-                    SortedList<int, esTemplateInfo> templateInfoCollection = coll.GetTemplateUI(template.Header.UserInterfaceID);
+                    var templateInfoCollection = Coll.GetTemplateUI(template.Header.UserInterfaceID);
 
                     if (templateInfoCollection == null || templateInfoCollection.Count == 0)
                     {
-                        MainWindow.ShowError(new Exception("Template UI Assembly Cannot Be Located"));
+                        _mainWindow.ShowError(new Exception("Template UI Assembly Cannot Be Located"));
                     }
 
-                    this.esMeta = esMetaCreator.Create(settings);
+                    EsMeta = esMetaCreator.Create(settings);
 
-                    esMeta.Input["OutputPath"] = settings.OutputPath;
+                    EsMeta.Input["OutputPath"] = settings.OutputPath;
 
                     if (useCachedInput)
                     {
-                        if (CachedInput.ContainsKey(template.Header.UniqueID))
+                        if (_cachedInput.TryGetValue(template.Header.UniqueID, out var cachedInput))
                         {
-                            Hashtable cachedInput = CachedInput[template.Header.UniqueID];
-
                             if (cachedInput != null)
                             {
                                 foreach (string key in cachedInput.Keys)
                                 {
-                                    esMeta.Input[key] = cachedInput[key];
+                                    EsMeta.Input[key] = cachedInput[key];
                                 }
                             }
                         }
@@ -90,37 +80,39 @@ namespace EntitySpaces.AddIn
 
                     if (input != null)
                     {
-                        esMeta.Input = input;
+                        EsMeta.Input = input;
                     }
 
-                    MainWindow.tabControlTemplateUI.SuspendLayout();
+                    _mainWindow.tabControlTemplateUI.SuspendLayout();
 
-                    foreach (esTemplateInfo info in templateInfoCollection.Values)
+                    if (templateInfoCollection?.Values != null)
+                        foreach (var info in templateInfoCollection.Values)
+                        {
+                            var userControl = info.UserInterface.CreateInstance(EsMeta, useCachedInput,
+                                _mainWindow.ApplicationObject);
+                            _currentUiControls.Add(info.TabOrder, userControl);
+
+                            var page = new TabPage(info.TabTitle);
+                            page.Controls.Add(userControl);
+
+                            userControl.Dock = DockStyle.Fill;
+
+                            _mainWindow.tabControlTemplateUI.TabPages.Add(page);
+
+                            _mainWindow.ShowTemplateUIControl();
+                        }
+
+                    _mainWindow.tabControlTemplateUI.ResumeLayout();
+
+                    if (_currentUiControls.Count > 0)
                     {
-                        UserControl userControl = info.UserInterface.CreateInstance(esMeta, useCachedInput, MainWindow.ApplicationObject);
-                        CurrentUIControls.Add(info.TabOrder, userControl);
-
-                        TabPage page = new TabPage(info.TabTitle);
-                        page.Controls.Add(userControl);
-
-                        userControl.Dock = DockStyle.Fill;
-
-                        MainWindow.tabControlTemplateUI.TabPages.Add(page);
-
-                        MainWindow.ShowTemplateUIControl();
-                    }
-
-                    MainWindow.tabControlTemplateUI.ResumeLayout();
-
-                    if (CurrentUIControls.Count > 0)
-                    {
-                        MainWindow.ShowTemplateUIControl();
+                        _mainWindow.ShowTemplateUIControl();
                     }
                 }
             }
             catch (Exception ex)
             {
-                MainWindow.ShowError(ex);
+                _mainWindow.ShowError(ex);
             }
         }
 
@@ -128,14 +120,14 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                if (!coll.IsLoaded)
+                if (!Coll.IsLoaded)
                 {
-                    coll.RegisterAssemblies(TemplateDisplaySurface.MainWindow.Settings.UIAssemblyPath);
+                    Coll.RegisterAssemblies(_mainWindow.Settings.UIAssemblyPath);
                 }
             }
             catch (Exception ex)
             {
-                MainWindow.ShowError(ex);
+                _mainWindow.ShowError(ex);
             }
         }
 
@@ -143,11 +135,9 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                foreach (UserControl userControl in this.CurrentUIControls.Values)
+                foreach (var userControl in _currentUiControls.Values)
                 {
-                    ITemplateUI templateUI = userControl as ITemplateUI;
-
-                    if (!templateUI.OnExecute())
+                    if (userControl is ITemplateUI templateUi && !templateUi.OnExecute())
                     {
                         return false;
                     }
@@ -155,7 +145,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                MainWindow.ShowError(ex);
+                _mainWindow.ShowError(ex);
             }
 
             return true;
@@ -163,14 +153,14 @@ namespace EntitySpaces.AddIn
 
         public Hashtable CacheUserInput()
         {
-            Hashtable settings = (Hashtable)esMeta.Input.Clone();
-            CachedInput[Template.Header.UniqueID] = settings;
+            var settings = (Hashtable)EsMeta.Input.Clone();
+            _cachedInput[Template.Header.UniqueID] = settings;
             return settings;
         }
 
-        static public void ClearCachedSettings()
+        public static void ClearCachedSettings()
         {
-            CachedInput = new Dictionary<Guid, Hashtable>();
+            _cachedInput = new Dictionary<Guid, Hashtable>();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Data;
 using System.Windows.Forms;
 
 using EntitySpaces.MetadataEngine;
+// ReSharper disable InconsistentNaming
 
 namespace EntitySpaces.AddIn
 {
@@ -67,13 +68,13 @@ namespace EntitySpaces.AddIn
 
         private void tree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            Cursor cursor = Cursor.Current;
+            var cursor = Cursor.Current;
 
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                NodeData data = (NodeData)e.Node.Tag;
+                var data = (NodeData)e.Node.Tag;
 
                 if (null != data)
                 {
@@ -168,7 +169,7 @@ namespace EntitySpaces.AddIn
         {
             if (HasBlankNode(dbNode))
             {
-                IDatabase db = root.Databases[database.Name];
+                var db = root.Databases[database.Name];
 
                 TreeNode node;
 
@@ -216,7 +217,7 @@ namespace EntitySpaces.AddIn
             {
                 foreach (ITable table in tables)
                 {
-                    TreeNode n = new TreeNode(table.Name);
+                    var n = new TreeNode(table.Name);
                     n.Tag = new NodeData(NodeType.TABLE, table);
                     n.SelectedImageIndex = n.ImageIndex = 3;
                     node.Nodes.Add(n);
@@ -275,7 +276,7 @@ namespace EntitySpaces.AddIn
             {
                 foreach (IView view in views)
                 {
-                    TreeNode n = new TreeNode(view.Name);
+                    var n = new TreeNode(view.Name);
                     n.Tag = new NodeData(NodeType.VIEW, view);
                     n.SelectedImageIndex = n.ImageIndex = 6;
                     node.Nodes.Add(n);
@@ -325,7 +326,7 @@ namespace EntitySpaces.AddIn
             {
                 foreach (IProcedure procedure in procedures)
                 {
-                    TreeNode n = new TreeNode(procedure.Name);
+                    var n = new TreeNode(procedure.Name);
                     n.Tag = new NodeData(NodeType.PROCEDURE, procedure);
                     n.SelectedImageIndex = n.ImageIndex = 8;
                     node.Nodes.Add(n);
@@ -366,7 +367,7 @@ namespace EntitySpaces.AddIn
             {
                 foreach (IColumn column in columns)
                 {
-                    TreeNode n = new TreeNode(column.Name);
+                    var n = new TreeNode(column.Name);
                     n.Tag = new NodeData(NodeType.COLUMN, column);
 
                     if (!column.IsInPrimaryKey)
@@ -378,7 +379,7 @@ namespace EntitySpaces.AddIn
 
                     if (column.ForeignKeys.Count > 0)
                     {
-                        TreeNode nn = new TreeNode("ForeignKeys");
+                        var nn = new TreeNode("ForeignKeys");
                         nn.Tag = new NodeData(NodeType.FOREIGNKEYS, column.ForeignKeys);
                         nn.SelectedImageIndex = nn.ImageIndex = 11;
                         n.Nodes.Add(nn);
@@ -394,7 +395,7 @@ namespace EntitySpaces.AddIn
             {
                 foreach (IParameter parameter in parameters)
                 {
-                    TreeNode n = new TreeNode(parameter.Name);
+                    var n = new TreeNode(parameter.Name);
                     n.Tag = new NodeData(NodeType.PARAMETER, parameter);
                     n.SelectedImageIndex = n.ImageIndex = 18;
                     node.Nodes.Add(n);
@@ -408,7 +409,7 @@ namespace EntitySpaces.AddIn
             {
                 foreach (IResultColumn resultColumn in resultColumns)
                 {
-                    TreeNode n = new TreeNode(resultColumn.Name);
+                    var n = new TreeNode(resultColumn.Name);
                     n.Tag = new NodeData(NodeType.RESULTCOLUMN, resultColumn);
                     n.SelectedImageIndex = n.ImageIndex = 20;
                     node.Nodes.Add(n);
@@ -422,14 +423,14 @@ namespace EntitySpaces.AddIn
             {
                 foreach (IIndex index in indexes)
                 {
-                    TreeNode indexNode = new TreeNode(index.Name);
+                    var indexNode = new TreeNode(index.Name);
                     indexNode.Tag = new NodeData(NodeType.INDEX, index);
                     indexNode.SelectedImageIndex = indexNode.ImageIndex = 15;
                     node.Nodes.Add(indexNode);
 
                     if (index.Columns.Count > 0)
                     {
-                        TreeNode n = new TreeNode("Columns");
+                        var n = new TreeNode("Columns");
                         n.Tag = new NodeData(NodeType.COLUMNS, index.Columns);
                         n.SelectedImageIndex = n.ImageIndex = 9;
                         indexNode.Nodes.Add(n);
@@ -446,7 +447,7 @@ namespace EntitySpaces.AddIn
                 foreach (IForeignKey foreignKey in foreignKeys)
                 {
                     TreeNode n;
-                    TreeNode fkNode = new TreeNode(foreignKey.Name);
+                    var fkNode = new TreeNode(foreignKey.Name);
                     fkNode.Tag = new NodeData(NodeType.FOREIGNKEY, foreignKey);
                     fkNode.SelectedImageIndex = fkNode.ImageIndex = 12;
                     node.Nodes.Add(fkNode);
@@ -478,7 +479,7 @@ namespace EntitySpaces.AddIn
             {
                 foreach (IDomain domain in domains)
                 {
-                    TreeNode n = new TreeNode(domain.Name);
+                    var n = new TreeNode(domain.Name);
                     n.Tag = new NodeData(NodeType.DOMAIN, domain);
                     n.SelectedImageIndex = n.ImageIndex = 25;
                     node.Nodes.Add(n);
@@ -515,8 +516,8 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                DataTable dt = ProLogForNiceNames(coll);
-                DataRowCollection rows = dt.Rows;
+                var dt = ProLogForNiceNames(coll);
+                var rows = dt.Rows;
 
                 foreach (EntitySpaces.MetadataEngine.Single o in coll)
                 {
@@ -532,13 +533,13 @@ namespace EntitySpaces.AddIn
 
         private DataTable ProLogForNiceNames(Collection coll)
         {
-            DataTable dt = new DataTable();
+            var dt = new DataTable();
             try
             {
-                DataColumn k = dt.Columns.Add("Name", typeof(string));
+                var k = dt.Columns.Add("Name", typeof(string));
                 k.AllowDBNull = false;
                 k.ReadOnly = true;
-                DataColumn v = dt.Columns.Add("Alias", typeof(string));
+                var v = dt.Columns.Add("Alias", typeof(string));
                 v.AllowDBNull = false;
             }
             catch { }
@@ -565,7 +566,7 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                Collection coll = e.Row.Table.ExtendedProperties["Collection"] as Collection;
+                var coll = e.Row.Table.ExtendedProperties["Collection"] as Collection;
 
                 if (coll != null)
                 {
@@ -588,15 +589,15 @@ namespace EntitySpaces.AddIn
             {
                 this.single = obj;
 
-                DataTable dt = new DataTable();
+                var dt = new DataTable();
 
-                DataColumn k = dt.Columns.Add("Key", typeof(string));
+                var k = dt.Columns.Add("Key", typeof(string));
                 k.Unique = true;
-                DataColumn v = dt.Columns.Add("Value", typeof(string));
+                var v = dt.Columns.Add("Value", typeof(string));
                 k.AllowDBNull = false;
 
-                IPropertyCollection properties = obj.Properties;
-                DataRowCollection rows = dt.Rows;
+                var properties = obj.Properties;
+                var rows = dt.Rows;
 
                 foreach (IProperty prop in properties)
                 {
@@ -621,27 +622,27 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                EntitySpaces.MetadataEngine.Single o = e.Row.Table.ExtendedProperties["EntitySpaces.MetadataEngine.Single"] as EntitySpaces.MetadataEngine.Single;
+                var o = e.Row.Table.ExtendedProperties["EntitySpaces.MetadataEngine.Single"] as EntitySpaces.MetadataEngine.Single;
 
                 if (o != null)
                 {
                     try
                     {
-                        string sKey = e.Row["Key"] as string;
+                        var sKey = e.Row["Key"] as string;
                         if (sKey == null || sKey.Length == 0)
                         {
                             MessageBox.Show("Requires a 'Key' or this record won't be saved");
                             return;
                         }
 
-                        string sValue = e.Row["Value"] as string;
+                        var sValue = e.Row["Value"] as string;
                         if (sValue == null || sValue.Length == 0)
                         {
                             MessageBox.Show("Requires a 'Value' or this record won't be saved");
                             return;
                         }
 
-                        IProperty p = o.Properties[sKey];
+                        var p = o.Properties[sKey];
 
                         if (p != null)
                         {
@@ -664,7 +665,7 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                EntitySpaces.MetadataEngine.Single o = e.Row.Table.ExtendedProperties["EntitySpaces.MetadataEngine.Single"] as EntitySpaces.MetadataEngine.Single;
+                var o = e.Row.Table.ExtendedProperties["EntitySpaces.MetadataEngine.Single"] as EntitySpaces.MetadataEngine.Single;
 
                 if (o != null)
                 {
@@ -683,13 +684,13 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                EntitySpaces.MetadataEngine.Single o = e.Row.Table.ExtendedProperties["EntitySpaces.MetadataEngine.Single"] as EntitySpaces.MetadataEngine.Single;
+                var o = e.Row.Table.ExtendedProperties["EntitySpaces.MetadataEngine.Single"] as EntitySpaces.MetadataEngine.Single;
 
                 if (o != null)
                 {
                     try
                     {
-                        DataTable dt = e.Row.Table;
+                        var dt = e.Row.Table;
 
                         dt.RowChanged -= new DataRowChangeEventHandler(this.PropertyGridRowChanged);
                         dt.RowDeleting -= new DataRowChangeEventHandler(this.PropertyGridRowDeleting);
@@ -712,7 +713,7 @@ namespace EntitySpaces.AddIn
 
         public void InitializeTree()
         {
-            Cursor cursor = Cursor.Current;
+            var cursor = Cursor.Current;
 
             try
             {
@@ -739,7 +740,7 @@ namespace EntitySpaces.AddIn
                 this.tree.Nodes.Add(rootNode);
 
                 // DATABASES
-                TreeNode databasesNode = new TreeNode("Databases");
+                var databasesNode = new TreeNode("Databases");
                 databasesNode.Tag = new NodeData(NodeType.DATABASES, root.Databases);
                 databasesNode.SelectedImageIndex = databasesNode.ImageIndex = 0;
 
@@ -747,7 +748,7 @@ namespace EntitySpaces.AddIn
 
                 foreach (IDatabase database in root.Databases)
                 {
-                    TreeNode dbNode = new TreeNode(database.Name);
+                    var dbNode = new TreeNode(database.Name);
                     dbNode.Tag = new NodeData(NodeType.DATABASE, database);
                     dbNode.SelectedImageIndex = dbNode.ImageIndex = 1;
                     dbNode.Nodes.Add(this.BlankNode);
@@ -772,7 +773,7 @@ namespace EntitySpaces.AddIn
         {
             get
             {
-                TreeNode blankNode = new TreeNode("");
+                var blankNode = new TreeNode("");
                 blankNode.Tag = "Blank";
                 return blankNode;
             }
@@ -784,7 +785,7 @@ namespace EntitySpaces.AddIn
             {
                 if (this.isDirty)
                 {
-                    DialogResult result = MessageBox.Show("Save your Changes?", "Unsaved Changes", MessageBoxButtons.YesNo);
+                    var result = MessageBox.Show("Save your Changes?", "Unsaved Changes", MessageBoxButtons.YesNo);
 
                     if (result == DialogResult.Yes)
                     {
@@ -809,7 +810,7 @@ namespace EntitySpaces.AddIn
             {
                 if (this.isDirty)
                 {
-                    DialogResult result = MessageBox.Show("Save your Changes?", "Unsaved Changes", MessageBoxButtons.YesNo);
+                    var result = MessageBox.Show("Save your Changes?", "Unsaved Changes", MessageBoxButtons.YesNo);
 
                     if (result == DialogResult.Yes)
                     {
@@ -828,7 +829,7 @@ namespace EntitySpaces.AddIn
             {
                 if (node.Tag == null) return;
 
-                NodeData data = node.Tag as NodeData;
+                var data = node.Tag as NodeData;
                 MetaObject obj = null;
 
                 if (data.Type != NodeType.ESMETADATAENGINE)
@@ -892,7 +893,7 @@ namespace EntitySpaces.AddIn
                     {
                         case NodeType.DATABASE:
                             {
-                                Database o = obj as Database;
+                                var o = obj as Database;
                                 metadataProperties.DisplayDatabaseProperties(o, node);
                                 this.EditSingle(o, o.Alias);
                             }
@@ -900,7 +901,7 @@ namespace EntitySpaces.AddIn
 
                         case NodeType.COLUMN:
                             {
-                                Column o = obj as Column;
+                                var o = obj as Column;
                                 metadataProperties.DisplayColumnProperties(o, node);
                                 this.EditSingle(o, o.Alias);
                             }
@@ -909,7 +910,7 @@ namespace EntitySpaces.AddIn
                         case NodeType.TABLE:
                             {
 
-                                Table o = obj as Table;
+                                var o = obj as Table;
                                 metadataProperties.DisplayTableProperties(o, node);
                                 this.EditSingle(o, o.Alias);
                             }
@@ -918,7 +919,7 @@ namespace EntitySpaces.AddIn
                         case NodeType.VIEW:
                             {
 
-                                EntitySpaces.MetadataEngine.View o = obj as EntitySpaces.MetadataEngine.View;
+                                var o = obj as EntitySpaces.MetadataEngine.View;
                                 metadataProperties.DisplayViewProperties(o, node);
                                 this.EditSingle(o, o.Alias);
                             }
@@ -927,7 +928,7 @@ namespace EntitySpaces.AddIn
                         case NodeType.PARAMETER:
                             {
 
-                                Parameter o = obj as Parameter;
+                                var o = obj as Parameter;
                                 metadataProperties.DisplayParameterProperties(o, node);
                                 this.EditSingle(o, o.Alias);
                             }
@@ -936,7 +937,7 @@ namespace EntitySpaces.AddIn
                         case NodeType.RESULTCOLUMN:
                             {
 
-                                ResultColumn o = obj as ResultColumn;
+                                var o = obj as ResultColumn;
                                 metadataProperties.DisplayResultColumnProperties(o, node);
                                 this.EditSingle(o, o.Alias);
                             }
@@ -944,7 +945,7 @@ namespace EntitySpaces.AddIn
 
                         case NodeType.FOREIGNKEY:
                             {
-                                ForeignKey o = obj as ForeignKey;
+                                var o = obj as ForeignKey;
                                 metadataProperties.DisplayForeignKeyProperties(o, node);
                                 this.EditSingle(o, o.Alias);
                             }
@@ -952,7 +953,7 @@ namespace EntitySpaces.AddIn
 
                         case NodeType.INDEX:
                             {
-                                Index o = obj as Index;
+                                var o = obj as Index;
                                 metadataProperties.DisplayIndexProperties(o, node);
                                 this.EditSingle(o, o.Alias);
                             }
@@ -960,7 +961,7 @@ namespace EntitySpaces.AddIn
 
                         case NodeType.PROCEDURE:
                             {
-                                Procedure o = obj as Procedure;
+                                var o = obj as Procedure;
                                 metadataProperties.DisplayProcedureProperties(o, node);
                                 this.EditSingle(o, o.Alias);
                             }
@@ -968,7 +969,7 @@ namespace EntitySpaces.AddIn
 
                         case NodeType.DOMAIN:
                             {
-                                Domain o = obj as Domain;
+                                var o = obj as Domain;
                                 metadataProperties.DisplayDomainProperties(o, node);
                                 this.EditSingle(o, o.Alias);
                             }
@@ -986,32 +987,24 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                TreeNode node = tree.GetNodeAt(e.X, e.Y) as TreeNode;
-                if ((node != null) && (node == tree.SelectedNode))
-                {
-                    try
-                    {
-                        BeforeNodeSelected(node);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(ex.Message, ex);
-                    }
-                    catch { }
-                }
+                if (!(tree.GetNodeAt(e.X, e.Y) is TreeNode node) || node != tree.SelectedNode) return;
+                    BeforeNodeSelected(node);
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
         }
 
         private void ToolBar_ButtonClick(object sender, ToolBarButtonClickEventArgs e)
         {
-            Cursor origCursor = this.Cursor;
+            var origCursor = this.Cursor;
 
             try
             {
                 this.Cursor = Cursors.WaitCursor;
 
-                object data = this.Grid.DataSource;
+                var data = this.Grid.DataSource;
 
                 try
                 {
@@ -1056,7 +1049,7 @@ namespace EntitySpaces.AddIn
         public object Meta = null;
     }
 
-    enum NodeType
+    internal enum NodeType
     {
         BLANK,
         ESMETADATAENGINE,
@@ -1078,14 +1071,13 @@ namespace EntitySpaces.AddIn
         INDEXES,
         INDEX,
         PRIMARYKEYS,
-        PRIMARKYKEY,
         PARAMETERS,
         PARAMETER,
         RESULTCOLUMNS,
         RESULTCOLUMN,
         DOMAINS,
         DOMAIN,
-        PROVIDERTYPE,
+        Providertype,
         PROVIDERTYPES
     }
 }

@@ -43,7 +43,7 @@
             this.ButtonExecute = new System.Windows.Forms.ToolStripButton();
             this.ButtonExecuteCache = new System.Windows.Forms.ToolStripButton();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.tree = new EntitySpaces.AddIn.ucTemplateControl();
+            this.tree = new EntitySpaces.AddIn.UcTemplateControl();
             this.templateMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenu_Execute = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenu_ExecuteCache = new System.Windows.Forms.ToolStripMenuItem();
@@ -276,7 +276,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton ButtonOpenFolder;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private EntitySpaces.AddIn.ucTemplateControl tree;
+        private EntitySpaces.AddIn.UcTemplateControl tree;
         private System.Windows.Forms.ContextMenuStrip templateMenu;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenu_Execute;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenu_ExecuteCache;

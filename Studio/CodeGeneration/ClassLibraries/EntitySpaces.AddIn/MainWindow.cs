@@ -1,34 +1,17 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
-
-using System.Net;
-using System.IO;
-using System.Management;
-
-using Microsoft.Win32;
-
-using EntitySpaces;
-using EntitySpaces.Common;
 using EntitySpaces.CodeGenerator;
 using EntitySpaces.MetadataEngine;
-
-using EntitySpaces.AddIn;
 
 namespace EntitySpaces.AddIn.ES2019
 {
   public partial class MainWindow : UserControl
   {
-    private Licensing licensing = new Licensing();
-    private object applicationObject;
-    private List<esUserControl> userControlCollection = new List<esUserControl>();
-    private esSettings settings = new esSettings();
-    internal string esVersion = "2024.1.4.0";
+    private object _applicationObject;
+    private readonly List<esUserControl> _userControlCollection = new List<esUserControl>();
+    private esSettings _settings = new esSettings();
 
     internal OnTemplateExecute OnTemplateExecuteCallback;
     internal OnTemplateCancel OnTemplateCancelCallback;
@@ -41,168 +24,52 @@ namespace EntitySpaces.AddIn.ES2019
       NotAConstructor();
     }
 
-    internal void NotAConstructor()
+    private void NotAConstructor()
     {
       try
       {
-        if (!this.DesignMode)
-        {
+          if (DesignMode) return;
+
           TemplateDisplaySurface.Initialize(this);
 
-          this.Settings = esSettings.Load();
-          esPlugIn plugin = new esPlugIn(settings);
+          Settings = esSettings.Load();
+          var plugin = new esPlugIn(_settings);
 
-          //#if TRIAL
-          //                    Licensing licensing = new Licensing();
-          //                    string id = licensing.getUniqueID("C");
+          ucSettings.Settings = Settings;
 
-          //                    bool canRunOffline = false;
+          _userControlCollection.Add(ucProjects);
+          _userControlCollection.Add(ucTemplates);
+          _userControlCollection.Add(ucMetadata);
+          _userControlCollection.Add(ucMappings);
 
-          //                    int result = licensing.ValidateLicense("trial", "b69e3783-9f56-47a7-82e0-6eee6d0779bf", System.Environment.MachineName, id, esVersion, GetProxySettings(Settings));
-
-          //                    if (1 != result)
-          //                    {
-          //                        result = licensing.RegisterLicense("trial", "b69e3783-9f56-47a7-82e0-6eee6d0779bf", System.Environment.MachineName, id, esVersion, GetProxySettings(Settings));
-          //                    }
-          //#else
-          //                    Crypto crypto = new Crypto();
-
-          //                    string id = licensing.getUniqueID("C");
-          //                    string serialNumber = "";
-          //                    bool canRunOffline = false;
-
-          //                    RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", true);
-          //                    if (key != null)
-          //                    {
-          //                        try
-          //                        {
-          //                            serialNumber = (string)key.GetValue("Serial_Number");
-          //                        }
-          //                        catch { }
-          //                    }
-
-
-          //                    string offlinePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-          //                    offlinePath += @"\EntitySpaces\ES2019\Interop.ADODBX.dll";
-
-          //                    // See if we have registered our license
-          //                    int result = licensing.ValidateLicense("developer", serialNumber, System.Environment.MachineName, id, plugin.esVersion, GetProxySettings(Settings));
-
-          //                    switch (result)
-          //                    {
-          //                        case 0:
-
-          //                            // Try Registering it ...
-          //                            int newResult = licensing.RegisterLicense("developer", serialNumber, System.Environment.MachineName, id, plugin.esVersion, GetProxySettings(Settings));
-
-          //                            if (newResult == 1)
-          //                            {
-          //                                licensing.CreateSerialNumber2Key(key, "Serial_Number2", id, false);
-          //                                result = 1;
-          //                            }
-          //                            else 
-          //                            {
-          //                                result = 0;
-          //                            }
-          //                            break;
-
-          //                        case 1:
-
-          //                            licensing.CreateSerialNumber2Key(key, "Serial_Number2", id, false);
-          //                            try
-          //                            {
-          //                                File.Delete(offlinePath);
-          //                            }
-          //                            catch { }
-
-          //                            break;
-
-          //                        case -1:
-
-          //                            bool isOffLine = false;
-          //                            DateTime offLineDate = DateTime.MinValue;
-          //                            if (licensing.ReadSerialNumber2Key(key, "Serial_Number2", id, out isOffLine, out offLineDate))
-          //                            {
-          //                                if (isOffLine)
-          //                                {
-          //                                    if (File.Exists(offlinePath))
-          //                                    {
-          //                                        DateTime fileDate = licensing.OpenOfflineFile(offlinePath);
-
-          //                                        if (DateTime.Now > offLineDate)
-          //                                        {
-          //                                            TimeSpan ts = DateTime.Now.Subtract(offLineDate);
-          //                                            if (ts.Days < licensing.DaysTheyCanRunOffline)
-          //                                            {
-          //                                                if (fileDate < DateTime.Now)
-          //                                                {
-          //                                                    canRunOffline = true;
-          //                                                }
-          //                                            }
-          //                                        }
-          //                                    }
-          //                                }
-          //                                else
-          //                                {
-          //                                    licensing.CreateSerialNumber2Key(key, "Serial_Number2", id, true);
-          //                                    licensing.CreateOfflineFile(offlinePath);
-          //                                    canRunOffline = true;
-          //                                }
-          //                            }
-          //                            break;
-          //                    }
-          //#endif 
-
-          this.ucSettings.Settings = this.Settings;
-
-          //if (result == 1 || (canRunOffline && result == -1))
-          //{
-          userControlCollection.Add(ucProjects);
-          userControlCollection.Add(ucTemplates);
-          userControlCollection.Add(ucMetadata);
-          userControlCollection.Add(ucMappings);
-
-          this.ucProjects.MainWindow = this;
-          this.ucTemplates.MainWindow = this;
-          this.ucMetadata.MainWindow = this;
-          this.ucMappings.MainWindow = this;
-          //}
-          //else
-          //{
-          //    this.tabControl.TabPages.Remove(this.tabProjects);
-          //    this.tabControl.TabPages.Remove(this.tabMetadata);
-          //    this.tabControl.TabPages.Remove(this.tabProjects);
-          //    this.tabControl.TabPages.Remove(this.tabTemplates);
-          //    this.tabControl.TabPages.Remove(this.tabLanguageMappings);
-          //}
-        }
+          ucProjects.MainWindow = this;
+          ucTemplates.MainWindow = this;
+          ucMetadata.MainWindow = this;
+          ucMappings.MainWindow = this;
       }
       catch (Exception ex)
       {
-        this.ShowError(ex);
+        ShowError(ex);
       }
       finally
       {
-        //userControlCollection.Add(ucWhatsNew);
-        //this.ucWhatsNew.MainWindow = this;
-
-        userControlCollection.Add(ucSettings);
-        this.ucSettings.MainWindow = this;
+        _userControlCollection.Add(ucSettings);
+        ucSettings.MainWindow = this;
       }
     }
 
     public object ApplicationObject
     {
-      get { return applicationObject; }
-      set { applicationObject = value; }
+      get { return _applicationObject; }
+      set { _applicationObject = value; }
     }
 
     public esSettings Settings
     {
-      get { return settings; }
+      get { return _settings; }
       set
       {
-        settings = value;
+        _settings = value;
       }
     }
 
@@ -212,14 +79,14 @@ namespace EntitySpaces.AddIn.ES2019
       {
         Root.UnLoadPlugins();
 
-        foreach (esUserControl control in this.userControlCollection)
+        foreach (var control in _userControlCollection)
         {
           control.OnSettingsChanged();
         }
       }
       catch (Exception ex)
       {
-        this.ShowError(ex);
+        ShowError(ex);
       }
     }
 
@@ -227,10 +94,10 @@ namespace EntitySpaces.AddIn.ES2019
     {
       try
       {
-        string errorText = string.Empty;
-        string callStack = string.Empty;
+        var errorText = string.Empty;
+        var callStack = string.Empty;
 
-        CompilerException cex = ex as CompilerException;
+        var cex = ex as CompilerException;
 
         if (cex != null)
         {
@@ -243,7 +110,7 @@ namespace EntitySpaces.AddIn.ES2019
         }
         else
         {
-          Exception rootCause = ex;
+          var rootCause = ex;
 
           while (rootCause.InnerException != null)
           {
@@ -255,16 +122,16 @@ namespace EntitySpaces.AddIn.ES2019
           errorText = rootCause.Message;
         }
 
-        this.splitContainer.Panel2Collapsed = false;
-        this.pictureBoxError.Image = Resource.error;
-        this.textBoxError.Text = errorText;
-        this.textBoxError.Text += Environment.NewLine + Environment.NewLine;
-        this.textBoxError.Text += ex.StackTrace;
-        this.textBoxError.ScrollToCaret();
+        splitContainer.Panel2Collapsed = false;
+        pictureBoxError.Image = Resource.error;
+        textBoxError.Text = errorText;
+        textBoxError.Text += Environment.NewLine + Environment.NewLine;
+        textBoxError.Text += ex.StackTrace;
+        textBoxError.ScrollToCaret();
       }
       catch (Exception exx)
       {
-        this.ShowError(exx);
+        ShowError(exx);
       }
     }
 
@@ -272,82 +139,68 @@ namespace EntitySpaces.AddIn.ES2019
     {
       try
       {
-        this.splitContainer.Panel2Collapsed = true;
-        this.textBoxError.Text = string.Empty;
+        splitContainer.Panel2Collapsed = true;
+        textBoxError.Text = string.Empty;
       }
       catch (Exception ex)
       {
-        this.ShowError(ex);
+        ShowError(ex);
       }
     }
 
     public void ShowStatusMessage(string message)
     {
-      this.splitContainer.Panel2Collapsed = false;
-      this.pictureBoxError.Image = Resource.info;
+      splitContainer.Panel2Collapsed = false;
+      pictureBoxError.Image = Resource.info;
 
-      this.textBoxError.Text = message;
-      this.textBoxError.Text += Environment.NewLine + Environment.NewLine;
-      this.textBoxError.ScrollToCaret();
+      textBoxError.Text = message;
+      textBoxError.Text += Environment.NewLine + Environment.NewLine;
+      textBoxError.ScrollToCaret();
     }
 
     public void ShowTemplateUIControl()
     {
       try
       {
-        this.splitContainerTabControl.Panel1Collapsed = true;
-        this.splitContainerTabControl.Panel2Collapsed = false;
+        splitContainerTabControl.Panel1Collapsed = true;
+        splitContainerTabControl.Panel2Collapsed = false;
       }
       catch (Exception ex)
       {
-        this.ShowError(ex);
+        ShowError(ex);
       }
     }
 
     private void buttonExecuteTemplateOk_Click(object sender, EventArgs e)
     {
-      Cursor origCursor = this.Cursor;
+      var origCursor = Cursor;
 
       try
       {
-        if (this.OnTemplateExecuteCallback == null) return;
+        if (OnTemplateExecuteCallback == null) return;
 
-        this.HideErrorOrStatusMessage();
+        //HideErrorOrStatusMessage();
 
-        //#if TRIAL
-        //                Licensing license = new Licensing();
-        //                string id = license.getUniqueID("C");
+        Cursor = Cursors.WaitCursor;
 
-        //                if (1 != licensing.ValidateLicense("trial", "b69e3783-9f56-47a7-82e0-6eee6d0779bf", System.Environment.MachineName, id, "2024.1.4.0", GetProxySettings(Settings)))
-        //                {
-        //                    return;
-        //                }
-        //#else
-        //                Licensing licensing = new Licensing();
-        //                licensing.ReplaceMeLater("developer", esVersion, "Serial_Number", "Serial_Number2", "Interop.ADODBX.dll", GetProxySettings(Settings));
-        //#endif
+        if (!OnTemplateExecuteCallback(CurrentTemplateDisplaySurface)) return;
+        
+        tabControlTemplateUI.TabPages.Clear();
 
-        this.Cursor = Cursors.WaitCursor;
+        splitContainerTabControl.Panel1Collapsed = false;
+        splitContainerTabControl.Panel2Collapsed = true;
 
-        if (this.OnTemplateExecuteCallback(this.CurrentTemplateDisplaySurface))
-        {
-          this.tabControlTemplateUI.TabPages.Clear();
-
-          this.splitContainerTabControl.Panel1Collapsed = false;
-          this.splitContainerTabControl.Panel2Collapsed = true;
-
-          OnTemplateExecuteCallback = null;
-          OnTemplateCancelCallback = null;
-          CurrentTemplateDisplaySurface = null;
-        }
+        OnTemplateExecuteCallback = null;
+        OnTemplateCancelCallback = null;
+        CurrentTemplateDisplaySurface = null;
       }
       catch (Exception ex)
       {
-        this.ShowError(ex);
+        ShowError(ex);
       }
       finally
       {
-        this.Cursor = origCursor;
+        Cursor = origCursor;
       }
     }
 
@@ -355,20 +208,20 @@ namespace EntitySpaces.AddIn.ES2019
     {
       try
       {
-        if (this.OnTemplateExecuteCallback == null) return;
+        if (OnTemplateExecuteCallback == null) return;
 
-        this.OnTemplateCancelCallback(this.CurrentTemplateDisplaySurface);
+        OnTemplateCancelCallback(CurrentTemplateDisplaySurface);
 
-        this.HideErrorOrStatusMessage();
+        //HideErrorOrStatusMessage();
 
-        this.tabControlTemplateUI.TabPages.Clear();
+        tabControlTemplateUI.TabPages.Clear();
 
-        this.splitContainerTabControl.Panel1Collapsed = false;
-        this.splitContainerTabControl.Panel2Collapsed = true;
+        splitContainerTabControl.Panel1Collapsed = false;
+        splitContainerTabControl.Panel2Collapsed = true;
       }
       catch (Exception ex)
       {
-        this.ShowError(ex);
+        ShowError(ex);
       }
       finally
       {
@@ -382,11 +235,11 @@ namespace EntitySpaces.AddIn.ES2019
     {
       try
       {
-        this.splitContainer.Panel2Collapsed = true;
+        splitContainer.Panel2Collapsed = true;
       }
       catch (Exception ex)
       {
-        this.ShowError(ex);
+        ShowError(ex);
       }
     }
 
@@ -394,29 +247,34 @@ namespace EntitySpaces.AddIn.ES2019
     {
       try
       {
-        this.HideErrorOrStatusMessage();
+        HideErrorOrStatusMessage();
 
-        TabPage tabPage = sender as TabPage;
+        var tabPage = sender as TabPage;
 
-        if (tabPage.Name != "Projects")
+        if (tabPage?.Name != "Projects")
         {
-          this.ucProjects.PromptForSave();
+          ucProjects.PromptForSave();
         }
       }
-      catch { }
+      catch
+      {
+          // ignored
+      }
     }
 
     internal static ProxySettings GetProxySettings(esSettings settings)
     {
-      ProxySettings proxy = new ProxySettings();
-      proxy.UseProxy = settings.LicenseProxyEnable;
-      if (proxy.UseProxy)
+      var proxy = new ProxySettings
       {
-        proxy.Url = settings.LicenseProxyUrl;
-        proxy.UserName = settings.LicenseProxyUserName;
-        proxy.Password = settings.LicenseProxyPassword;
-        proxy.DomainName = settings.LicenseProxyDomainName;
-      }
+          UseProxy = settings.LicenseProxyEnable
+      };
+
+      if (!proxy.UseProxy) return proxy;
+      
+      proxy.Url = settings.LicenseProxyUrl;
+      proxy.UserName = settings.LicenseProxyUserName;
+      proxy.Password = settings.LicenseProxyPassword;
+      proxy.DomainName = settings.LicenseProxyDomainName;
 
       return proxy;
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Web;
@@ -13,39 +14,28 @@ namespace EntitySpaces
 {
   internal class Licensing
   {
-    private int daysTheyCanRunOffline = 3; // default
-    private Guid magicCookie = Guid.NewGuid();
+      private Guid _magicCookie = Guid.NewGuid();
 
-    internal Licensing()
+    private int DaysTheyCanRunOffline { get; set; } = 3;
+
+    private void CreateSerialNumber2Key(RegistryKey key, string keyName, string id, bool offline)
     {
+      var crypto = new Crypto();
 
-    }
-
-    internal int DaysTheyCanRunOffline
-    {
-      get
-      {
-        return daysTheyCanRunOffline;
-      }
-    }
-
-    internal void CreateSerialNumber2Key(RegistryKey key, string keyName, string id, bool offline)
-    {
-      Crypto crypto = new Crypto();
-
-      string offlineDate = offline ? DateTime.Now.ToString() : DateTime.MinValue.ToString();
+      // ReSharper disable once SpecifyACultureInStringConversionExplicitly
+      var offlineDate = offline ? DateTime.Now.ToString() : DateTime.MinValue.ToString();
 
       key.SetValue
           (keyName,
               crypto.EncryptStringAES
               (
-                  Guid.NewGuid().ToString() + "|" +
-                  DateTime.Now.ToString() + "|" +
-                  Guid.NewGuid().ToString() + "|" +
+                  Guid.NewGuid() + "|" +
+                  DateTime.Now.ToString(CultureInfo.InvariantCulture) + "|" +
+                  Guid.NewGuid() + "|" +
                   id + "|" +
-                  magicCookie.ToString() + "|" +
-                  daysTheyCanRunOffline.ToString() + "|" +
-                  offline.ToString() + "|" +
+                  _magicCookie + "|" +
+                  DaysTheyCanRunOffline.ToString() + "|" +
+                  offline + "|" +
                   offlineDate,
                   id
               )
@@ -57,24 +47,24 @@ namespace EntitySpaces
       isOffline = false;
       offLineDate = DateTime.MinValue;
 
-      bool canRunOffline = false;
+      var canRunOffline = false;
 
-      string serialNumber2 = (string)key.GetValue(keyName);
+      var serialNumber2 = (string)key.GetValue(keyName);
 
       if (serialNumber2 != null)
       {
-        Crypto crypto = new Crypto();
-        string data = crypto.DecryptStringAES(serialNumber2, id);
-        string[] datas = data.Split('|');
+        var crypto = new Crypto();
+        var data = crypto.DecryptStringAES(serialNumber2, id);
+        var datas = data.Split('|');
 
         if (datas[3] != id) throw new Exception("");
 
-        magicCookie = new Guid(datas[4]);
+        _magicCookie = new Guid(datas[4]);
 
-        int daysOff = 3;
+        var daysOff = 3;
         if (int.TryParse(datas[5], out daysOff))
         {
-          daysTheyCanRunOffline = daysOff;
+          DaysTheyCanRunOffline = daysOff;
         }
 
         isOffline = bool.Parse(datas[6]);
@@ -89,29 +79,29 @@ namespace EntitySpaces
 
     internal DateTime CreateOfflineFile(string offlinePath)
     {
-      DateTime dt = DateTime.MinValue;
+      var dt = DateTime.MinValue;
 
-      using (FileStream stream = File.Create(offlinePath))
+      using (var stream = File.Create(offlinePath))
       {
         dt = File.GetCreationTime(offlinePath);
       }
 
-      using (FileStream stream = File.OpenWrite(offlinePath))
+      using (var stream = File.OpenWrite(offlinePath))
       {
-        Crypto crypto = new Crypto();
+        var crypto = new Crypto();
 
-        string data = crypto.EncryptStringAES
+        var data = crypto.EncryptStringAES
             (
               Guid.NewGuid().ToString() + "|" +
               Guid.NewGuid().ToString() + "|" +
               dt.ToString() + "|" +
               Guid.NewGuid().ToString() + "|" +
               Guid.NewGuid().ToString() + "|" +
-              magicCookie.ToString(),
+              _magicCookie.ToString(),
               getUniqueID("C")
             );
 
-        byte[] info = new UTF8Encoding(true).GetBytes(data);
+        var info = new UTF8Encoding(true).GetBytes(data);
 
         // Add some information to the file.
         stream.Write(info, 0, info.Length);
@@ -122,21 +112,21 @@ namespace EntitySpaces
 
     internal DateTime OpenOfflineFile(string offlinePath)
     {
-      DateTime dt = DateTime.MaxValue;
+      var dt = DateTime.MaxValue;
 
       if (File.Exists(offlinePath))
       {
-        byte[] b = File.ReadAllBytes(offlinePath);
+        var b = File.ReadAllBytes(offlinePath);
 
-        Crypto crypto = new Crypto();
+        var crypto = new Crypto();
 
-        string data = new UTF8Encoding(true).GetString(b);
+        var data = new UTF8Encoding(true).GetString(b);
 
         data = crypto.DecryptStringAES(data, getUniqueID("C"));
-        string[] datas = data.Split('|');
+        var datas = data.Split('|');
 
         DateTime.TryParse(datas[2], out dt);
-        DateTime fileDate = File.GetCreationTime(offlinePath);
+        var fileDate = File.GetCreationTime(offlinePath);
 
         if (dt.ToString() != fileDate.ToString())
         {
@@ -150,8 +140,8 @@ namespace EntitySpaces
 
         try
         {
-          Guid fileMagicKey = new Guid(datas[5]);
-          if (fileMagicKey != magicCookie)
+          var fileMagicKey = new Guid(datas[5]);
+          if (fileMagicKey != _magicCookie)
           {
             dt = DateTime.MaxValue;
           }
@@ -164,15 +154,15 @@ namespace EntitySpaces
 
     internal int ValidateLicense(string product, string serialNumber, string machineName, string uniqueHardwareIdentifier, string version, ProxySettings settings)
     {
-      int result = 0; // normal failure as a default
+      var result = 0; // normal failure as a default
 
       try
       {
-        StringBuilder post = new StringBuilder();
+        var post = new StringBuilder();
 
-        Random seed = new Random();
-        Random r = new Random(seed.Next());
-        byte playback = (byte)r.Next(250);
+        var seed = new Random();
+        var r = new Random(seed.Next());
+        var playback = (byte)r.Next(250);
 
         post.AppendFormat("Product={0}", Uri.EscapeDataString(product.ToString()));
         post.AppendFormat("&SerialNumber={0}", Uri.EscapeDataString(serialNumber.ToString()));
@@ -181,14 +171,14 @@ namespace EntitySpaces
         post.AppendFormat("&Version={0}", Uri.EscapeDataString(version));
         post.AppendFormat("&Playback={0}", Uri.EscapeDataString(playback.ToString()));
 
-        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(@"https://api.entityspaces.net/VerifyActivation2.ashx");
+        var req = (HttpWebRequest)WebRequest.Create(@"https://api.entityspaces.net/VerifyActivation2.ashx");
         // HttpWebRequest req = (HttpWebRequest)WebRequest.Create(@"http://localhost/Licensing/VerifyActivation2.ashx");
 
         if (settings.UseProxy)
         {
           if (!string.IsNullOrEmpty(settings.UserName))
           {
-            NetworkCredential creds = new NetworkCredential(settings.UserName, settings.Password);
+            var creds = new NetworkCredential(settings.UserName, settings.Password);
             if (!string.IsNullOrEmpty(settings.DomainName))
             {
               creds.Domain = settings.DomainName;
@@ -204,21 +194,21 @@ namespace EntitySpaces
         req.Method = WebRequestMethods.Http.Post;
         req.ContentType = "application/x-www-form-urlencoded";
         req.Timeout = 10000;
-        byte[] data = System.Text.Encoding.UTF8.GetBytes(post.ToString());
+        var data = System.Text.Encoding.UTF8.GetBytes(post.ToString());
         req.ContentLength = data.Length;
 
-        string responseFromServer = "";
+        var responseFromServer = "";
 
-        using (Stream dataStream = req.GetRequestStream())
+        using (var dataStream = req.GetRequestStream())
         {
           dataStream.Write(data, 0, data.Length);
           dataStream.Close();
 
-          using (WebResponse response = req.GetResponse())
+          using (var response = req.GetResponse())
           {
-            using (Stream stream = response.GetResponseStream())
+            using (var stream = response.GetResponseStream())
             {
-              using (StreamReader reader = new StreamReader(stream))
+              using (var reader = new StreamReader(stream))
               {
                 responseFromServer = reader.ReadToEnd();
               }
@@ -226,9 +216,9 @@ namespace EntitySpaces
           }
         }
 
-        byte[] responseData = Convert.FromBase64String(responseFromServer);
-        byte offset = responseData[600];
-        byte valid = responseData[offset];
+        var responseData = Convert.FromBase64String(responseFromServer);
+        var offset = responseData[600];
+        var valid = responseData[offset];
 
         if (valid % 2 == 0)
         {
@@ -239,10 +229,10 @@ namespace EntitySpaces
 
         if (result == 1)
         {
-          daysTheyCanRunOffline = responseData[offset + 1];
+          DaysTheyCanRunOffline = responseData[offset + 1];
         }
       }
-      catch (Exception ex)
+      catch
       {
         result = -1;
       }
@@ -252,15 +242,15 @@ namespace EntitySpaces
 
     internal int RegisterLicense(string product, string serialNumber, string machineName, string uniqueHardwareIdentifier, string version, ProxySettings settings)
     {
-      int result = 0; // normal failure as a default
+      var result = 0; // normal failure as a default
 
       try
       {
-        StringBuilder post = new StringBuilder();
+        var post = new StringBuilder();
 
-        Random seed = new Random();
-        Random r = new Random(seed.Next());
-        byte playback = (byte)r.Next(250);
+        var seed = new Random();
+        var r = new Random(seed.Next());
+        var playback = (byte)r.Next(250);
 
         post.AppendFormat("Product={0}", Uri.EscapeDataString(product.ToString()));
         post.AppendFormat("&SerialNumber={0}", Uri.EscapeDataString(serialNumber.ToString()));
@@ -269,14 +259,14 @@ namespace EntitySpaces
         post.AppendFormat("&Version={0}", Uri.EscapeDataString(version));
         post.AppendFormat("&Playback={0}", Uri.EscapeDataString(playback.ToString()));
 
-        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(@"https://api.entityspaces.net/AddActivation2.ashx");
+        var req = (HttpWebRequest)WebRequest.Create(@"https://api.entityspaces.net/AddActivation2.ashx");
         // HttpWebRequest req = (HttpWebRequest)WebRequest.Create(@"http://localhost/Licensing/AddActivation2.ashx");
 
         if (settings.UseProxy)
         {
           if (!string.IsNullOrEmpty(settings.UserName))
           {
-            NetworkCredential creds = new NetworkCredential(settings.UserName, settings.Password);
+            var creds = new NetworkCredential(settings.UserName, settings.Password);
             if (!string.IsNullOrEmpty(settings.DomainName))
             {
               creds.Domain = settings.DomainName;
@@ -292,21 +282,21 @@ namespace EntitySpaces
         req.Method = WebRequestMethods.Http.Post;
         req.ContentType = "application/x-www-form-urlencoded";
         req.Timeout = 10000;
-        byte[] data = System.Text.Encoding.UTF8.GetBytes(post.ToString());
+        var data = System.Text.Encoding.UTF8.GetBytes(post.ToString());
         req.ContentLength = data.Length;
 
-        string responseFromServer = "";
+        var responseFromServer = "";
 
-        using (Stream dataStream = req.GetRequestStream())
+        using (var dataStream = req.GetRequestStream())
         {
           dataStream.Write(data, 0, data.Length);
           dataStream.Close();
 
-          using (WebResponse response = req.GetResponse())
+          using (var response = req.GetResponse())
           {
-            using (Stream stream = response.GetResponseStream())
+            using (var stream = response.GetResponseStream())
             {
-              using (StreamReader reader = new StreamReader(stream))
+              using (var reader = new StreamReader(stream))
               {
                 responseFromServer = reader.ReadToEnd();
               }
@@ -314,9 +304,9 @@ namespace EntitySpaces
           }
         }
 
-        byte[] responseData = Convert.FromBase64String(responseFromServer);
-        byte offset = responseData[600];
-        byte valid = responseData[offset];
+        var responseData = Convert.FromBase64String(responseFromServer);
+        var offset = responseData[600];
+        var valid = responseData[offset];
 
         if (valid % 2 == 0)
         {
@@ -327,7 +317,7 @@ namespace EntitySpaces
 
         if (result == 1)
         {
-          daysTheyCanRunOffline = responseData[offset + 1];
+          DaysTheyCanRunOffline = responseData[offset + 1];
         }
       }
       catch (Exception)
@@ -340,19 +330,19 @@ namespace EntitySpaces
 
     internal void ReplaceMeLater(string product, string esVersion, string s1, string s2, string offlineFile, ProxySettings settings)
     {
-      bool passed = false;
+      var passed = false;
 
       try
       {
-        Crypto crypto = new Crypto();
+        var crypto = new Crypto();
 
-        string id = this.getUniqueID("C");
-        string serialNumber = "";
-        bool canRunOffline = false;
-        bool isAllSecurityOkay = true;
+        var id = this.getUniqueID("C");
+        var serialNumber = "";
+        var canRunOffline = false;
+        var isAllSecurityOkay = true;
 
 
-        RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", true);
+        var key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", true);
         if (key != null)
         {
           try
@@ -362,18 +352,18 @@ namespace EntitySpaces
           catch { }
         }
 
-        string offlinePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+        var offlinePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
         offlinePath += @"\EntitySpaces\ES2019\" + offlineFile; //Interop.ADODBX.dll";
 
         // See if we have registered our license
-        int result = this.ValidateLicense(product, serialNumber, System.Environment.MachineName, id, esVersion, settings);
+        var result = this.ValidateLicense(product, serialNumber, System.Environment.MachineName, id, esVersion, settings);
 
         switch (result)
         {
           case 0:
 
             // Try Registering it ...
-            int newResult = this.RegisterLicense(product, serialNumber, System.Environment.MachineName, id, esVersion, settings);
+            var newResult = this.RegisterLicense(product, serialNumber, System.Environment.MachineName, id, esVersion, settings);
 
             if (newResult == 1)
             {
@@ -399,19 +389,19 @@ namespace EntitySpaces
 
           case -1:
 
-            bool isOffLine = false;
-            DateTime offLineDate = DateTime.MinValue;
+            var isOffLine = false;
+            var offLineDate = DateTime.MinValue;
             if (this.ReadSerialNumber2Key(key, s2, id, out isOffLine, out offLineDate))
             {
               if (isOffLine)
               {
                 if (File.Exists(offlinePath))
                 {
-                  DateTime fileDate = this.OpenOfflineFile(offlinePath);
+                  var fileDate = this.OpenOfflineFile(offlinePath);
 
                   if (DateTime.Now > offLineDate)
                   {
-                    TimeSpan ts = DateTime.Now.Subtract(offLineDate);
+                    var ts = DateTime.Now.Subtract(offLineDate);
                     if (ts.Days < this.DaysTheyCanRunOffline)
                     {
                       if (fileDate < DateTime.Now)
@@ -453,7 +443,7 @@ namespace EntitySpaces
       if (drive == string.Empty)
       {
         //Find first drive
-        foreach (DriveInfo compDrive in DriveInfo.GetDrives())
+        foreach (var compDrive in DriveInfo.GetDrives())
         {
           if (compDrive.IsReady)
           {
@@ -468,8 +458,8 @@ namespace EntitySpaces
         drive = drive.Substring(0, drive.Length - 2);
       }
 
-      string volumeSerial = getVolumeSerial(drive);
-      string cpuID = getCPUID();
+      var volumeSerial = getVolumeSerial(drive);
+      var cpuID = getCPUID();
 
       //Mix them up and remove some useless 0's
       return cpuID.Substring(13) + cpuID.Substring(1, 4) + volumeSerial + cpuID.Substring(4, 4);
@@ -477,10 +467,10 @@ namespace EntitySpaces
 
     private string getVolumeSerial(string drive)
     {
-      ManagementObject disk = new ManagementObject(@"win32_logicaldisk.deviceid=""" + drive + @":""");
+      var disk = new ManagementObject(@"win32_logicaldisk.deviceid=""" + drive + @":""");
       disk.Get();
 
-      string volumeSerial = disk["VolumeSerialNumber"].ToString();
+      var volumeSerial = disk["VolumeSerialNumber"].ToString();
       disk.Dispose();
 
       return volumeSerial;
@@ -488,9 +478,9 @@ namespace EntitySpaces
 
     private string getCPUID()
     {
-      string cpuInfo = "";
-      ManagementClass managClass = new ManagementClass("win32_processor");
-      ManagementObjectCollection managCollec = managClass.GetInstances();
+      var cpuInfo = "";
+      var managClass = new ManagementClass("win32_processor");
+      var managCollec = managClass.GetInstances();
 
       foreach (ManagementObject managObj in managCollec)
       {
@@ -517,26 +507,26 @@ namespace EntitySpaces
 
     public void Save()
     {
-      string path = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+      var path = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
       path += @"\EntitySpaces\ES2019\esProfileSettings.xml";
 
-      string xml = string.Empty;
+      var xml = string.Empty;
 
-      using (MemoryStream stream = new MemoryStream())
+      using (var stream = new MemoryStream())
       {
-        XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+        var ns = new XmlSerializerNamespaces();
         ns.Add("", "");
 
-        XmlSerializer serializer = new XmlSerializer(typeof(ProxySettings));
+        var serializer = new XmlSerializer(typeof(ProxySettings));
         serializer.Serialize(stream, this, ns);
 
-        xml = ASCIIEncoding.UTF8.GetString(stream.ToArray());
+        xml = Encoding.UTF8.GetString(stream.ToArray());
       }
 
-      XmlDocument doc = new XmlDocument();
+      var doc = new XmlDocument();
       doc.LoadXml(xml);
 
-      XmlAttribute attr = doc.CreateAttribute("Version");
+      var attr = doc.CreateAttribute("Version");
       attr.Value = "2024.1.4.0";
 
       doc.DocumentElement.Attributes.Append(attr);
@@ -547,14 +537,14 @@ namespace EntitySpaces
     {
       ProxySettings settings = null;
 
-      string path = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+      var path = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
       path += @"\EntitySpaces\ES2019\esProfileSettings.xml";
 
       try
       {
         using (TextReader rdr = new StreamReader(path))
         {
-          XmlSerializer serializer = new XmlSerializer(typeof(ProxySettings));
+          var serializer = new XmlSerializer(typeof(ProxySettings));
           settings = (ProxySettings)serializer.Deserialize(rdr);
           rdr.Close();
         }

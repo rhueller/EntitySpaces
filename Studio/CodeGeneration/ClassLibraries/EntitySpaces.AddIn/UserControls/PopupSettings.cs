@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-
 using EntitySpaces.MetadataEngine;
 
 namespace EntitySpaces.AddIn
@@ -19,20 +13,13 @@ namespace EntitySpaces.AddIn
 
         private void PopupSettings_Load(object sender, EventArgs e)
         {
-            ucSettings1.PopulateUI();
+            ucSettings1.PopulateUi();
         }
 
         public esSettings Settings 
         {
-            get
-            {
-                return this.ucSettings1.Settings;
-            }
-
-            set
-            {
-                this.ucSettings1.Settings = value.Clone();
-            }
+            get => ucSettings1.Settings;
+            set => ucSettings1.Settings = value.Clone();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

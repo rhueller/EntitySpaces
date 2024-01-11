@@ -1,99 +1,102 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Xml;
 using System.Windows.Forms;
-
+using EntitySpaces.CodeGenerator;
+using EntitySpaces.Common;
+using EntitySpaces.MetadataEngine;
 using Microsoft.Win32;
 
-using EntitySpaces.Common;
-using EntitySpaces.AddIn.TemplateUI;
-using EntitySpaces.CodeGenerator;
-using EntitySpaces.MetadataEngine;
-
-namespace EntitySpaces.AddIn
+namespace EntitySpaces.AddIn.UserControls
 {
-    internal partial class ucProjects : esUserControl
+    internal partial class UcProjects : esUserControl
     {
-        private string projectName;
-        private esProject project;
-        private MostRecentlyUsedList mru;
-        private bool isDirty = false;
+        private string _projectName;
+        private EsProject _project;
+        private MostRecentlyUsedList _mru;
+        private bool _isDirty;
 
-        public ucProjects()
+        public UcProjects()
         {
             try
             {
                 InitializeComponent();
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
         }
 
         private void ucProjects_Load(object sender, EventArgs e)
         {
             try
             {
-                if (!DesignMode)
+                if (DesignMode) return;
+                
+                _mru = new MostRecentlyUsedList();
+
+                tree.LoadTemplates(null, null, Settings);
+
+                try
                 {
-                    this.mru = new MostRecentlyUsedList();
-
-                    this.tree.LoadTemplates(null, null, Settings);
-
-                    try
-                    {
-                        this.projectTree.SelectedNode = this.projectTree.Nodes[0];
-                    }
-                    catch { }
-
-                    LoadMruList();
+                    projectTree.SelectedNode = projectTree.Nodes[0];
                 }
+                catch
+                {
+                    // ignored
+                }
+
+                LoadMruList();
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
         private void LoadMruList()
         {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", false))
+            using (var key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", false))
             {
                 if (key == null) return;
 
-                mru.Load(key, "Project_");
+                _mru.Load(key, "Project_");
                 PopulateMruMenu();
             }
         }
 
         private void SaveMruList()
         {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", true))
+            using (var key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", true))
             {
                 if (key == null) return;
 
-                mru.Save(key, "Project_");
+                _mru.Save(key, "Project_");
                 PopulateMruMenu();
             }
         }
 
         private void PopulateMruMenu()
         {
-            this.menuMRU.Items.Clear();
+            menuMRU.Items.Clear();
 
-            foreach (string project in mru)
+            foreach (var project in _mru)
             {
                 if (project == null) continue;
 
                 try
                 {
-                    FileInfo info = new FileInfo(project);
-                    ToolStripItem item = this.menuMRU.Items.Add(info.Name);
+                    var info = new FileInfo(project);
+                    var item = menuMRU.Items.Add(info.Name);
                     item.ToolTipText = project;
                     item.Image = Resource.check;
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
             }
         }
 
@@ -106,7 +109,7 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                this.MainWindow.HideErrorOrStatusMessage();
+                MainWindow.HideErrorOrStatusMessage();
 
                 splitContainer.Panel1Collapsed = true;
                 splitContainer.Panel2Collapsed = false;
@@ -115,38 +118,38 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
         private void buttonRecordOk_Click(object sender, EventArgs e)
         {
-            Cursor origCursor = this.Cursor;
+            var origCursor = Cursor;
 
             try
             {
-                this.Cursor = Cursors.WaitCursor;
+                Cursor = Cursors.WaitCursor;
 
-                this.MainWindow.HideErrorOrStatusMessage();
+                MainWindow.HideErrorOrStatusMessage();
 
-                TemplateDisplaySurface templateDisplaySurface = new TemplateDisplaySurface();
+                var templateDisplaySurface = new TemplateDisplaySurface();
 
-                Template template = this.tree.SelectedNode.Tag as Template;
-                templateDisplaySurface.DisplayTemplateUI(false, null, this.Settings, template, OnExecute, OnCancel);
+                var template = tree.SelectedNode.Tag as Template;
+                templateDisplaySurface.DisplayTemplateUi(false, null, Settings, template, OnExecute, OnCancel);
 
                 splitContainer.Panel1Collapsed = false;
                 splitContainer.Panel2Collapsed = true;
-                isDirty = true;
+                _isDirty = true;
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
             finally
             {
                 EnableToolbarButtons(true);
 
-                this.Cursor = origCursor;
+                Cursor = origCursor;
             }
         }
 
@@ -154,52 +157,49 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                this.MainWindow.HideErrorOrStatusMessage();
+                MainWindow.HideErrorOrStatusMessage();
 
                 splitContainer.Panel1Collapsed = false;
                 splitContainer.Panel2Collapsed = true;
 
                 EnableToolbarButtons(true);
-                isDirty = false;
+                _isDirty = false;
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
         private void EnableToolbarButtons(bool enable)
         {
-            this.ButtonProjectOpen.Enabled = enable;
+            ButtonProjectOpen.Enabled = enable;
 
-            if (this.projectName != null)
+            if (_projectName != null)
             {
-                this.ButtonSave.Enabled = enable;
+                ButtonSave.Enabled = enable;
             }
-            this.ButtonSaveAs.Enabled = enable;
-            this.ButtonExecute.Enabled = enable;
-            this.ButtonClear.Enabled = enable;
-            this.ButtonOpenFolder.Enabled = enable;
-            this.ButtonMoveDown.Enabled = enable;
-            this.ButtonMoveUp.Enabled = enable;
+            ButtonSaveAs.Enabled = enable;
+            ButtonExecute.Enabled = enable;
+            ButtonClear.Enabled = enable;
+            ButtonOpenFolder.Enabled = enable;
+            ButtonMoveDown.Enabled = enable;
+            ButtonMoveUp.Enabled = enable;
 
-            if (enable == true)
+            if (enable)
             {
-                TreeNode node = this.projectTree.SelectedNode;
+                var node = projectTree.SelectedNode;
 
-                if (node != null)
+                if (node == null) return;
+
+                if (node.Tag is ProjectNodeData data)
                 {
-                    ProjectNodeData data = node.Tag as ProjectNodeData;
-
-                    if (data != null)
-                    {
-                        this.ButtonRecord.Enabled = enable;
-                    }
+                    ButtonRecord.Enabled = true;
                 }
             }
             else
             {
-                this.ButtonRecord.Enabled = enable;
+                ButtonRecord.Enabled = false;
             }
         }
 
@@ -207,34 +207,34 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                this.MainWindow.HideErrorOrStatusMessage();
+                MainWindow.HideErrorOrStatusMessage();
 
                 if (e.Button == MouseButtons.Right)
                 {
-                    TreeNode node = this.projectTree.GetNodeAt(e.X, e.Y);
+                    var node = projectTree.GetNodeAt(e.X, e.Y);
 
                     if (node != null)
                     {
-                        this.projectTree.SelectedNode = node;
+                        projectTree.SelectedNode = node;
                     }
                 }
                 else
                 {
                     if (e.Node != null && e.Node.ImageIndex == 2)
                     {
-                        this.ButtonRecord.Enabled = false;
+                        ButtonRecord.Enabled = false;
                     }
                     else
                     {
-                        this.ButtonRecord.Enabled = true;
+                        ButtonRecord.Enabled = true;
                     }
 
-                    this.ButtonExecute.Enabled = true;
+                    ButtonExecute.Enabled = true;
                 }
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
@@ -242,24 +242,15 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                TreeNode node = e.Node;
+                var node = e.Node;
 
-                if (node != null)
-                {
-                    if (node.ImageIndex == 2)
-                    {
-                        this.ButtonRecord.Enabled = false;
-                    }
-                    else
-                    {
-                        this.ButtonRecord.Enabled = true;
-                    }
-                }
+                if (node == null) return;
+                ButtonRecord.Enabled = node.ImageIndex != 2;
 
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
@@ -272,54 +263,52 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                this.MainWindow.HideErrorOrStatusMessage();
+                MainWindow.HideErrorOrStatusMessage();
 
-                TreeNode node = this.projectTree.SelectedNode;
+                var node = projectTree.SelectedNode;
 
-                if (node != null && node != this.projectTree.Nodes[0])
-                {
-                    node.Remove();
-                    isDirty = true;
-                }
+                if (node == null || node == projectTree.Nodes[0]) return;
+                node.Remove();
+                _isDirty = true;
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
         private void EditTemplatesMenuItem_Click(object sender, EventArgs e)
         {
-            Cursor origCursor = this.Cursor;
+            var origCursor = Cursor;
 
             try
             {
-                this.Cursor = Cursors.WaitCursor;
+                Cursor = Cursors.WaitCursor;
 
-                this.MainWindow.HideErrorOrStatusMessage();
+                MainWindow.HideErrorOrStatusMessage();
 
-                TemplateDisplaySurface templateDisplaySurface = new TemplateDisplaySurface();
+                var templateDisplaySurface = new TemplateDisplaySurface();
 
-                TreeNode node = this.projectTree.SelectedNode;
+                var node = projectTree.SelectedNode;
 
-                ProjectNodeData data = node.Tag as ProjectNodeData;
+                var data = node.Tag as ProjectNodeData;
 
-                templateDisplaySurface.DisplayTemplateUI(true, data.Input, data.Settings as esSettings, data.Template, OnExecute, OnCancel);
+                templateDisplaySurface.DisplayTemplateUi(true, data?.Input, data.Settings as esSettings, data.Template, OnExecute, OnCancel);
 
                 splitContainer.Panel1Collapsed = false;
                 splitContainer.Panel2Collapsed = true;
 
-                isDirty = true;
+                _isDirty = true;
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
             finally
             {
                 EnableToolbarButtons(true);
 
-                this.Cursor = origCursor;
+                Cursor = origCursor;
             }
         }
 
@@ -327,13 +316,13 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                this.MainWindow.HideErrorOrStatusMessage();
+                MainWindow.HideErrorOrStatusMessage();
 
-                TreeNode node = this.projectTree.SelectedNode;
-                ProjectNodeData data = node.Tag as ProjectNodeData;
+                var node = projectTree.SelectedNode;
+                var data = node.Tag as ProjectNodeData;
 
-                PopupSettings popup = new PopupSettings();
-                popup.Settings = (esSettings)data.Settings;
+                var popup = new PopupSettings();
+                popup.Settings = (esSettings)data?.Settings;
 
                 if (popup.ShowDialog() == DialogResult.OK)
                 {
@@ -342,11 +331,11 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
-        private void OnCancel(TemplateDisplaySurface surface)
+        private static void OnCancel(TemplateDisplaySurface surface)
         {
 
         }
@@ -355,14 +344,14 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                this.MainWindow.HideErrorOrStatusMessage();
+                MainWindow.HideErrorOrStatusMessage();
 
-                TreeNode node = this.projectTree.SelectedNode;
+                var node = projectTree.SelectedNode;
 
                 if (node != null)
                 {
                     node.BeginEdit();
-                    isDirty = true;
+                    _isDirty = true;
                 }
 
             }
@@ -371,29 +360,16 @@ namespace EntitySpaces.AddIn
 
         private void ExecuteMenuItem_Click(object sender, EventArgs e)
         {
-            Cursor origCursor = this.Cursor;
-            bool error = false;
+            var origCursor = Cursor;
+            var error = false;
 
             try
             {
-                this.MainWindow.HideErrorOrStatusMessage();
+                MainWindow.HideErrorOrStatusMessage();
 
-                this.Cursor = Cursors.WaitCursor;
+                Cursor = Cursors.WaitCursor;
 
-//#if TRIAL
-//                Licensing licensing = new Licensing();
-//                string id = licensing.getUniqueID("C");
-
-//                if (1 != licensing.ValidateLicense("trial", "b69e3783-9f56-47a7-82e0-6eee6d0779bf", System.Environment.MachineName, id, MainWindow.esVersion, GetProxySettings(Settings)))
-//                {
-//                    return;
-//                }
-//#else
-//                Licensing licensing = new Licensing();
-//                licensing.ReplaceMeLater("developer", MainWindow.esVersion, "Serial_Number", "Serial_Number2", "Interop.ADODBX.dll", GetProxySettings(Settings));
-//#endif
-
-                TreeNode node = this.projectTree.SelectedNode;
+                var node = projectTree.SelectedNode;
 
                 if (node != null)
                 {
@@ -404,7 +380,7 @@ namespace EntitySpaces.AddIn
             catch (Exception ex)
             {
                 error = true;
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
             finally
             {
@@ -412,63 +388,50 @@ namespace EntitySpaces.AddIn
                 {
                     MainWindow.ShowStatusMessage("Project Executed Successfully");
                 }
-                this.Cursor = origCursor;
+                Cursor = origCursor;
             }
 
             try
             {
-                if (isDirty) PromptForSave();
+                if (_isDirty) PromptForSave();
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
         }
 
         private void ExecuteRecordedTemplates(TreeNode node)
         {
-            try
-            {
-                 ExecuteRecordedTemplate(node);
+            ExecuteRecordedTemplate(node);
 
-                foreach (TreeNode childNode in node.Nodes)
-                {
-                    ExecuteRecordedTemplates(childNode);
-                }
-            }
-            catch (Exception ex)
+            foreach (TreeNode childNode in node.Nodes)
             {
-                throw;
+                ExecuteRecordedTemplates(childNode);
             }
         }
 
         private void ExecuteRecordedTemplate(TreeNode node)
         {
-            try
-            {
-                if (node != null && node.Tag != null)
-                {
-                    ProjectNodeData tag = node.Tag as ProjectNodeData;
+            if (node?.Tag == null) return;
+            var tag = node.Tag as ProjectNodeData;
 
-                    Root esMeta = esMetaCreator.Create(tag.Settings as esSettings);
-                    esMeta.Input = tag.Input;
+            var esMeta = esMetaCreator.Create(tag?.Settings as esSettings);
+            esMeta.Input = tag?.Input;
 
-                    Template template = new Template();
-                    template.Execute(esMeta, tag.Template.Header.FullFileName);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            var template = new Template();
+            template.Execute(esMeta, tag.Template.Header.FullFileName);
         }
 
         private void Tree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             try
             {
-                buttonRecordOk.Enabled = this.tree.IsExecuteableTemplateSelected();
+                buttonRecordOk.Enabled = tree.IsExecuteableTemplateSelected();
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
@@ -478,25 +441,24 @@ namespace EntitySpaces.AddIn
             {
                 if (surface.GatherUserInput())
                 {
-                    Hashtable ht = surface.CacheUserInput();
+                    var ht = surface.CacheUserInput();
 
-                    if (this.projectTree.SelectedNode != null && this.projectTree.SelectedNode.Tag != null)
+                    if (projectTree.SelectedNode != null && projectTree.SelectedNode.Tag != null)
                     {
-                        ProjectNodeData tag = this.projectTree.SelectedNode.Tag as ProjectNodeData;
-                        tag.Input = ht;
+                        var tag = projectTree.SelectedNode.Tag as ProjectNodeData;
+                        if (tag != null) tag.Input = ht;
                     }
                     else
                     {
                         AddRecordedTemplate(surface, true);
-                        isDirty = true;
+                        _isDirty = true;
                     }
                 }
                 else return false;
             }
             catch (Exception ex)
             {
-                throw;
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
                 return false;
             }
 
@@ -507,22 +469,22 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                TreeNode node = this.projectTree.SelectedNode;
+                var node = projectTree.SelectedNode;
 
                 if (node == null)
                 {
-                    node = this.projectTree.Nodes[0];
+                    node = projectTree.Nodes[0];
                 }
 
                 if (node != null)
                 {
-                    TreeNode folder = new TreeNode(name);
+                    var folder = new TreeNode(name);
                     node.Nodes.Add(folder);
-                    isDirty = true;
+                    _isDirty = true;
 
                     node.Expand();
 
-                    this.projectTree.SelectedNode = folder;
+                    projectTree.SelectedNode = folder;
 
                     if (beginEdit)
                     {
@@ -532,7 +494,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
@@ -540,31 +502,31 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                TreeNode node = this.projectTree.SelectedNode;
+                var node = projectTree.SelectedNode;
 
                 if (node == null)
                 {
-                    node = this.projectTree.Nodes[0];
+                    node = projectTree.Nodes[0];
                 }
 
                 if (node != null)
                 {
-                    TreeNode recordedTemplate = new TreeNode(surface.Template.Header.Title);
+                    var recordedTemplate = new TreeNode(surface.Template.Header.Title);
                     recordedTemplate.ImageIndex = 2;
                     recordedTemplate.SelectedImageIndex = 2;
                     recordedTemplate.ContextMenuStrip = menuTemplate;
                     node.Nodes.Add(recordedTemplate);
 
-                    ProjectNodeData tag = new ProjectNodeData();
+                    var tag = new ProjectNodeData();
                     tag.Template = surface.Template;
                     tag.Input = surface.CacheUserInput();
                     tag.Settings = Settings.Clone();
                     recordedTemplate.Tag = tag;
         
                     node.Expand();
-                    isDirty = true;
+                    _isDirty = true;
 
-                    this.projectTree.SelectedNode = recordedTemplate;
+                    projectTree.SelectedNode = recordedTemplate;
 
                     if (beginEdit)
                     {
@@ -574,7 +536,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
@@ -584,14 +546,14 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                TreeNode root = (TreeNode)e.Item;
-                if (root == this.projectTree.Nodes[0]) return;
+                var root = (TreeNode)e.Item;
+                if (root == projectTree.Nodes[0]) return;
 
                 DoDragDrop(e.Item, DragDropEffects.Move);
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
@@ -603,7 +565,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
@@ -615,24 +577,24 @@ namespace EntitySpaces.AddIn
 
                 if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", false))
                 {
-                    Point pt = ((TreeView)sender).PointToClient(new Point(e.X, e.Y));
-                    TreeNode DestinationNode = ((TreeView)sender).GetNodeAt(pt);
-                    TreeNode NewNode = (TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode");
+                    var pt = ((TreeView)sender).PointToClient(new Point(e.X, e.Y));
+                    var destinationNode = ((TreeView)sender).GetNodeAt(pt);
+                    var newNode = (TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode");
 
-                    if (DestinationNode == null) return;
-                    if (DestinationNode.ImageIndex == 2) return;
-                    if (NewNode == DestinationNode) return;
+                    if (destinationNode == null) return;
+                    if (destinationNode.ImageIndex == 2) return;
+                    if (newNode == destinationNode) return;
 
-                    NewNode.Remove();
-                    isDirty = true;
+                    newNode.Remove();
+                    _isDirty = true;
 
-                    DestinationNode.Nodes.Add(NewNode);
-                    DestinationNode.Expand();
+                    destinationNode.Nodes.Add(newNode);
+                    destinationNode.Expand();
                 }
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
@@ -640,24 +602,24 @@ namespace EntitySpaces.AddIn
 
         private void ButtonProjectOpen_Click(object sender, EventArgs e)
         {
-            Cursor oldCursor = Cursor.Current;
-            isDirty = false;
+            var oldCursor = Cursor.Current;
+            _isDirty = false;
 
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
+                var openFileDialog = new OpenFileDialog();
                 openFileDialog.Title = "Open EntitySpaces Project File";
                 openFileDialog.Filter = "Project Files (*.esprj)|*.esprj|All Files (*.*)|*.*";
                 openFileDialog.RestoreDirectory = true;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    this.OpenProject(openFileDialog.FileName);
+                    OpenProject(openFileDialog.FileName);
                 }
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
             finally
             {
@@ -665,13 +627,13 @@ namespace EntitySpaces.AddIn
             }
         }
 
-        private void ConvertProjectToTree(TreeNode parentNode, esProjectNode esNode)
+        private void ConvertProjectToTree(TreeNode parentNode, EsProjectNode esNode)
         {
             TreeNode node = null;
 
             if (parentNode == null)
             {
-                node = this.projectTree.Nodes.Add(esNode.Name);
+                node = projectTree.Nodes.Add(esNode.Name);
             }
             else
             {
@@ -680,7 +642,7 @@ namespace EntitySpaces.AddIn
 
             if(!esNode.IsFolder)
             {
-                ProjectNodeData tag = new ProjectNodeData();
+                var tag = new ProjectNodeData();
                 tag.Template = esNode.Template;
                 tag.Settings = esNode.Settings;
                 tag.Input = esNode.Input;
@@ -693,20 +655,20 @@ namespace EntitySpaces.AddIn
                 node.ToolTipText = esNode.Template.Header.Description + " (" + node.FullPath + ")";
             }
 
-            foreach (esProjectNode childNode in esNode.Children)
+            foreach (EsProjectNode childNode in esNode.Children)
             {
                 ConvertProjectToTree(node, childNode);
             }
         }
 
-        private void ConvertTreeToProject(esProjectNode esParentNode, TreeNode node)
+        private void ConvertTreeToProject(EsProjectNode esParentNode, TreeNode node)
         {
-            esProjectNode esNode = new esProjectNode();
+            var esNode = new EsProjectNode();
             esNode.Name = node.Text;
 
             if (esParentNode == null)
             {
-                project.RootNode = esNode;
+                _project.RootNode = esNode;
             }
             else
             {
@@ -715,7 +677,7 @@ namespace EntitySpaces.AddIn
 
             if (node.Tag != null)
             {
-                ProjectNodeData tag = node.Tag as ProjectNodeData;
+                var tag = node.Tag as ProjectNodeData;
 
                 esNode.Template = tag.Template;
                 esNode.Settings = tag.Settings;
@@ -732,11 +694,11 @@ namespace EntitySpaces.AddIn
 
         private void ButtonSaveAs_Click(object sender, EventArgs e)
         {
-            Cursor oldCursor = Cursor.Current;
+            var oldCursor = Cursor.Current;
 
             try
             {
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                var saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Title = "Save EntitySpaces Project File";
                 saveFileDialog.Filter = "Project Files (*.esprj)|*.esprj|All Files (*.*)|*.*";
                 saveFileDialog.RestoreDirectory = true;
@@ -745,18 +707,18 @@ namespace EntitySpaces.AddIn
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
-                    this.SaveProject(saveFileDialog.FileName);
+                    SaveProject(saveFileDialog.FileName);
 
-                    projectName = saveFileDialog.FileName;
-                    this.ButtonSave.Enabled = true;
+                    _projectName = saveFileDialog.FileName;
+                    ButtonSave.Enabled = true;
 
-                    mru.Push(this.projectName);
+                    _mru.Push(_projectName);
                     SaveMruList();
                 }
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
             finally
             {
@@ -766,17 +728,17 @@ namespace EntitySpaces.AddIn
 
         private void ButtonSave_Click(object sender, EventArgs e)
         {
-            Cursor oldCursor = Cursor.Current;
+            var oldCursor = Cursor.Current;
 
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                this.SaveProject(this.projectName);
-                this.OpenProject(this.projectName);
+                SaveProject(_projectName);
+                OpenProject(_projectName);
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
             finally
             {
@@ -786,48 +748,48 @@ namespace EntitySpaces.AddIn
 
         private void SaveProject(string fileNameAndPath)
         {
-            TreeNode rootNode = this.projectTree.Nodes[0];
+            var rootNode = projectTree.Nodes[0];
 
-            project = new esProject();
-            ConvertTreeToProject(project.RootNode, rootNode);
-            project.Save(fileNameAndPath, MainWindow.Settings);
-            project = null;
-            isDirty = false;
+            _project = new EsProject();
+            ConvertTreeToProject(_project.RootNode, rootNode);
+            _project.Save(fileNameAndPath, MainWindow.Settings);
+            _project = null;
+            _isDirty = false;
         }
 
         private void OpenProject(string fileNameAndPath)
         {
-            Cursor oldCursor = Cursor.Current;
+            var oldCursor = Cursor.Current;
 
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                esProject project = new esProject();
+                var project = new EsProject();
                 project.Load(fileNameAndPath, MainWindow.Settings);
 
-                this.projectTree.Nodes.Clear();
+                projectTree.Nodes.Clear();
                 ConvertProjectToTree(null, project.RootNode);
 
-                this.ButtonSave.Enabled = true;
+                ButtonSave.Enabled = true;
 
-                this.projectName = fileNameAndPath;
+                _projectName = fileNameAndPath;
 
-                this.projectTree.ExpandAll();
+                projectTree.ExpandAll();
 
-                this.projectTree.SelectedNode = this.projectTree.Nodes[0];
-                this.projectTree.Select();
+                projectTree.SelectedNode = projectTree.Nodes[0];
+                projectTree.Select();
 
                 EnableToolbarButtons(true);
 
-                mru.Push(this.projectName);
+                _mru.Push(_projectName);
                 SaveMruList();
             }
             catch (Exception ex)
             {
-                mru.Remove(fileNameAndPath);
-                this.SaveMruList();
-                this.MainWindow.ShowError(ex);
+                _mru.Remove(fileNameAndPath);
+                SaveMruList();
+                MainWindow.ShowError(ex);
             }
             finally
             {
@@ -839,20 +801,20 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                this.projectTree.Nodes.Clear();
-                this.projectTree.Nodes.Add(new TreeNode("Project"));
-                this.projectName = null;
-                this.ButtonSave.Enabled = false;
+                projectTree.Nodes.Clear();
+                projectTree.Nodes.Add(new TreeNode("Project"));
+                _projectName = null;
+                ButtonSave.Enabled = false;
 
-                this.projectTree.SelectedNode = this.projectTree.Nodes[0];
-                this.projectTree.Select();
-                isDirty = false;
+                projectTree.SelectedNode = projectTree.Nodes[0];
+                projectTree.Select();
+                _isDirty = false;
 
                 EnableToolbarButtons(true);
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
@@ -860,7 +822,7 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                System.Diagnostics.Process p = new System.Diagnostics.Process();
+                var p = new System.Diagnostics.Process();
                 p.StartInfo.FileName = "explorer";
                 p.StartInfo.Arguments = "/e," + Settings.OutputPath;
                 p.StartInfo.UseShellExecute = true;
@@ -868,7 +830,7 @@ namespace EntitySpaces.AddIn
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
@@ -876,14 +838,14 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                if (this.projectTree.SelectedNode != null)
+                if (projectTree.SelectedNode != null)
                 {
-                    this.projectTree.SelectedNode.ExpandAll();
+                    projectTree.SelectedNode.ExpandAll();
                 }
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
@@ -891,49 +853,49 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                string project = e.ClickedItem.ToolTipText;
-                this.mru.Remove(project);  // OpenProject will reinsert him at the top
-                this.OpenProject(project);
+                var project = e.ClickedItem.ToolTipText;
+                _mru.Remove(project);  // OpenProject will reinsert him at the top
+                OpenProject(project);
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
 
         private void CopyNodePath(object sender, EventArgs e)
         {
-            if (this.projectTree.SelectedNode != null)
+            if (projectTree.SelectedNode != null)
             {
-                Clipboard.SetText(this.projectTree.SelectedNode.FullPath);
+                Clipboard.SetText(projectTree.SelectedNode.FullPath);
             }
         }
 
         private void MoveUpMenuItem_Click(object sender, EventArgs e)
         {
-            TreeNode node = this.projectTree.SelectedNode;
+            var node = projectTree.SelectedNode;
 
             if (node == null) return;
 
-            TreeNode parent = node.Parent;
-            TreeNode prevNode = node.PrevNode;
+            var parent = node.Parent;
+            var prevNode = node.PrevNode;
 
             if (prevNode == null) return;
 
-            this.projectTree.BeginUpdate();
+            projectTree.BeginUpdate();
 
-            int index = node.Index;
-            int pIndex = node.PrevNode.Index;
+            var index = node.Index;
+            var pIndex = node.PrevNode.Index;
 
             parent.Nodes.Remove(prevNode);
 
             parent.Nodes.Insert(index, prevNode);
 
-            this.projectTree.SelectedNode = node;
+            projectTree.SelectedNode = node;
 
-            this.projectTree.EndUpdate();
+            projectTree.EndUpdate();
 
-            isDirty = true;
+            _isDirty = true;
         }
 
         private void FolderMoveUpMenuItem_Click(object sender, EventArgs e)
@@ -943,29 +905,29 @@ namespace EntitySpaces.AddIn
 
         private void MoveDownMenuItem_Click(object sender, EventArgs e)
         {
-            TreeNode node = this.projectTree.SelectedNode;
+            var node = projectTree.SelectedNode;
 
             if (node == null) return;
 
-            TreeNode parent = node.Parent;
-            TreeNode nextNode = node.NextNode;
+            var parent = node.Parent;
+            var nextNode = node.NextNode;
 
             if (nextNode == null) return;
 
-            this.projectTree.BeginUpdate();
+            projectTree.BeginUpdate();
 
-            int index = node.Index;
-            int pIndex = node.NextNode.Index;
+            var index = node.Index;
+            var pIndex = node.NextNode.Index;
 
             parent.Nodes.Remove(nextNode);
 
             parent.Nodes.Insert(index, nextNode);
 
-            this.projectTree.SelectedNode = node;
+            projectTree.SelectedNode = node;
 
-            this.projectTree.EndUpdate();
+            projectTree.EndUpdate();
 
-            isDirty = true;
+            _isDirty = true;
         }
 
         private void FolderMoveDownMenuItem_Click(object sender, EventArgs e)
@@ -987,50 +949,33 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                if (isDirty)
+                if (_isDirty)
                 {
-                    DialogResult result = MessageBox.Show("Do you want to save the project", "Your project has unsaved changes",
+                    var result = MessageBox.Show("Do you want to save the project", "Your project has unsaved changes",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                     if (result == DialogResult.Yes)
                     {
                         Cursor.Current = Cursors.WaitCursor;
 
-                        if (this.projectName != null)
+                        if (_projectName != null)
                         {
-                            ButtonSave_Click(null, new EventArgs());
+                            ButtonSave_Click(null, EventArgs.Empty);
                         }
                         else
                         {
-                            ButtonSaveAs_Click(null, new EventArgs());
+                            ButtonSaveAs_Click(null, EventArgs.Empty);
                         }
                     }
 
-                    isDirty = false;
+                    _isDirty = false;
                 }
             }
             catch (Exception ex)
             {
-                this.MainWindow.ShowError(ex);
+                MainWindow.ShowError(ex);
             }
         }
-
-        internal static ProxySettings GetProxySettings(esSettings settings)
-        {
-            ProxySettings proxy = new ProxySettings();
-            proxy.UseProxy = settings.LicenseProxyEnable;
-            if (proxy.UseProxy)
-            {
-                proxy.Url = settings.LicenseProxyUrl;
-                proxy.UserName = settings.LicenseProxyUserName;
-                proxy.Password = settings.LicenseProxyPassword;
-                proxy.DomainName = settings.LicenseProxyDomainName;
-            }
-
-            return proxy;
-        }
-
-
     }
 
     #region ProjectNodeData

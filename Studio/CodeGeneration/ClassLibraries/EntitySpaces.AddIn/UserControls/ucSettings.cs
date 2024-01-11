@@ -3,7 +3,6 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-
 using Microsoft.Win32;
 
 using EntitySpaces.MetadataEngine;
@@ -23,13 +22,7 @@ namespace EntitySpaces.AddIn
             }
         }
 
-        public esSettings Settings 
-        {
-            get => _settings;
-            set => _settings = value;
-        }
-        private esSettings _settings;
-
+        public new esSettings Settings { get; set; }
 
         private void ShowError(Exception ex)
         {
@@ -50,7 +43,7 @@ namespace EntitySpaces.AddIn
         {
             if (!DesignMode)
             {
-                Cursor oldCursor = Cursor.Current;
+                var oldCursor = Cursor.Current;
 
                 try
                 {
@@ -76,10 +69,10 @@ namespace EntitySpaces.AddIn
 
                     comboBoxDriver.Focus();
 
-                    PopulateUI();
+                    PopulateUi();
                     SetOleDbButton();
 
-                    DictionaryEntry de = (DictionaryEntry)comboBoxDriver.SelectedItem;
+                    var de = (DictionaryEntry)comboBoxDriver.SelectedItem;
                     lblSelectedDriver.Text = (string)de.Value;
 
                     LoadMruList();
@@ -95,7 +88,7 @@ namespace EntitySpaces.AddIn
             }
         }
 
-        public void PopulateUI()
+        public void PopulateUi()
         {
             try
             {
@@ -149,7 +142,7 @@ namespace EntitySpaces.AddIn
                 checkBoxUseRawNames.Checked = Settings.UseRawNames;
 
                 // License
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", true);
+                var key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", true);
                 if (key != null)
                 {
                     textBoxSerialNumber.Text = (string)key.GetValue("Serial_Number");
@@ -184,16 +177,18 @@ namespace EntitySpaces.AddIn
             try
             {
                 // Connection
-                DictionaryEntry de = (DictionaryEntry)comboBoxDriver.SelectedItem;
+                var de = (DictionaryEntry)comboBoxDriver.SelectedItem;
                 Settings.Driver = (string)de.Value;
                 Settings.ConnectionString = textBoxConnectionString.Text;
 
-                esSettingsDriverInfo driverInfo = Settings.FindDriverInfoCollection(Settings.Driver);
+                var driverInfo = Settings.FindDriverInfoCollection(Settings.Driver);
 
                 if (driverInfo == null)
                 {
-                    driverInfo = new esSettingsDriverInfo();
-                    driverInfo.Driver = Settings.Driver;
+                    driverInfo = new esSettingsDriverInfo
+                    {
+                        Driver = Settings.Driver
+                    };
                     Settings.DriverInfoCollection.Add(driverInfo);
                 }
 
@@ -301,8 +296,8 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                DictionaryEntry de = (DictionaryEntry)comboBoxDriver.SelectedItem;
-                string driver = (string)de.Value;
+                var de = (DictionaryEntry)comboBoxDriver.SelectedItem;
+                var driver = (string)de.Value;
 
                 if (string.IsNullOrEmpty(driver))
                 {
@@ -337,19 +332,21 @@ namespace EntitySpaces.AddIn
 
                 if (comboBoxDriver.SelectedIndex != -1)
                 {
-                    DictionaryEntry de = (DictionaryEntry)comboBoxDriver.SelectedItem;
-                    string driver = (string)de.Value;
+                    var de = (DictionaryEntry)comboBoxDriver.SelectedItem;
+                    var driver = (string)de.Value;
 
                     lblSelectedDriver.Text = driver;
 
-                    esSettingsDriverInfo driverInfo = Settings.FindDriverInfoCollection(driver);
+                    var driverInfo = Settings.FindDriverInfoCollection(driver);
 
                     if (driverInfo == null)
                     {
                         // There is no entry fro this driver
-                        driverInfo = new esSettingsDriverInfo();
-                        driverInfo.HasConnected = false;
-                        driverInfo.Driver = driver;
+                        driverInfo = new esSettingsDriverInfo
+                        {
+                            HasConnected = false,
+                            Driver = driver
+                        };
                         Settings.DriverInfoCollection.Add(driverInfo);
 
                         textBoxConnectionString.Text = esSettings.GetDefaultConnectionString(driver);
@@ -382,26 +379,26 @@ namespace EntitySpaces.AddIn
                         txtDateAddedColumnName.Text = driverInfo.DateAdded.ColumnName;
                         txtDateAddedServerSideText.Text = driverInfo.DateAdded.ServerSideText;
                         chkDateAddedClientSideEnabled.Checked =
-                            driverInfo.DateAdded.Type == esSettingsDriverInfo.DateType.ServerSide ? true : false;
+                            driverInfo.DateAdded.Type == esSettingsDriverInfo.DateType.ServerSide;
                         chkDateAddedClientSideEnabled.Checked =
-                            driverInfo.DateAdded.Type == esSettingsDriverInfo.DateType.ServerSide ? false : true;
+                            driverInfo.DateAdded.Type != esSettingsDriverInfo.DateType.ServerSide;
                         rdoDateAddedClientSideNow.Checked =
-                            driverInfo.DateAdded.ClientType == esSettingsDriverInfo.ClientType.Now ? true : false;
+                            driverInfo.DateAdded.ClientType == esSettingsDriverInfo.ClientType.Now;
                         rdoDateAddedClientSideUtcNow.Checked =
-                            driverInfo.DateAdded.ClientType == esSettingsDriverInfo.ClientType.Now ? false : true;
+                            driverInfo.DateAdded.ClientType != esSettingsDriverInfo.ClientType.Now;
 
                         // DateModified
                         chkDateModifiedEnabled.Checked = driverInfo.DateModified.IsEnabled;
                         txtDateModifiedColumnName.Text = driverInfo.DateModified.ColumnName;
                         txtDateModifiedServerSideText.Text = driverInfo.DateModified.ServerSideText;
                         chkDateModifiedServerSideEnabled.Checked =
-                            driverInfo.DateModified.Type == esSettingsDriverInfo.DateType.ServerSide ? true : false;
+                            driverInfo.DateModified.Type == esSettingsDriverInfo.DateType.ServerSide;
                         chkDateModifiedClientSideEnabled.Checked =
-                            driverInfo.DateModified.Type == esSettingsDriverInfo.DateType.ServerSide ? false : true;
+                            driverInfo.DateModified.Type != esSettingsDriverInfo.DateType.ServerSide;
                         rdoDateModifiedClientSideNow.Checked =
-                            driverInfo.DateModified.ClientType == esSettingsDriverInfo.ClientType.Now ? true : false;
+                            driverInfo.DateModified.ClientType == esSettingsDriverInfo.ClientType.Now;
                         rdoDateModifiedClientSideUtcNow.Checked =
-                            driverInfo.DateModified.ClientType == esSettingsDriverInfo.ClientType.Now ? false : true;
+                            driverInfo.DateModified.ClientType != esSettingsDriverInfo.ClientType.Now;
 
                         chkAddedByEnabled.Checked = driverInfo.AddedBy.IsEnabled;
                         chkAddedByEventHandler.Checked = driverInfo.AddedBy.UseEventHandler;
@@ -500,7 +497,7 @@ namespace EntitySpaces.AddIn
 
         private void toolStripButtonSetDefault_Click(object sender, EventArgs e)
         {
-            Cursor oldCursor = Cursor.Current;
+            var oldCursor = Cursor.Current;
 
             try
             {
@@ -522,14 +519,14 @@ namespace EntitySpaces.AddIn
 
         private void toolStripButtonReloadDefault_Click(object sender, EventArgs e)
         {
-            Cursor oldCursor = Cursor.Current;
+            var oldCursor = Cursor.Current;
 
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
 
                 Settings = esSettings.Load();
-                PopulateUI();
+                PopulateUi();
                 NofityControlsThatSettingsChanged();
             }
             catch (Exception ex)
@@ -544,11 +541,11 @@ namespace EntitySpaces.AddIn
 
         private void toolStripButtonSave_Click(object sender, EventArgs e)
         {
-            Cursor oldCursor = Cursor.Current;
+            var oldCursor = Cursor.Current;
 
             try
             {
-                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                var saveFileDialog1 = new SaveFileDialog();
                 saveFileDialog1.Title = "Save Settings File";
                 saveFileDialog1.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
                 saveFileDialog1.RestoreDirectory = true;
@@ -577,11 +574,11 @@ namespace EntitySpaces.AddIn
 
         private void toolStripButtonOpen_Click(object sender, EventArgs e)
         {
-            Cursor oldCursor = Cursor.Current;
+            var oldCursor = Cursor.Current;
 
             try
             {
-                OpenFileDialog openFileDialog1 = new OpenFileDialog();
+                var openFileDialog1 = new OpenFileDialog();
                 openFileDialog1.Title = "Open Settings File";
                 openFileDialog1.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
                 openFileDialog1.RestoreDirectory = true;
@@ -604,7 +601,7 @@ namespace EntitySpaces.AddIn
 
         private void OpenSettingsFile(string filename)
         {
-            Cursor oldCursor = Cursor.Current;
+            var oldCursor = Cursor.Current;
 
             try
             {
@@ -612,7 +609,7 @@ namespace EntitySpaces.AddIn
 
                 MainWindow.Settings = Settings = esSettings.Load(filename);
 
-                PopulateUI();
+                PopulateUi();
                 NofityControlsThatSettingsChanged();
 
                 _mru.Push(filename);
@@ -634,19 +631,18 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                string driver = string.Empty;
-                string connstr = string.Empty;
+                var driver = string.Empty;
 
-                DictionaryEntry de = (DictionaryEntry)comboBoxDriver.SelectedItem;
+                var de = (DictionaryEntry)comboBoxDriver.SelectedItem;
                 if (null != de.Key)
                 {
                     driver = (string)de.Value;
                 }
-                connstr = textBoxConnectionString.Text;
+                var connstr = textBoxConnectionString.Text;
 
                 if (string.IsNullOrEmpty(driver))
                 {
-                    throw new Exception("You Must Choose a Driver");
+                    throw new Exception("You must choose a driver");
                 }
 
                 driver = driver.ToUpper();
@@ -656,60 +652,58 @@ namespace EntitySpaces.AddIn
                     connstr = esSettings.GetDefaultConnectionString(driver);
                 }
 
-                Type adoType = Type.GetTypeFromProgID("ADODB.Connection");
+                var adoType = Type.GetTypeFromProgID("ADODB.Connection");
                 if (adoType == null) return;
-                object oConn = Activator.CreateInstance(adoType);
-                            
-                object ret = adoType.InvokeMember("ConnectionString", BindingFlags.SetProperty, null, oConn,
-                    new object[] { connstr });
+                var oConn = Activator.CreateInstance(adoType);
 
-                Type dataLinkType = Type.GetTypeFromProgID("DataLinks");
+                adoType.InvokeMember("ConnectionString", BindingFlags.SetProperty, null, oConn, new object[] { connstr });
+
+                var dataLinkType = Type.GetTypeFromProgID("DataLinks");
                 if (dataLinkType == null) return;
-                object oDialog = Activator.CreateInstance(dataLinkType);
+                var oDialog = Activator.CreateInstance(dataLinkType);
 
-                bool ok = (bool)dataLinkType.InvokeMember("PromptEdit", BindingFlags.InvokeMethod, null, oDialog, new object[] { oConn });
+                var ok = (bool)dataLinkType.InvokeMember("PromptEdit", BindingFlags.InvokeMethod, null, oDialog, new[] { oConn });
 
-                if (ok)
-                {
-                    string connString = (string)adoType.InvokeMember("ConnectionString", BindingFlags.GetProperty, null, oConn, null);
+                if (!ok) return;
+                
+                var connString = (string)adoType.InvokeMember("ConnectionString", BindingFlags.GetProperty, null, oConn, null);
 
-                    Root.UnLoadPlugins();
-                    Root tempRoot = new Root(Settings);
-                    if (tempRoot.Connect(driver, connString))
-                    {
-                        textBoxConnectionString.Text = connString;
+                Root.UnLoadPlugins();
+                
+                var tempRoot = new Root(Settings);
 
-                        _root = new Root(Settings);
-                        _root.Connect(driver, connString);
-                    }
-                }
+                if (!tempRoot.Connect(driver, connString)) return;
+                
+                textBoxConnectionString.Text = connString;
+
+                _root = new Root(Settings);
+                _root.Connect(driver, connString);
             }
             catch (Exception ex)
             {
                 ShowError(ex);
             }
-            catch { }
         }
 
         private void buttonTestConnection_Click(object sender, EventArgs e)
         {
-            Cursor oldCursor = Cursor.Current;
+            var oldCursor = Cursor.Current;
 
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                Root tempRoot = new Root(Settings);
+                var tempRoot = new Root(Settings);
                 Root.UnLoadPlugins();
 
-                DictionaryEntry de = (DictionaryEntry)comboBoxDriver.SelectedItem;
-                string driver = (string)de.Value;
+                var de = (DictionaryEntry)comboBoxDriver.SelectedItem;
+                var driver = (string)de.Value;
 
                 if (!string.IsNullOrEmpty(driver) &&
                     textBoxConnectionString.Text != string.Empty &&
                     tempRoot.Connect(driver, textBoxConnectionString.Text))
                 {
-                    esSettingsDriverInfo driverInfo = Settings.FindDriverInfoCollection(driver);
+                    var driverInfo = Settings.FindDriverInfoCollection(driver);
                     if (driverInfo != null)
                     {
                         driverInfo.HasConnected = true;
@@ -734,54 +728,13 @@ namespace EntitySpaces.AddIn
 
         private void buttonAssign_Click(object sender, EventArgs e)
         {
-            string originalKey = null;
-
             try
             {
-                string serialNum = textBoxSerialNumber.Text != null ? textBoxSerialNumber.Text.Trim() : "";
-                Guid serialNumber = new Guid(serialNum);
-            }
-            catch
-            {
-                MessageBox.Show("Invalid Serial Number");
-                return;
-            }
-
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", true);
-            if (key != null)
-            {
-                originalKey = (string)key.GetValue("Serial_Number");
-                key.SetValue("Serial_Number", textBoxSerialNumber.Text.Trim());
-            }
-
-            try
-            {
-//#if TRIAL
-//                Licensing licensing = new Licensing();
-//                string id = licensing.getUniqueID("C");
-
-//                if (1 != licensing.ValidateLicense("trial", "b69e3783-9f56-47a7-82e0-6eee6d0779bf", System.Environment.MachineName, id, MainWindow.esVersion, GetProxySettings(Settings)))
-//                {
-//                    return;
-//                }
-//#else
-//                if (MainWindow != null)
-//                {
-//                    Licensing licensing = new Licensing();
-//                    licensing.ReplaceMeLater("developer", MainWindow.esVersion, "Serial_Number", "Serial_Number2", "Interop.ADODBX.dll", GetProxySettings(Settings));
-//                }
-//#endif
-
-                MessageBox.Show("You must 'close' all instances of Visual Studio or the Stand Alone version and restart for changes to take place.");
+                throw new NotImplementedException();
             }
             catch(Exception ex)
             {
-                MessageBox.Show("Unable to Validate License");
-
-                if (originalKey != null && originalKey.Length > 0)
-                {
-                    key.SetValue("Serial_Number", originalKey);
-                }
+                ShowError(ex);
             }
         }
 
@@ -789,7 +742,7 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
+                var folderBrowserDialog1 = new FolderBrowserDialog();
                 folderBrowserDialog1.Description = "Select the Template Folder";
                 folderBrowserDialog1.SelectedPath = textBoxTemplatePath.Text;
 
@@ -808,7 +761,7 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
+                var folderBrowserDialog1 = new FolderBrowserDialog();
                 folderBrowserDialog1.Description = "Select the Output Folder";
                 folderBrowserDialog1.SelectedPath = textBoxOutputPath.Text;
 
@@ -827,7 +780,7 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
+                var folderBrowserDialog1 = new FolderBrowserDialog();
                 folderBrowserDialog1.Description = "Select the UI Assemblies Folder";
                 folderBrowserDialog1.SelectedPath = textBoxUIAssemblyPath.Text;
 
@@ -846,7 +799,7 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
+                var folderBrowserDialog1 = new FolderBrowserDialog();
                 folderBrowserDialog1.Description = "Select the Compiler Assemblies Folder";
                 folderBrowserDialog1.SelectedPath = textBoxCompilerAssemblyPath.Text;
 
@@ -865,7 +818,7 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                OpenFileDialog openFileDialog1 = new OpenFileDialog();
+                var openFileDialog1 = new OpenFileDialog();
 
                 openFileDialog1.FileName = textBoxLanguageMap.Text;
                 openFileDialog1.Title = "Select a Language Mapping File";
@@ -887,7 +840,7 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                OpenFileDialog openFileDialog1 = new OpenFileDialog();
+                var openFileDialog1 = new OpenFileDialog();
                 openFileDialog1.FileName = textBoxUserMetadata.Text;
                 openFileDialog1.Title = "Select a User Metadata File";
                 openFileDialog1.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
@@ -929,7 +882,7 @@ namespace EntitySpaces.AddIn
 
         private void BuildSampleProcs()
         {
-            string sample = string.Empty;
+            var sample = string.Empty;
 
             sample += BuildSampleProc(textBoxProcInsert);
             sample += BuildSampleProc(textBoxProcUpdate);
@@ -942,7 +895,7 @@ namespace EntitySpaces.AddIn
 
         private string BuildSampleProc(TextBox textbox)
         {
-            string sample = string.Empty;
+            var sample = string.Empty;
 
             sample += textBoxProcPrefix.Text;
 
@@ -1006,14 +959,14 @@ namespace EntitySpaces.AddIn
 
         private void BuildSampleHierarchical()
         {
-            string sampleTypes = string.Empty;
+            var sampleTypes = string.Empty;
 
             sampleTypes += " ManyToOne:" + Environment.NewLine;
             sampleTypes += " ZeroToMany:" + Environment.NewLine;
 
             labelHierTypes.Text = sampleTypes;
 
-            string sample = string.Empty;
+            var sample = string.Empty;
 
             sample += BuildSampleManyToOne();
             sample += BuildSampleZeroToMany();
@@ -1026,9 +979,9 @@ namespace EntitySpaces.AddIn
 
         private string BuildSampleManyToOne()
         {
-            string sample = string.Empty;
-            string table = "Employees";
-            string column = "ReportsTo";
+            var sample = string.Empty;
+            var table = "Employees";
+            var column = "ReportsTo";
 
             sample += "emp.";
 
@@ -1069,9 +1022,9 @@ namespace EntitySpaces.AddIn
 
         private string BuildSampleZeroToMany()
         {
-            string sample = string.Empty;
-            string table = "Employees";
-            string column = "ReportsTo";
+            var sample = string.Empty;
+            var table = "Employees";
+            var column = "ReportsTo";
 
             sample += "emp.";
             sample += textBoxManyPrefix.Text;
@@ -1106,7 +1059,7 @@ namespace EntitySpaces.AddIn
 
         private void LoadMruList()
         {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", false))
+            using (var key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", false))
             {
                 if (key == null) return;
 
@@ -1117,7 +1070,7 @@ namespace EntitySpaces.AddIn
 
         private void SaveMruList()
         {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", true))
+            using (var key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", true))
             {
                 if (key == null) return;
 
@@ -1130,18 +1083,21 @@ namespace EntitySpaces.AddIn
         {
             menuMRU.Items.Clear();
 
-            foreach (string project in _mru)
+            foreach (var project in _mru)
             {
                 if (project == null) continue;
 
                 try
                 {
-                    FileInfo info = new FileInfo(project);
-                    ToolStripItem item = menuMRU.Items.Add(info.Name);
+                    var info = new FileInfo(project);
+                    var item = menuMRU.Items.Add(info.Name);
                     item.ToolTipText = project;
                     item.Image = Resource.check;
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
             }
         }
 
@@ -1149,7 +1105,7 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                string settingsFile = e.ClickedItem.ToolTipText;
+                var settingsFile = e.ClickedItem.ToolTipText;
                 _mru.Remove(settingsFile);  // OpenProject will reinsert him at the top
                 OpenSettingsFile(settingsFile);
             }
@@ -1163,12 +1119,12 @@ namespace EntitySpaces.AddIn
         {
             try
             {
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", true);
+                var key = Registry.CurrentUser.OpenSubKey(@"Software\EntitySpaces 2019", true);
                 if (key != null)
                 {
                     key.DeleteValue("Serial_Number2");
 
-                    string installDir = (string)key.GetValue("Install_Dir");
+                    var installDir = (string)key.GetValue("Install_Dir");
                     if (installDir.EndsWith("\\"))
                     {
                         installDir = installDir.TrimEnd('\\');
@@ -1179,25 +1135,33 @@ namespace EntitySpaces.AddIn
                     {
                         File.Delete(installDir);
                     }
-                    catch { }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
 
             try
             {
-                string offlinePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+                var offlinePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                 offlinePath += @"\EntitySpaces\ES2019\Interop.ADODBX.dll";
 
                 File.Delete(offlinePath);
             }
-            catch { }
-
+            catch
+            {
+                // ignored
+            }
         }
 
         private void chkUseProxyServer_CheckedChanged(object sender, EventArgs e)
         {
-            bool enable = !txtProxyServerURL.Enabled;
+            var enable = !txtProxyServerURL.Enabled;
 
             txtProxyServerURL.Enabled = enable;
             txtProxyServerUserName.Enabled = enable;
@@ -1207,7 +1171,7 @@ namespace EntitySpaces.AddIn
 
         private void chkDateAddedEnabled_CheckedChanged(object sender, EventArgs e)
         {
-            bool isChecked = chkDateAddedEnabled.Checked;
+            var isChecked = chkDateAddedEnabled.Checked;
 
             txtDateAddedColumnName.Enabled = isChecked;
             chkDateAddedClientSideEnabled.Enabled = isChecked;
@@ -1217,31 +1181,27 @@ namespace EntitySpaces.AddIn
             rdoDateAddedClientSideUtcNow.Enabled = isChecked;
         }
 
-        private bool inCheckChanged = false;
+        private bool _inCheckChanged;
 
         private void chkDateAddedServerSideEnabled_CheckedChanged(object sender, EventArgs e)
         {
-            if (!inCheckChanged)
-            {
-                inCheckChanged = true;
-                chkDateAddedClientSideEnabled.Checked = !chkDateAddedClientSideEnabled.Checked;
-                inCheckChanged = false;
-            }
+            if (_inCheckChanged) return;
+            _inCheckChanged = true;
+            chkDateAddedClientSideEnabled.Checked = !chkDateAddedClientSideEnabled.Checked;
+            _inCheckChanged = false;
         }
 
         private void chkDateAddedClientSideEnabled_CheckedChanged(object sender, EventArgs e)
         {
-            if (!inCheckChanged)
-            {
-                inCheckChanged = true;
-                chkDateAddedServerSideEnabled.Checked = !chkDateAddedServerSideEnabled.Checked;
-                inCheckChanged = false;
-            }
+            if (_inCheckChanged) return;
+            _inCheckChanged = true;
+            chkDateAddedServerSideEnabled.Checked = !chkDateAddedServerSideEnabled.Checked;
+            _inCheckChanged = false;
         }
 
         private void chkDateModifiedEnabled_CheckedChanged(object sender, EventArgs e)
         {
-            bool isChecked = chkDateModifiedEnabled.Checked;
+            var isChecked = chkDateModifiedEnabled.Checked;
 
             txtDateModifiedColumnName.Enabled = isChecked;
             chkDateModifiedClientSideEnabled.Enabled = isChecked;
@@ -1253,27 +1213,23 @@ namespace EntitySpaces.AddIn
 
         private void chkDateModifiedServerSideEnabled_CheckedChanged(object sender, EventArgs e)
         {
-            if (!inCheckChanged)
-            {
-                inCheckChanged = true;
-                chkDateModifiedClientSideEnabled.Checked = !chkDateModifiedClientSideEnabled.Checked;
-                inCheckChanged = false;
-            }
+            if (_inCheckChanged) return;
+            _inCheckChanged = true;
+            chkDateModifiedClientSideEnabled.Checked = !chkDateModifiedClientSideEnabled.Checked;
+            _inCheckChanged = false;
         }
 
         private void chkDateModifiedClientSideEnabled_CheckedChanged(object sender, EventArgs e)
         {
-            if (!inCheckChanged)
-            {
-                inCheckChanged = true;
-                chkDateModifiedServerSideEnabled.Checked = !chkDateModifiedClientSideEnabled.Checked;
-                inCheckChanged = false;
-            }
+            if (_inCheckChanged) return;
+            _inCheckChanged = true;
+            chkDateModifiedServerSideEnabled.Checked = !chkDateModifiedClientSideEnabled.Checked;
+            _inCheckChanged = false;
         }
 
         private void chkAddedByEnabled_CheckedChanged(object sender, EventArgs e)
         {
-            bool isChecked = chkAddedByEnabled.Checked;
+            var isChecked = chkAddedByEnabled.Checked;
 
             txtAddedByColumnName.Enabled = isChecked;
             chkAddedByServerSide.Enabled = isChecked;
@@ -1283,7 +1239,7 @@ namespace EntitySpaces.AddIn
 
         private void chkModifiedByEnabled_CheckedChanged(object sender, EventArgs e)
         {
-            bool isChecked = chkModifiedByEnabled.Checked;
+            var isChecked = chkModifiedByEnabled.Checked;
 
             txtModifiedByColumnName.Enabled = isChecked;
             chkModifiedByServerSide.Enabled = isChecked;
@@ -1293,62 +1249,39 @@ namespace EntitySpaces.AddIn
 
         private void chkAddedByServerSide_CheckedChanged(object sender, EventArgs e)
         {
-            if (!inCheckChanged)
-            {
-                inCheckChanged = true;
-                chkAddedByEventHandler.Checked = !chkAddedByEventHandler.Checked;
-                inCheckChanged = false;
-            }
+            if (_inCheckChanged) return;
+            _inCheckChanged = true;
+            chkAddedByEventHandler.Checked = !chkAddedByEventHandler.Checked;
+            _inCheckChanged = false;
         }
 
         private void chkAddedByEventHandler_CheckedChanged(object sender, EventArgs e)
         {
-            if (!inCheckChanged)
-            {
-                inCheckChanged = true;
-                chkAddedByServerSide.Checked = !chkAddedByServerSide.Checked;
-                inCheckChanged = false;
-            }
+            if (_inCheckChanged) return;
+            _inCheckChanged = true;
+            chkAddedByServerSide.Checked = !chkAddedByServerSide.Checked;
+            _inCheckChanged = false;
         }
 
         private void chkModifiedByServerSide_CheckedChanged(object sender, EventArgs e)
         {
-            if (!inCheckChanged)
-            {
-                inCheckChanged = true;
-                chkModifiedByEventHandler.Checked = !chkModifiedByEventHandler.Checked;
-                inCheckChanged = false;
-            }
+            if (_inCheckChanged) return;
+            _inCheckChanged = true;
+            chkModifiedByEventHandler.Checked = !chkModifiedByEventHandler.Checked;
+            _inCheckChanged = false;
         }
 
         private void chkModifiedByEventHandler_CheckedChanged(object sender, EventArgs e)
         {
-            if (!inCheckChanged)
-            {
-                inCheckChanged = true;
-                chkModifiedByServerSide.Checked = !chkModifiedByServerSide.Checked;
-                inCheckChanged = false;
-            }
+            if (_inCheckChanged) return;
+            _inCheckChanged = true;
+            chkModifiedByServerSide.Checked = !chkModifiedByServerSide.Checked;
+            _inCheckChanged = false;
         }
 
         private void chkConcurrencyColumn_CheckedChanged(object sender, EventArgs e)
         {
             txtConcurrencyColumnName.Enabled = chkConcurrencyColumn.Checked;
-        }
-
-        internal static ProxySettings GetProxySettings(esSettings settings)
-        {
-            ProxySettings proxy = new ProxySettings();
-            proxy.UseProxy = settings.LicenseProxyEnable;
-            if (proxy.UseProxy)
-            {
-                proxy.Url = settings.LicenseProxyUrl;
-                proxy.UserName = settings.LicenseProxyUserName;
-                proxy.Password = settings.LicenseProxyPassword;
-                proxy.DomainName = settings.LicenseProxyDomainName;
-            }
-
-            return proxy;
         }
     }
 }

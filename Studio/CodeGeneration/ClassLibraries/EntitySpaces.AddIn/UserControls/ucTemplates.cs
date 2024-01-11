@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
-
-using EntitySpaces.AddIn.TemplateUI;
 using EntitySpaces.CodeGenerator;
 using EntitySpaces.MetadataEngine;
 
@@ -82,7 +76,7 @@ namespace EntitySpaces.AddIn
                 this.MainWindow.HideErrorOrStatusMessage();
 
                 Template template = this.tree.SelectedNode.Tag as Template;
-                this.templateDisplaySurface.DisplayTemplateUI(useCachedInput, null, this.Settings, template, OnExecute, OnCancel);
+                this.templateDisplaySurface.DisplayTemplateUi(useCachedInput, null, this.Settings, template, OnExecute, OnCancel);
             }
             catch (Exception ex)
             {
@@ -101,7 +95,7 @@ namespace EntitySpaces.AddIn
                 if (surface.GatherUserInput())
                 {
                     Template temp = new Template();
-                    temp.Execute(surface.esMeta, surface.Template.Header.FullFileName);
+                    temp.Execute(surface.EsMeta, surface.Template.Header.FullFileName);
 
                     surface.CacheUserInput();
 

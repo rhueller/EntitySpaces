@@ -1,38 +1,33 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-
-using EntitySpaces.Common;
-using EntitySpaces.AddIn.TemplateUI;
 using EntitySpaces.CodeGenerator;
 using EntitySpaces.MetadataEngine;
 
 namespace EntitySpaces.AddIn
 {
-    internal class ucTemplateControl : TreeView
+    internal class UcTemplateControl : TreeView
     {
-        private TreeNode rootNode = null;
-        private TemplateUICollection coll = new TemplateUICollection();
-        private SortedList<int, UserControl> currentUIControls = new SortedList<int, UserControl>();
-        private Dictionary<Guid, Hashtable> cachedSettings = new Dictionary<Guid, Hashtable>();
-        private esSettings Settings;
+        private TreeNode _rootNode;
+        private readonly TemplateUICollection _coll = new TemplateUICollection();
+        private readonly SortedList<int, UserControl> _currentUiControls = new SortedList<int, UserControl>();
+        private esSettings _settings;
 
-        private ImageList imageList;
-        private ContextMenuStrip folderMenu;
-        private ToolStripMenuItem showallexecutable;
-        private ToolStripMenuItem showall;
-        private ToolStripSeparator toolStripSeparator6;
-        private ToolStripMenuItem collapseAll;
+        private ImageList _imageList;
+        private ContextMenuStrip _folderMenu;
+        private ToolStripMenuItem _showallexecutable;
+        private ToolStripMenuItem _showall;
+        private ToolStripSeparator _toolStripSeparator6;
+        private ToolStripMenuItem _collapseAll;
         private System.ComponentModel.IContainer components;
 
         public void LoadTemplates(ContextMenuStrip templateMenu, ContextMenuStrip subTemplateMenu, esSettings settings)
         {
             try
             {
-                this.Settings = settings;
+                this._settings = settings;
 
                 if (this.TreeViewNodeSorter == null)
                 {
@@ -40,19 +35,19 @@ namespace EntitySpaces.AddIn
                     InitializeComponent();
 
                     Template.SetTemplateCachePath(esSettings.TemplateCachePath);
-                    Template.SetCompilerAssemblyPath(Settings.CompilerAssemblyPath);
+                    Template.SetCompilerAssemblyPath(_settings.CompilerAssemblyPath);
                 }
 
                 this.Nodes.Clear();
-                rootNode = this.Nodes.Add("Templates");
-                rootNode.ImageIndex = 2;
-                rootNode.SelectedImageIndex = 2;
-                rootNode.ContextMenuStrip = this.folderMenu;
+                _rootNode = this.Nodes.Add("Templates");
+                _rootNode.ImageIndex = 2;
+                _rootNode.SelectedImageIndex = 2;
+                _rootNode.ContextMenuStrip = this._folderMenu;
 
-                this.currentUIControls.Clear();
-                this.coll.Clear();
+                this._currentUiControls.Clear();
+                this._coll.Clear();
 
-                string[] files = Directory.GetFiles(Settings.TemplatePath, "*.est", SearchOption.AllDirectories);
+                string[] files = Directory.GetFiles(_settings.TemplatePath, "*.est", SearchOption.AllDirectories);
 
                 foreach (string file in files)
                 {
@@ -74,7 +69,7 @@ namespace EntitySpaces.AddIn
                     catch { continue; }
 
                     // Okay, we have a valid template with a namespace ...
-                    TreeNode node = rootNode;
+                    TreeNode node = _rootNode;
                     TreeNode[] temp = null;
 
                     // This foreach loop adds all of the folder entries based on 
@@ -95,7 +90,7 @@ namespace EntitySpaces.AddIn
 
                         node.ImageIndex = 2;
                         node.SelectedImageIndex = 2;
-                        node.ContextMenuStrip = this.folderMenu;
+                        node.ContextMenuStrip = this._folderMenu;
                     }
 
                     // Now we add the final node, with the template icon and stash the Template
@@ -177,68 +172,68 @@ namespace EntitySpaces.AddIn
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ucTemplateControl));
-            this.imageList = new System.Windows.Forms.ImageList(this.components);
-            this.folderMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.showallexecutable = new System.Windows.Forms.ToolStripMenuItem();
-            this.showall = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.collapseAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.folderMenu.SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UcTemplateControl));
+            this._imageList = new System.Windows.Forms.ImageList(this.components);
+            this._folderMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this._showallexecutable = new System.Windows.Forms.ToolStripMenuItem();
+            this._showall = new System.Windows.Forms.ToolStripMenuItem();
+            this._toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this._collapseAll = new System.Windows.Forms.ToolStripMenuItem();
+            this._folderMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // imageList
             // 
-            this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
-            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList.Images.SetKeyName(0, "template.png");
-            this.imageList.Images.SetKeyName(1, "template_selected.png");
-            this.imageList.Images.SetKeyName(2, "folder_closed.png");
-            this.imageList.Images.SetKeyName(3, "folder_open.png");
+            this._imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("_imageList.ImageStream")));
+            this._imageList.TransparentColor = System.Drawing.Color.Transparent;
+            this._imageList.Images.SetKeyName(0, "template.png");
+            this._imageList.Images.SetKeyName(1, "template_selected.png");
+            this._imageList.Images.SetKeyName(2, "folder_closed.png");
+            this._imageList.Images.SetKeyName(3, "folder_open.png");
             // 
             // folderMenu
             // 
-            this.folderMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showallexecutable,
-            this.showall,
-            this.toolStripSeparator6,
-            this.collapseAll});
-            this.folderMenu.Name = "folderMenu";
-            this.folderMenu.Size = new System.Drawing.Size(234, 76);
-            this.folderMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.folderMenu_ItemClicked);
+            this._folderMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._showallexecutable,
+            this._showall,
+            this._toolStripSeparator6,
+            this._collapseAll});
+            this._folderMenu.Name = "_folderMenu";
+            this._folderMenu.Size = new System.Drawing.Size(234, 76);
+            this._folderMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.folderMenu_ItemClicked);
             // 
             // showallexecutable
             // 
-            this.showallexecutable.Image = ((System.Drawing.Image)(resources.GetObject("showallexecutable.Image")));
-            this.showallexecutable.Name = "showallexecutable";
-            this.showallexecutable.Size = new System.Drawing.Size(233, 22);
-            this.showallexecutable.Text = "Show All Executable Templates";
+            this._showallexecutable.Image = ((System.Drawing.Image)(resources.GetObject("_showallexecutable.Image")));
+            this._showallexecutable.Name = "_showallexecutable";
+            this._showallexecutable.Size = new System.Drawing.Size(233, 22);
+            this._showallexecutable.Text = "Show All Executable Templates";
             // 
             // showall
             // 
-            this.showall.Image = ((System.Drawing.Image)(resources.GetObject("showall.Image")));
-            this.showall.Name = "showall";
-            this.showall.Size = new System.Drawing.Size(233, 22);
-            this.showall.Text = "Show All Templates";
+            this._showall.Image = ((System.Drawing.Image)(resources.GetObject("_showall.Image")));
+            this._showall.Name = "_showall";
+            this._showall.Size = new System.Drawing.Size(233, 22);
+            this._showall.Text = "Show All Templates";
             // 
             // toolStripSeparator6
             // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(230, 6);
+            this._toolStripSeparator6.Name = "_toolStripSeparator6";
+            this._toolStripSeparator6.Size = new System.Drawing.Size(230, 6);
             // 
             // collapseAll
             // 
-            this.collapseAll.Image = ((System.Drawing.Image)(resources.GetObject("collapseAll.Image")));
-            this.collapseAll.Name = "collapseAll";
-            this.collapseAll.Size = new System.Drawing.Size(233, 22);
-            this.collapseAll.Text = "Collapse All";
+            this._collapseAll.Image = ((System.Drawing.Image)(resources.GetObject("_collapseAll.Image")));
+            this._collapseAll.Name = "_collapseAll";
+            this._collapseAll.Size = new System.Drawing.Size(233, 22);
+            this._collapseAll.Text = "Collapse All";
             // 
             // ucTemplateControl
             // 
             this.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.HideSelection = false;
             this.ImageIndex = 0;
-            this.ImageList = this.imageList;
+            this.ImageList = this._imageList;
             this.ItemHeight = 18;
             this.LineColor = System.Drawing.Color.Black;
             this.PathSeparator = ".";
@@ -247,7 +242,7 @@ namespace EntitySpaces.AddIn
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ucTemplateControl_MouseClick);
             this.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tree_BeforeExpand);
             this.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.tree_BeforeCollapse);
-            this.folderMenu.ResumeLayout(false);
+            this._folderMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
