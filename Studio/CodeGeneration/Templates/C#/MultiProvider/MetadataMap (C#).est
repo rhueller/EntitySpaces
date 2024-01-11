@@ -92,7 +92,7 @@ namespace <%=Namespace%>
 {
     public partial class <%=source.Metadata%> : esMetadata, IMetadata
     {
-		static private int RegisterDelegate<%=MapName%>()
+		private static int RegisterDelegate<%=MapName%>()
 		{
 			// This is only executed once per the life of the application
 			lock (typeof(<%=source.Metadata%>))
@@ -187,7 +187,7 @@ namespace <%=Namespace%>
 			return m_providerMetadataMaps["<%=MapName%>"];
 		}
 		
-		static private int _<%=MapName%> = RegisterDelegate<%=MapName%>();
+		private static int _<%=MapName%> = RegisterDelegate<%=MapName%>();
     }
 }
 <%

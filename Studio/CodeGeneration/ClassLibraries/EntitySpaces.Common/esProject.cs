@@ -9,9 +9,9 @@ using EntitySpaces.MetadataEngine;
 
 namespace EntitySpaces.Common
 {
-    public class EsProject
+    public class esProject
     {
-        public EsProjectNode RootNode;
+        public esProjectNode RootNode;
 
         // used in serialized project file
         private const string EsProjectVersion = "2019.1.0.0";
@@ -33,7 +33,7 @@ namespace EntitySpaces.Common
 
             RootNode = null;
 
-            var parents = new Dictionary<int, EsProjectNode>();
+            var parents = new Dictionary<int, esProjectNode>();
 
             using (var reader = new XmlTextReader(fileNameAndFilePath))
             {
@@ -50,7 +50,7 @@ namespace EntitySpaces.Common
 
                 reader.Read();
 
-                var currentNode = new EsProjectNode
+                var currentNode = new esProjectNode
                 {
                     Name = reader.GetAttribute("Name")
                 };
@@ -66,7 +66,7 @@ namespace EntitySpaces.Common
                         {
                             case "Folder":
 
-                                currentNode = new EsProjectNode
+                                currentNode = new esProjectNode
                                 {
                                     Name = reader.GetAttribute("Name")
                                 };
@@ -77,7 +77,7 @@ namespace EntitySpaces.Common
 
                             case "RecordedTemplate":
 
-                                currentNode = new EsProjectNode
+                                currentNode = new esProjectNode
                                 {
                                     Name = reader.GetAttribute("Name"),
                                     IsFolder = false
@@ -236,11 +236,11 @@ namespace EntitySpaces.Common
             writer.Close();
         }
 
-        private void Save(EsProjectNode node, XmlTextWriter writer)
+        private void Save(esProjectNode node, XmlTextWriter writer)
         {
             BeginWriteNode(node, writer);
 
-            foreach (var childNode in node.Children.Cast<EsProjectNode>())
+            foreach (var childNode in node.Children.Cast<esProjectNode>())
             {
                 Save(childNode, writer);
             }

@@ -114,7 +114,7 @@ namespace <%=Namespace%>
 		#endregion<%}%>
 		
 		<%if(ConnectionName != null && ConnectionName.Length > 0) {%>
-		override protected string GetConnectionName()
+		protected override string GetConnectionName()
 		{
 			return "<%=ConnectionName%>";
 		}<%}%>		

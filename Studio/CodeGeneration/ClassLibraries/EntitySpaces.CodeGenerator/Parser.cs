@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ namespace EntitySpaces.CodeGenerator
     /// <summary>
     /// The Template parser for the EntitySpaces CodeGenerator. It populates a CodeBuilder class from a template file.
     /// </summary>
-    internal class Parser
+    internal abstract class Parser
     {
         private const string MarkupOpenTag = "<%";
         private const string TagStartHeaders = "<%@";
@@ -19,7 +18,7 @@ namespace EntitySpaces.CodeGenerator
         private const string MarkupCloseTag = "%>";
         private const string RunAtTemplateOpenTag = "<script runat=\"template\">";
         private const string RunAtTemplateCloseTag = "</script>";
-        private static string[,] Chars2Replace = new string[5, 2] { { "\\", "\\\\" }, { "\"", "\\\"" }, { "\r", "\\r" }, { "\n", "\\n" }, { "\t", "\\t" } };
+        private static readonly string[,] Chars2Replace = new string[5, 2] { { "\\", "\\\\" }, { "\"", "\\\"" }, { "\r", "\\r" }, { "\n", "\\n" }, { "\t", "\\t" } };
 
         private const string ClassDeclarationText = @"
 public class ";

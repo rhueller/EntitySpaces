@@ -286,7 +286,7 @@ namespace <%=WCFServiceClassNamespace%>
 } // foreach %>
 		#region EntitySpaces Support Routines
 		
-		static private List<Type> AllKnownTypes = GetAllKnownTypes();
+		private static List<Type> AllKnownTypes = GetAllKnownTypes();
 
 		static List<Type> GetAllKnownTypes()
 		{

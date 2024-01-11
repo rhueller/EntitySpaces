@@ -261,7 +261,7 @@ namespace <%=Namespace%>
 			this.es.JoinAlias = joinAlias;
 		}	
 		<%if(WcfSupport){%>
-		override protected string GetQueryName()
+		protected override string GetQueryName()
 		{
 			return "<%=source.Query%>";
 		}<%}%>

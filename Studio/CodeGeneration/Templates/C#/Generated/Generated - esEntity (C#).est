@@ -86,8 +86,8 @@ namespace <%=Namespace%>
 {<%}%><%if(!TargetTheCompactFramework){%>
 	[DataContract]
 	[Serializable]<%} if (UseCustomBaseClass) {%>
-	abstract public partial class <%=source.esEntity%> : EntityBase<%}else{%>
-	abstract public partial class <%=source.esEntity%> : esEntity<%}%>
+	public abstract partial class <%=source.esEntity%> : EntityBase<%}else{%>
+	public abstract partial class <%=source.esEntity%> : esEntity<%}%>
 	{
 		public <%=source.esEntity%>()
 		{
@@ -435,7 +435,7 @@ namespace <%=Namespace%>
 		
 		#region Housekeeping methods
 
-		override protected IMetadata Meta
+		protected override IMetadata Meta
 		{
 			get
 			{

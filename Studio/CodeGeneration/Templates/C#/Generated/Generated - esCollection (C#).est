@@ -77,11 +77,11 @@ namespace <%=Namespace%>
 {<%}%>
 <%if(!TargetTheCompactFramework){%>
 	[Serializable]<%} if (UseCustomBaseClass) {%>
-	abstract public partial class <%=source.esCollection%> : CollectionBase<<%=source.Entity%>><%}else{%>
-	abstract public partial class <%=source.esCollection%> : esEntityCollection<<%=source.Entity%>><%}%>
+	public abstract partial class <%=source.esCollection%> : CollectionBase<<%=source.Entity%>><%}else{%>
+	public abstract partial class <%=source.esCollection%> : esEntityCollection<<%=source.Entity%>><%}%>
 	{
 		#region Housekeeping methods
-		override protected IMetadata Meta
+		protected override IMetadata Meta
 		{
 			get
 			{
@@ -122,7 +122,7 @@ namespace <%=Namespace%>
 			return Query.Load();
 		}
 
-		override protected esDynamicQuery GetDynamicQuery()
+		protected override esDynamicQuery GetDynamicQuery()
 		{
 			if (this.query == null)
 			{

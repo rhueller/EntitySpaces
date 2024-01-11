@@ -82,13 +82,13 @@ namespace <%=Namespace%>
 			this.es.JoinAlias = joinAlias;
 		}	
 
-		override protected string GetQueryName()
+		protected override string GetQueryName()
 		{
 			return "<%=source.Query%>";
 		}
 		
 		<%if(ConnectionName != null && ConnectionName.Length > 0) {%>
-		override protected string GetConnectionName()
+		protected override string GetConnectionName()
 		{
 			return "<%=ConnectionName%>";
 		}<%}%>			

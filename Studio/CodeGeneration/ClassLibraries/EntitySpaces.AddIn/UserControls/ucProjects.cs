@@ -13,7 +13,7 @@ namespace EntitySpaces.AddIn.UserControls
     internal partial class UcProjects : esUserControl
     {
         private string _projectName;
-        private EsProject _project;
+        private esProject _project;
         private MostRecentlyUsedList _mru;
         private bool _isDirty;
 
@@ -627,7 +627,7 @@ namespace EntitySpaces.AddIn.UserControls
             }
         }
 
-        private void ConvertProjectToTree(TreeNode parentNode, EsProjectNode esNode)
+        private void ConvertProjectToTree(TreeNode parentNode, esProjectNode esNode)
         {
             TreeNode node = null;
 
@@ -655,15 +655,15 @@ namespace EntitySpaces.AddIn.UserControls
                 node.ToolTipText = esNode.Template.Header.Description + " (" + node.FullPath + ")";
             }
 
-            foreach (EsProjectNode childNode in esNode.Children)
+            foreach (esProjectNode childNode in esNode.Children)
             {
                 ConvertProjectToTree(node, childNode);
             }
         }
 
-        private void ConvertTreeToProject(EsProjectNode esParentNode, TreeNode node)
+        private void ConvertTreeToProject(esProjectNode esParentNode, TreeNode node)
         {
-            var esNode = new EsProjectNode();
+            var esNode = new esProjectNode();
             esNode.Name = node.Text;
 
             if (esParentNode == null)
@@ -750,7 +750,7 @@ namespace EntitySpaces.AddIn.UserControls
         {
             var rootNode = projectTree.Nodes[0];
 
-            _project = new EsProject();
+            _project = new esProject();
             ConvertTreeToProject(_project.RootNode, rootNode);
             _project.Save(fileNameAndPath, MainWindow.Settings);
             _project = null;
@@ -765,7 +765,7 @@ namespace EntitySpaces.AddIn.UserControls
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                var project = new EsProject();
+                var project = new esProject();
                 project.Load(fileNameAndPath, MainWindow.Settings);
 
                 projectTree.Nodes.Clear();

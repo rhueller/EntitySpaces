@@ -192,7 +192,7 @@ namespace <%=Namespace%>
 		}
 		#endregion	
 	
-		static public <%=source.Metadata%> Meta()
+		public static <%=source.Metadata%> Meta()
 		{
 			return meta;
 		}	
@@ -244,7 +244,7 @@ namespace <%=Namespace%>
 		
 		#region MAP esDefault
 		
-		static private int RegisterDelegateesDefault()
+		private static int RegisterDelegateesDefault()
 		{
 			// This is only executed once per the life of the application
 			lock (typeof(<%=source.Metadata%>))
@@ -379,9 +379,9 @@ namespace <%=Namespace%>
 
 		#endregion
 
-		static private <%=source.Metadata%> meta;
-		static protected Dictionary<string, MapToMeta> mapDelegates;
-		static private int _esDefault = RegisterDelegateesDefault();
+		private static <%=source.Metadata%> meta;
+		protected static Dictionary<string, MapToMeta> mapDelegates;
+		private static int _esDefault = RegisterDelegateesDefault();
 	}
 }
 <script runat="template">

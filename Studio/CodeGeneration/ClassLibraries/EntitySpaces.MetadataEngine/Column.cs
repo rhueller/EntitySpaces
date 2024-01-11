@@ -41,7 +41,7 @@ namespace EntitySpaces.MetadataEngine
         {
             get
             {
-                return this.dbRoot.esPlugIn.CSharpToSystemType(this);
+                return esPlugIn.CSharpToSystemType(this);
             }
         }
 

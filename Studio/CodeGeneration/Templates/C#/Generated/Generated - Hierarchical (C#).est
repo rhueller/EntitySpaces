@@ -478,7 +478,7 @@ namespace <%=Namespace%>
 				}%>
 		#region <%=objName%> - Zero To Many
 		
-		static public esPrefetchMap Prefetch_<%=objName%>
+		public static esPrefetchMap Prefetch_<%=objName%>
 		{
 			get
 			{
@@ -492,7 +492,7 @@ namespace <%=Namespace%>
 			}
 		}		
 		
-		static private void <%=objName%>_Delegate(esPrefetchParameters data)
+		private static void <%=objName%>_Delegate(esPrefetchParameters data)
 		{
 			<%=esMeta.esPlugIn.Query(tr.PrimaryTable)%> parent = new <%=esMeta.esPlugIn.Query(tr.PrimaryTable)%>(data.NextAlias());
 

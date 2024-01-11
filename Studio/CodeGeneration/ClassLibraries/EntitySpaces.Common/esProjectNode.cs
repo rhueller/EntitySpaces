@@ -5,7 +5,7 @@ using EntitySpaces.CodeGenerator;
 
 namespace EntitySpaces.Common
 {
-    public class EsProjectNode : IProjectNode
+    public class esProjectNode : IProjectNode
     {
         public bool IsFolder { get; set; } = true;
 

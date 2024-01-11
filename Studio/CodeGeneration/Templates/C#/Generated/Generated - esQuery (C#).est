@@ -73,10 +73,10 @@ namespace <%=Namespace%>
 {<%}%>
 <%if(!TargetTheCompactFramework){%>
 	[Serializable]<%} if (UseCustomBaseClass) {%>
-	abstract public partial class <%=source.esQuery%> : QueryBase<%}else{%>
-	abstract public partial class <%=source.esQuery%> : esDynamicQuery<%}%>
+	public abstract partial class <%=source.esQuery%> : QueryBase<%}else{%>
+	public abstract partial class <%=source.esQuery%> : esDynamicQuery<%}%>
 	{
-		override protected IMetadata Meta
+		protected override IMetadata Meta
 		{
 			get
 			{

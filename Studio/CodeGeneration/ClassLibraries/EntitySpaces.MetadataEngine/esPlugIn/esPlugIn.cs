@@ -148,6 +148,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Xml;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace EntitySpaces.MetadataEngine
 {
@@ -215,7 +216,7 @@ namespace EntitySpaces.MetadataEngine
     /// </remarks>
     public esPlugIn(esSettings settings)
     {
-      this.Settings = settings;
+      Settings = settings;
     }
 
     #region Naming Methods
@@ -227,10 +228,7 @@ namespace EntitySpaces.MetadataEngine
     /// The default is "es", as in "esEntity", "esCollection" and others. You can modify this property to override the default of "es".
     /// See <see cref="esEntity"/>, <see cref="esCollection"/>, <see cref="esQuery"/>
     /// </remarks>
-    public string sPrefix
-    {
-      get { return Settings.AbstractPrefix; }
-    }
+    public string sPrefix => Settings.AbstractPrefix;
 
     /// <summary>
     /// The suffix used when building abstract and concrete "Entity" class names. 
@@ -239,10 +237,7 @@ namespace EntitySpaces.MetadataEngine
     /// The default is "" or blank meaning a Table with the name "Employees" 
     /// would be called "Employees". See <see cref="Entity"/> and <see cref="esEntity"/>
     /// </remarks>
-    public string sEntity
-    {
-      get { return Settings.EntitySuffix; }
-    }
+    public string sEntity => Settings.EntitySuffix;
 
     /// <summary>
     /// The suffix used when building abstract and concrete "Collection" class names. 
@@ -251,10 +246,7 @@ namespace EntitySpaces.MetadataEngine
     /// The default is "Collection" meaning a Table with the name "Employees" 
     /// would be called "EmployeesCollection". See <see cref="Collection"/> and <see cref="esCollection"/>
     /// </remarks>
-    public string sCollection
-    {
-      get { return Settings.CollectionSuffix; }
-    }
+    public string sCollection => Settings.CollectionSuffix;
 
     /// <summary>
     /// The suffix used when building abstract and concrete "Query" class names. 
@@ -263,10 +255,7 @@ namespace EntitySpaces.MetadataEngine
     /// The default is "Query" meaning a Table with the name "Employees" 
     /// would be called "EmployeesQuery". See <see cref="Query"/> and <see cref="esQuery"/>
     /// </remarks>
-    public string sQuery
-    {
-      get { return Settings.QuerySuffix; }
-    }
+    public string sQuery => Settings.QuerySuffix;
 
     /// <summary>
     /// The suffix used when building abstract and concrete "ProxyStub" class names. 
@@ -275,10 +264,7 @@ namespace EntitySpaces.MetadataEngine
     /// The default is "ProxyStub" or blank meaning a Table with the name "Employees" 
     /// would be called "EmployeesProxyStub". See <see cref="ProxyStub"/>
     /// </remarks>
-    public string sProxyStub
-    {
-      get { return Settings.ProxyStubSuffix; }
-    }
+    public string sProxyStub => Settings.ProxyStubSuffix;
 
     /// <summary>
     /// The suffix used when building concrete "Metadata" class names. 
@@ -286,12 +272,9 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is "Metadata" meaning a Table with the name "Employees" 
     /// would be called "EmployeesMetadata". There are no abstract classes for the Metadata type.
-    /// See <see cref="Metadata"/>
+    /// See <see cref="sMetadata"/>
     /// </remarks>
-    public string sMetadata
-    {
-      get { return Settings.MetadataSuffix; }
-    }
+    public string sMetadata => Settings.MetadataSuffix;
 
     /// <summary>
     /// The prefix used when building stored procedure names. 
@@ -299,10 +282,7 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is "proc_" meaning stored procedures will begin with "proc_" 
     /// </remarks>
-    public string sProcPrefix
-    {
-      get { return Settings.ProcPrefix; }
-    }
+    public string sProcPrefix => Settings.ProcPrefix;
 
     /// <summary>
     /// The suffix used when building stored procedure names. 
@@ -310,10 +290,7 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is "" meaning no suffix is defined.
     /// </remarks>
-    public string sProcSuffix
-    {
-      get { return Settings.ProcSuffix; }
-    }
+    public string sProcSuffix => Settings.ProcSuffix;
 
     /// <summary>
     /// Used when building the Insert stored procedure name. 
@@ -321,10 +298,7 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is "Insert".
     /// </remarks>
-    public string sProcInsert
-    {
-      get { return Settings.ProcInsert; }
-    }
+    public string sProcInsert => Settings.ProcInsert;
 
     /// <summary>
     /// Used when building the Update stored procedure name. 
@@ -332,10 +306,7 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is "Update".
     /// </remarks>
-    public string sProcUpdate
-    {
-      get { return Settings.ProcUpdate; }
-    }
+    public string sProcUpdate => Settings.ProcUpdate;
 
     /// <summary>
     /// Used when building the Delete stored procedure name. 
@@ -343,10 +314,7 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is "Delete".
     /// </remarks>
-    public string sProcDelete
-    {
-      get { return Settings.ProcDelete; }
-    }
+    public string sProcDelete => Settings.ProcDelete;
 
     /// <summary>
     /// Used when building the LoadAll stored procedure name. 
@@ -354,10 +322,7 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is "LoadAll".
     /// </remarks>
-    public string sProcLoadAll
-    {
-      get { return Settings.ProcLoadAll; }
-    }
+    public string sProcLoadAll => Settings.ProcLoadAll;
 
     /// <summary>
     /// Used when building the LoadByPk stored procedure name. 
@@ -365,10 +330,7 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is "LoadByPrimaryKey".
     /// </remarks>
-    public string sProcLoadByPK
-    {
-      get { return Settings.ProcLoadByPK; }
-    }
+    public string sProcLoadByPK => Settings.ProcLoadByPK;
 
     #endregion
 
@@ -399,9 +361,9 @@ namespace EntitySpaces.MetadataEngine
     public string Entity(esPluginSource source)
     {
       if (source.table != null)
-        return this.Entity(source.table);
+        return Entity(source.table);
       else
-        return this.Entity(source.view);
+        return Entity(source.view);
     }
 
     /// <summary>
@@ -426,13 +388,13 @@ namespace EntitySpaces.MetadataEngine
         return Utils.RemoveIllegalCharacters(table.Alias) + sEntity;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return table.Schema + "_" + this.Entity(table.Name);
+          return table.Schema + "_" + Entity(table.Name);
         }
         else
         {
-          return this.Entity(table.Name);
+          return Entity(table.Name);
         }
       }
     }
@@ -459,13 +421,13 @@ namespace EntitySpaces.MetadataEngine
         return Utils.RemoveIllegalCharacters(view.Alias) + sEntity;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return view.Schema + "_" + this.Entity(view.Name);
+          return view.Schema + "_" + Entity(view.Name);
         }
         else
         {
-          return this.Entity(view.Name);
+          return Entity(view.Name);
         }
       }
     }
@@ -487,7 +449,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Entity class name</returns>
     public string Entity(string name)
     {
-      return this.EntityCore(name) + sEntity;
+      return EntityCore(name) + sEntity;
     }
     #endregion
 
@@ -518,9 +480,9 @@ namespace EntitySpaces.MetadataEngine
     public string Collection(esPluginSource source)
     {
       if (source.table != null)
-        return this.Collection(source.table);
+        return Collection(source.table);
       else
-        return this.Collection(source.view);
+        return Collection(source.view);
     }
 
     /// <summary>
@@ -547,13 +509,13 @@ namespace EntitySpaces.MetadataEngine
         return Utils.RemoveIllegalCharacters(table.Alias) + sCollection;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return table.Schema + "_" + this.Collection(table.Name);
+          return table.Schema + "_" + Collection(table.Name);
         }
         else
         {
-          return this.Collection(table.Name);
+          return Collection(table.Name);
         }
       }
     }
@@ -582,13 +544,13 @@ namespace EntitySpaces.MetadataEngine
         return Utils.RemoveIllegalCharacters(view.Alias) + sCollection;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return view.Schema + "_" + this.Collection(view.Name);
+          return view.Schema + "_" + Collection(view.Name);
         }
         else
         {
-          return this.Collection(view.Name);
+          return Collection(view.Name);
         }
       }
     }
@@ -612,7 +574,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Collection class name</returns>
     public string Collection(string name)
     {
-      return this.EntityCore(name) + sCollection;
+      return EntityCore(name) + sCollection;
     }
     #endregion
 
@@ -643,9 +605,9 @@ namespace EntitySpaces.MetadataEngine
     public string Query(esPluginSource source)
     {
       if (source.table != null)
-        return this.Query(source.table);
+        return Query(source.table);
       else
-        return this.Query(source.view);
+        return Query(source.view);
     }
 
     /// <summary>
@@ -672,13 +634,13 @@ namespace EntitySpaces.MetadataEngine
         return Utils.RemoveIllegalCharacters(table.Alias) + sQuery;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return table.Schema + "_" + this.Query(table.Name);
+          return table.Schema + "_" + Query(table.Name);
         }
         else
         {
-          return this.Query(table.Name);
+          return Query(table.Name);
         }
       }
     }
@@ -707,13 +669,13 @@ namespace EntitySpaces.MetadataEngine
         return Utils.RemoveIllegalCharacters(view.Alias) + sQuery;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return view.Schema + "_" + this.Query(view.Name);
+          return view.Schema + "_" + Query(view.Name);
         }
         else
         {
-          return this.Query(view.Name);
+          return Query(view.Name);
         }
       }
     }
@@ -737,7 +699,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Query class name</returns>
     public string Query(string name)
     {
-      return this.EntityCore(name) + sQuery;
+      return EntityCore(name) + sQuery;
     }
     #endregion
 
@@ -765,9 +727,9 @@ namespace EntitySpaces.MetadataEngine
     public string ProxyStub(esPluginSource source)
     {
       if (source.table != null)
-        return this.ProxyStub(source.table);
+        return ProxyStub(source.table);
       else
-        return this.ProxyStub(source.view);
+        return ProxyStub(source.view);
     }
 
     /// <summary>
@@ -792,13 +754,13 @@ namespace EntitySpaces.MetadataEngine
         return Utils.RemoveIllegalCharacters(table.Alias) + sProxyStub;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return table.Schema + "_" + this.ProxyStub(table.Name);
+          return table.Schema + "_" + ProxyStub(table.Name);
         }
         else
         {
-          return this.ProxyStub(table.Name);
+          return ProxyStub(table.Name);
         }
       }
     }
@@ -825,13 +787,13 @@ namespace EntitySpaces.MetadataEngine
         return Utils.RemoveIllegalCharacters(view.Alias) + sProxyStub;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return view.Schema + "_" + this.ProxyStub(view.Name);
+          return view.Schema + "_" + ProxyStub(view.Name);
         }
         else
         {
-          return this.ProxyStub(view.Name);
+          return ProxyStub(view.Name);
         }
       }
     }
@@ -853,7 +815,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Entity class name</returns>
     public string ProxyStub(string name)
     {
-      return this.EntityCore(name) + sProxyStub;
+      return EntityCore(name) + sProxyStub;
     }
 
     #endregion
@@ -882,9 +844,9 @@ namespace EntitySpaces.MetadataEngine
     public string ProxyStubCollection(esPluginSource source)
     {
       if (source.table != null)
-        return this.ProxyStubCollection(source.table);
+        return ProxyStubCollection(source.table);
       else
-        return this.ProxyStubCollection(source.view);
+        return ProxyStubCollection(source.view);
     }
 
     /// <summary>
@@ -909,13 +871,13 @@ namespace EntitySpaces.MetadataEngine
         return Utils.RemoveIllegalCharacters(table.Alias) + sCollection + sProxyStub;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return table.Schema + "_" + this.ProxyStubCollection(table.Name);
+          return table.Schema + "_" + ProxyStubCollection(table.Name);
         }
         else
         {
-          return this.ProxyStubCollection(table.Name);
+          return ProxyStubCollection(table.Name);
         }
       }
     }
@@ -942,13 +904,13 @@ namespace EntitySpaces.MetadataEngine
         return Utils.RemoveIllegalCharacters(view.Alias) + sCollection + sProxyStub;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return view.Schema + "_" + this.ProxyStubCollection(view.Name);
+          return view.Schema + "_" + ProxyStubCollection(view.Name);
         }
         else
         {
-          return this.ProxyStubCollection(view.Name);
+          return ProxyStubCollection(view.Name);
         }
       }
     }
@@ -970,7 +932,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Entity class name</returns>
     public string ProxyStubCollection(string name)
     {
-      return this.EntityCore(name) + sCollection + sProxyStub;
+      return EntityCore(name) + sCollection + sProxyStub;
     }
 
     #endregion
@@ -999,9 +961,9 @@ namespace EntitySpaces.MetadataEngine
     public string ProxyStubQuery(esPluginSource source)
     {
       if (source.table != null)
-        return this.ProxyStubQuery(source.table);
+        return ProxyStubQuery(source.table);
       else
-        return this.ProxyStubQuery(source.view);
+        return ProxyStubQuery(source.view);
     }
 
     /// <summary>
@@ -1026,13 +988,13 @@ namespace EntitySpaces.MetadataEngine
         return Utils.RemoveIllegalCharacters(table.Alias) + sQuery + sProxyStub;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return table.Schema + "_" + this.ProxyStubQuery(table.Name);
+          return table.Schema + "_" + ProxyStubQuery(table.Name);
         }
         else
         {
-          return this.ProxyStubQuery(table.Name);
+          return ProxyStubQuery(table.Name);
         }
       }
     }
@@ -1059,13 +1021,13 @@ namespace EntitySpaces.MetadataEngine
         return Utils.RemoveIllegalCharacters(view.Alias) + sQuery + sProxyStub;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return view.Schema + "_" + this.ProxyStubQuery(view.Name);
+          return view.Schema + "_" + ProxyStubQuery(view.Name);
         }
         else
         {
-          return this.ProxyStubQuery(view.Name);
+          return ProxyStubQuery(view.Name);
         }
       }
     }
@@ -1087,7 +1049,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Entity class name</returns>
     public string ProxyStubQuery(string name)
     {
-      return this.EntityCore(name) + sQuery + sProxyStub;
+      return EntityCore(name) + sQuery + sProxyStub;
     }
 
     #endregion
@@ -1123,9 +1085,9 @@ namespace EntitySpaces.MetadataEngine
     public string Metadata(esPluginSource source)
     {
       if (source.table != null)
-        return this.Metadata(source.table);
+        return Metadata(source.table);
       else
-        return this.Metadata(source.view);
+        return Metadata(source.view);
     }
 
     /// <summary>
@@ -1156,13 +1118,13 @@ namespace EntitySpaces.MetadataEngine
         return Utils.RemoveIllegalCharacters(table.Alias) + sMetadata;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return table.Schema + "_" + this.Metadata(table.Name);
+          return table.Schema + "_" + Metadata(table.Name);
         }
         else
         {
-          return this.Metadata(table.Name);
+          return Metadata(table.Name);
         }
       }
     }
@@ -1195,13 +1157,13 @@ namespace EntitySpaces.MetadataEngine
         return Utils.RemoveIllegalCharacters(view.Alias) + sMetadata;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return view.Schema + "_" + this.Metadata(view.Name);
+          return view.Schema + "_" + Metadata(view.Name);
         }
         else
         {
-          return this.Metadata(view.Name);
+          return Metadata(view.Name);
         }
       }
     }
@@ -1229,7 +1191,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Metadata class name</returns>
     public string Metadata(string name)
     {
-      return this.EntityCore(name) + sMetadata;
+      return EntityCore(name) + sMetadata;
     }
     #endregion
 
@@ -1264,9 +1226,9 @@ namespace EntitySpaces.MetadataEngine
     public string esEntity(esPluginSource source)
     {
       if (source.table != null)
-        return this.esEntity(source.table);
+        return esEntity(source.table);
       else
-        return this.esEntity(source.view);
+        return esEntity(source.view);
     }
 
     /// <summary>
@@ -1297,13 +1259,13 @@ namespace EntitySpaces.MetadataEngine
         return sPrefix + Utils.RemoveIllegalCharacters(table.Alias) + sEntity;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return table.Schema + "_" + this.esEntity(table.Name);
+          return table.Schema + "_" + esEntity(table.Name);
         }
         else
         {
-          return this.esEntity(table.Name);
+          return esEntity(table.Name);
         }
       }
     }
@@ -1336,13 +1298,13 @@ namespace EntitySpaces.MetadataEngine
         return sPrefix + Utils.RemoveIllegalCharacters(view.Alias) + sEntity;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return view.Schema + "_" + this.esEntity(view.Name);
+          return view.Schema + "_" + esEntity(view.Name);
         }
         else
         {
-          return this.esEntity(view.Name);
+          return esEntity(view.Name);
         }
       }
     }
@@ -1370,7 +1332,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The esEntity or abstract class name</returns>
     public string esEntity(string name)
     {
-      return sPrefix + this.EntityCore(name) + sEntity;
+      return sPrefix + EntityCore(name) + sEntity;
     }
     #endregion
 
@@ -1403,9 +1365,9 @@ namespace EntitySpaces.MetadataEngine
     public string esCollection(esPluginSource source)
     {
       if (source.table != null)
-        return this.esCollection(source.table);
+        return esCollection(source.table);
       else
-        return this.esCollection(source.view);
+        return esCollection(source.view);
     }
 
     /// <summary>
@@ -1434,13 +1396,13 @@ namespace EntitySpaces.MetadataEngine
         return sPrefix + Utils.RemoveIllegalCharacters(table.Alias) + sCollection;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return table.Schema + "_" + this.esCollection(table.Name);
+          return table.Schema + "_" + esCollection(table.Name);
         }
         else
         {
-          return this.esCollection(table.Name);
+          return esCollection(table.Name);
         }
       }
     }
@@ -1471,13 +1433,13 @@ namespace EntitySpaces.MetadataEngine
         return sPrefix + Utils.RemoveIllegalCharacters(view.Alias) + sCollection;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return view.Schema + "_" + this.esCollection(view.Name);
+          return view.Schema + "_" + esCollection(view.Name);
         }
         else
         {
-          return this.esCollection(view.Name);
+          return esCollection(view.Name);
         }
       }
     }
@@ -1503,7 +1465,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The esCollection or abstract class name</returns>
     public string esCollection(string name)
     {
-      return sPrefix + this.EntityCore(name) + sCollection;
+      return sPrefix + EntityCore(name) + sCollection;
     }
     #endregion
 
@@ -1536,9 +1498,9 @@ namespace EntitySpaces.MetadataEngine
     public string esQuery(esPluginSource source)
     {
       if (source.table != null)
-        return this.esQuery(source.table);
+        return esQuery(source.table);
       else
-        return this.esQuery(source.view);
+        return esQuery(source.view);
     }
 
     /// <summary>
@@ -1567,13 +1529,13 @@ namespace EntitySpaces.MetadataEngine
         return sPrefix + Utils.RemoveIllegalCharacters(table.Alias) + sQuery;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return table.Schema + "_" + this.esQuery(table.Name);
+          return table.Schema + "_" + esQuery(table.Name);
         }
         else
         {
-          return this.esQuery(table.Name);
+          return esQuery(table.Name);
         }
       }
     }
@@ -1604,13 +1566,13 @@ namespace EntitySpaces.MetadataEngine
         return sPrefix + Utils.RemoveIllegalCharacters(view.Alias) + sQuery;
       else
       {
-        if (this.Settings.PrefixWithSchema)
+        if (Settings.PrefixWithSchema)
         {
-          return view.Schema + "_" + this.esQuery(view.Name);
+          return view.Schema + "_" + esQuery(view.Name);
         }
         else
         {
-          return this.esQuery(view.Name);
+          return esQuery(view.Name);
         }
       }
     }
@@ -1636,7 +1598,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The esQuery or abstract class name</returns>
     public string esQuery(string name)
     {
-      return sPrefix + this.EntityCore(name) + sQuery;
+      return sPrefix + EntityCore(name) + sQuery;
     }
     #endregion
 
@@ -1674,7 +1636,7 @@ namespace EntitySpaces.MetadataEngine
       if (column.Alias != column.Name)
         return column.Alias;
       else
-        return this.PropertyName(column.Name);
+        return PropertyName(column.Name);
     }
 
     /// <summary>
@@ -1694,7 +1656,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public string PropertyName(string name)
     {
-      return this.ToPascalCase(name);
+      return ToPascalCase(name);
     }
     #endregion
 
@@ -1728,7 +1690,7 @@ namespace EntitySpaces.MetadataEngine
     {
       // In this case we always call down so that the
       // PropertyName and ParameterName wont match
-      return this.ParameterName(column.Alias);
+      return ParameterName(column.Alias);
     }
 
     /// <summary>
@@ -1749,7 +1711,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public string ParameterName(string name)
     {
-      return this.ToCamelCase(name);
+      return ToCamelCase(name);
     }
     #endregion
 
@@ -1783,9 +1745,9 @@ namespace EntitySpaces.MetadataEngine
     public string ProcInsert(esPluginSource source)
     {
       if (source.table != null)
-        return this.ProcInsert(source.table);
+        return ProcInsert(source.table);
       else
-        return this.ProcInsert(source.view);
+        return ProcInsert(source.view);
     }
 
     /// <summary>
@@ -1803,14 +1765,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Insert stored procedure name</returns>
     public string ProcInsert(ITable table)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcInsert + table.Name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcInsert + table.Name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + table.Name + this.Settings.ProcInsert + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + table.Name + Settings.ProcInsert + Settings.ProcSuffix;
       }
     }
 
@@ -1829,14 +1791,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Insert stored procedure name</returns>
     public string ProcInsert(IView view)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcInsert + view.Name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcInsert + view.Name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + view.Name + this.Settings.ProcInsert + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + view.Name + Settings.ProcInsert + Settings.ProcSuffix;
       }
     }
 
@@ -1855,14 +1817,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Insert stored procedure name</returns>
     public string ProcInsert(string name)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcInsert + name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcInsert + name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + name + this.Settings.ProcInsert + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + name + Settings.ProcInsert + Settings.ProcSuffix;
       }
     }
 
@@ -1894,9 +1856,9 @@ namespace EntitySpaces.MetadataEngine
     public string ProcUpdate(esPluginSource source)
     {
       if (source.table != null)
-        return this.ProcUpdate(source.table);
+        return ProcUpdate(source.table);
       else
-        return this.ProcUpdate(source.view);
+        return ProcUpdate(source.view);
     }
 
     /// <summary>
@@ -1914,14 +1876,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Update stored procedure name</returns>
     public string ProcUpdate(ITable table)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcUpdate + table.Name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcUpdate + table.Name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + table.Name + this.Settings.ProcUpdate + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + table.Name + Settings.ProcUpdate + Settings.ProcSuffix;
       }
     }
 
@@ -1940,14 +1902,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Update stored procedure name</returns>
     public string ProcUpdate(IView view)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcUpdate + view.Name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcUpdate + view.Name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + view.Name + this.Settings.ProcUpdate + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + view.Name + Settings.ProcUpdate + Settings.ProcSuffix;
       }
     }
 
@@ -1966,14 +1928,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Update stored procedure name</returns>
     public string ProcUpdate(string name)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcUpdate + name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcUpdate + name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + name + this.Settings.ProcUpdate + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + name + Settings.ProcUpdate + Settings.ProcSuffix;
       }
     }
 
@@ -2005,9 +1967,9 @@ namespace EntitySpaces.MetadataEngine
     public string ProcDelete(esPluginSource source)
     {
       if (source.table != null)
-        return this.ProcDelete(source.table);
+        return ProcDelete(source.table);
       else
-        return this.ProcDelete(source.view);
+        return ProcDelete(source.view);
     }
 
     /// <summary>
@@ -2025,14 +1987,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Delete stored procedure name</returns>
     public string ProcDelete(ITable table)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcDelete + table.Name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcDelete + table.Name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + table.Name + this.Settings.ProcDelete + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + table.Name + Settings.ProcDelete + Settings.ProcSuffix;
       }
     }
 
@@ -2051,14 +2013,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Delete stored procedure name</returns>
     public string ProcDelete(IView view)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcDelete + view.Name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcDelete + view.Name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + view.Name + this.Settings.ProcDelete + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + view.Name + Settings.ProcDelete + Settings.ProcSuffix;
       }
     }
 
@@ -2077,14 +2039,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The Delete stored procedure name</returns>
     public string ProcDelete(string name)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcDelete + name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcDelete + name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + name + this.Settings.ProcDelete + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + name + Settings.ProcDelete + Settings.ProcSuffix;
       }
     }
 
@@ -2116,9 +2078,9 @@ namespace EntitySpaces.MetadataEngine
     public string ProcLoadAll(esPluginSource source)
     {
       if (source.table != null)
-        return this.ProcLoadAll(source.table);
+        return ProcLoadAll(source.table);
       else
-        return this.ProcLoadAll(source.view);
+        return ProcLoadAll(source.view);
     }
 
     /// <summary>
@@ -2136,14 +2098,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The LoadAll stored procedure name</returns>
     public string ProcLoadAll(ITable table)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcLoadAll + table.Name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcLoadAll + table.Name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + table.Name + this.Settings.ProcLoadAll + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + table.Name + Settings.ProcLoadAll + Settings.ProcSuffix;
       }
     }
 
@@ -2162,14 +2124,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The LoadAll stored procedure name</returns>
     public string ProcLoadAll(IView view)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcLoadAll + view.Name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcLoadAll + view.Name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + view.Name + this.Settings.ProcLoadAll + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + view.Name + Settings.ProcLoadAll + Settings.ProcSuffix;
       }
     }
 
@@ -2188,14 +2150,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The LoadAll stored procedure name</returns>
     public string ProcLoadAll(string name)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcLoadAll + name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcLoadAll + name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + name + this.Settings.ProcLoadAll + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + name + Settings.ProcLoadAll + Settings.ProcSuffix;
       }
     }
 
@@ -2227,9 +2189,9 @@ namespace EntitySpaces.MetadataEngine
     public string ProcLoadByPK(esPluginSource source)
     {
       if (source.table != null)
-        return this.ProcLoadByPK(source.table);
+        return ProcLoadByPK(source.table);
       else
-        return this.ProcLoadByPK(source.view);
+        return ProcLoadByPK(source.view);
     }
 
     /// <summary>
@@ -2247,14 +2209,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The LoadByPK stored procedure name</returns>
     public string ProcLoadByPK(ITable table)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcLoadByPK + table.Name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcLoadByPK + table.Name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + table.Name + this.Settings.ProcLoadByPK + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + table.Name + Settings.ProcLoadByPK + Settings.ProcSuffix;
       }
     }
 
@@ -2273,14 +2235,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The LoadByPK stored procedure name</returns>
     public string ProcLoadByPK(IView view)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcLoadByPK + view.Name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcLoadByPK + view.Name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + view.Name + this.Settings.ProcLoadByPK + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + view.Name + Settings.ProcLoadByPK + Settings.ProcSuffix;
       }
     }
 
@@ -2299,14 +2261,14 @@ namespace EntitySpaces.MetadataEngine
     /// <returns>The LoadByPK stored procedure name</returns>
     public string ProcLoadByPK(string name)
     {
-      if (this.Settings.ProcVerbFirst)
+      if (Settings.ProcVerbFirst)
       {
-        return this.Settings.ProcPrefix + this.Settings.ProcLoadByPK + name + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + Settings.ProcLoadByPK + name + Settings.ProcSuffix;
 
       }
       else
       {
-        return this.Settings.ProcPrefix + name + this.Settings.ProcLoadByPK + this.Settings.ProcSuffix;
+        return Settings.ProcPrefix + name + Settings.ProcLoadByPK + Settings.ProcSuffix;
       }
     }
 
@@ -2322,10 +2284,7 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is "UpTo".
     /// </remarks>
-    public string sUpToPrefix
-    {
-      get { return "UpTo"; }
-    }
+    public string sUpToPrefix => "UpTo";
 
     /// <summary>
     /// Used when building an Entity relational object name. 
@@ -2333,10 +2292,7 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is "".
     /// </remarks>
-    public string sOnePrefix
-    {
-      get { return Settings.OnePrefix; }
-    }
+    public string sOnePrefix => Settings.OnePrefix;
 
     /// <summary>
     /// Used when building an Entity relational object name. 
@@ -2344,10 +2300,7 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is "By".
     /// </remarks>
-    public string sOneSep
-    {
-      get { return Settings.OneSeparator; }
-    }
+    public string sOneSep => Settings.OneSeparator;
 
     /// <summary>
     /// Used when building an Entity relational object name. 
@@ -2357,10 +2310,7 @@ namespace EntitySpaces.MetadataEngine
     /// The suffix always follows the table name,
     /// even if Swap Names is checked.
     /// </remarks>
-    public string sOneSuffix
-    {
-      get { return Settings.OneSuffix; }
-    }
+    public string sOneSuffix => Settings.OneSuffix;
 
     /// <summary>
     /// Used when building a Collection relational object name. 
@@ -2368,10 +2318,7 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is "".
     /// </remarks>
-    public string sManyPrefix
-    {
-      get { return Settings.ManyPrefix; }
-    }
+    public string sManyPrefix => Settings.ManyPrefix;
 
     /// <summary>
     /// Used when building a Collection relational object name. 
@@ -2379,10 +2326,7 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is "By".
     /// </remarks>
-    public string sManySep
-    {
-      get { return Settings.ManySeparator; }
-    }
+    public string sManySep => Settings.ManySeparator;
 
     /// <summary>
     /// Used when building a Collection relational object name. 
@@ -2392,10 +2336,7 @@ namespace EntitySpaces.MetadataEngine
     /// The suffix always follows the table name,
     /// even if Swap Names is checked.
     /// </remarks>
-    public string sManySuffix
-    {
-      get { return Settings.ManySuffix; }
-    }
+    public string sManySuffix => Settings.ManySuffix;
 
     /// <summary>
     /// Only add suffixes to self-referencing relational object names. 
@@ -2403,10 +2344,7 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is false.
     /// </remarks>
-    public bool SelfOnly
-    {
-      get { return Settings.SelfOnly; }
-    }
+    public bool SelfOnly => Settings.SelfOnly;
 
     /// <summary>
     /// Swap the table name and foreign column name when creating relational object names. 
@@ -2414,10 +2352,7 @@ namespace EntitySpaces.MetadataEngine
     /// <remarks>
     /// The default is false.
     /// </remarks>
-    public bool SwapNames
-    {
-      get { return Settings.SwapNames; }
-    }
+    public bool SwapNames => Settings.SwapNames;
 
     /// <summary>
     /// Use the associative table name for complex relationships.
@@ -2439,10 +2374,7 @@ namespace EntitySpaces.MetadataEngine
     /// TerritoriesCollection terrColl = emp.TerritoriesCollection;
     /// </code>
     /// </example>
-    public bool UseAssociativeName
-    {
-      get { return Settings.UseAssociativeName; }
-    }
+    public bool UseAssociativeName => Settings.UseAssociativeName;
 
     /// <summary>
     /// Prefix Prent names with "UpTo".
@@ -2463,10 +2395,7 @@ namespace EntitySpaces.MetadataEngine
     /// Suppliers sup = prd.SuppliersBySupplierID;
     /// </code>
     /// </example>
-    public bool UseUpToPrefix
-    {
-      get { return Settings.UseUpToPrefix; }
-    }
+    public bool UseUpToPrefix => Settings.UseUpToPrefix;
 
     /// <summary>
     /// The relational object name for an Entity. 
@@ -2479,12 +2408,12 @@ namespace EntitySpaces.MetadataEngine
     /// </remarks>
     public string EntityRelationName(ITable table)
     {
-      string suffix = "";
-      if (!this.SelfOnly)
+      var suffix = "";
+      if (!SelfOnly)
       {
-        suffix = this.sOneSuffix;
+        suffix = sOneSuffix;
       }
-      return this.sOnePrefix + this.Entity(table) + suffix;
+      return sOnePrefix + Entity(table) + suffix;
     }
 
     /// <summary>
@@ -2499,18 +2428,24 @@ namespace EntitySpaces.MetadataEngine
     /// </remarks>
     public string EntityRelationName(ITable table, IColumn col, bool isSelfReference)
     {
-      string suffix = "";
-      if (!this.SelfOnly || isSelfReference)
+      var suffix = "";
+      if (!SelfOnly || isSelfReference)
       {
-        suffix = this.sOneSuffix;
+        suffix = sOneSuffix;
       }
 
-      if (this.SwapNames)
+      string resultName;
+      
+      if (SwapNames)
       {
-        return this.sOnePrefix + this.PropertyName(col) + this.sOneSep + this.Entity(table) + suffix;
+          resultName = sOnePrefix + PropertyName(col) + sOneSep + Entity(table) + suffix;
+      }
+      else
+      {
+          resultName = sOnePrefix + Entity(table) + suffix + sOneSep + PropertyName(col);
       }
 
-      return this.sOnePrefix + this.Entity(table); // + suffix + this.sOneSep + this.PropertyName(col);
+      return resultName;
     }
 
     /// <summary>
@@ -2525,20 +2460,22 @@ namespace EntitySpaces.MetadataEngine
     /// </remarks>
     public string CollectionRelationName(ITable table, ITable associativeTable)
     {
-      string suffix = "";
-      if (!this.SelfOnly)
+      var suffix = "";
+      if (!SelfOnly)
       {
-        suffix = this.sManySuffix;
+        suffix = sManySuffix;
       }
 
-      if (this.UseAssociativeName)
+      string resultName;
+      if (UseAssociativeName)
       {
-        return this.sManyPrefix + this.Entity(table) + suffix + this.sManySep + this.Entity(associativeTable);
+          resultName = sManyPrefix + Entity(table) + suffix + sManySep + Entity(associativeTable);
       }
       else
       {
-        return this.sManyPrefix + this.Entity(table) + suffix;
+          resultName = sManyPrefix + Entity(table) + suffix;
       }
+      return resultName;
     }
 
     /// <summary>
@@ -2554,12 +2491,13 @@ namespace EntitySpaces.MetadataEngine
     /// </remarks>
     public string CollectionRelationName(ITable table)
     {
-      string suffix = "";
-      if (!this.SelfOnly)
+      var suffix = "";
+      if (!SelfOnly)
       {
-        suffix = this.sManySuffix;
+        suffix = sManySuffix;
       }
-      return this.sManyPrefix + this.Entity(table) + suffix;
+      var resultName = sManyPrefix + Entity(table) + suffix;
+      return resultName;
     }
 
     /// <summary>
@@ -2574,18 +2512,25 @@ namespace EntitySpaces.MetadataEngine
     /// </remarks>
     public string CollectionRelationName(ITable table, IColumn col, bool isSelfReference)
     {
-      string suffix = "";
-      if (!this.SelfOnly || isSelfReference)
+      var suffix = "";
+      if (!SelfOnly || isSelfReference)
       {
-        suffix = this.sManySuffix;
+        suffix = sManySuffix;
       }
 
-      if (this.SwapNames)
-      {
-        return this.sManyPrefix + this.PropertyName(col) + this.sManySep + this.Entity(table) + suffix;
-      }
+      string resultName;
 
-      return this.sManyPrefix + this.Entity(table) + suffix;// + this.sManySep + this.PropertyName(col);
+      if (SwapNames)
+      {
+          resultName = sManyPrefix + PropertyName(col) + sManySep + Entity(table) + suffix;
+      }
+      else
+      {
+          resultName = sManyPrefix + Entity(table) + suffix + sManySep + PropertyName(col);
+      }
+      
+      return resultName;
+
     }
 
     /// <summary>
@@ -2623,18 +2568,18 @@ namespace EntitySpaces.MetadataEngine
     {
       if (tr.IsOneToOne && !tr.IsDirect)
       {
-        return this.EntityRelationName(tr.ForeignTable);
+        return EntityRelationName(tr.ForeignTable);
       }
 
       if (tr.IsZeroToMany)
       {
         if (tr.IsSelfReference)
         {
-          return this.CollectionRelationName(tr.ForeignTable, tr.PrimaryColumns[0], tr.IsSelfReference);
+          return CollectionRelationName(tr.ForeignTable, tr.PrimaryColumns[0], tr.IsSelfReference);
         }
         else
         {
-          return this.CollectionRelationName(tr.ForeignTable, tr.ForeignColumns[0], tr.IsSelfReference);
+          return CollectionRelationName(tr.ForeignTable, tr.ForeignColumns[0], tr.IsSelfReference);
         }
       }
 
@@ -2652,20 +2597,20 @@ namespace EntitySpaces.MetadataEngine
     {
       if (tr.IsOneToOne && tr.IsDirect)
       {
-        return this.sUpToPrefix + this.EntityRelationName(tr.ForeignTable);
+        return sUpToPrefix + EntityRelationName(tr.ForeignTable);
       }
 
       if (tr.IsManyToMany)
       {
         if (tr.ForeignTable.PrimaryKeys.Count == 2)
         {
-          return this.sUpToPrefix + this.CollectionRelationName(tr.CrossReferenceTable, tr.ForeignTable);
+          return sUpToPrefix + CollectionRelationName(tr.CrossReferenceTable, tr.ForeignTable);
         }
       }
 
       if (tr.IsManyToOne)
       {
-        return this.sUpToPrefix + this.EntityRelationName(tr.ForeignTable, tr.PrimaryColumns[0], tr.IsSelfReference);
+        return sUpToPrefix + EntityRelationName(tr.ForeignTable, tr.PrimaryColumns[0], tr.IsSelfReference);
       }
 
       return null;
@@ -2683,12 +2628,12 @@ namespace EntitySpaces.MetadataEngine
     {
       if (tr.IsOneToOne && !tr.IsDirect)
       {
-        return this.Entity(tr.ForeignTable);
+        return Entity(tr.ForeignTable);
       }
 
       if (tr.IsZeroToMany)
       {
-        return this.Entity(tr.ForeignTable);
+        return Entity(tr.ForeignTable);
       }
 
       return null;
@@ -2706,20 +2651,20 @@ namespace EntitySpaces.MetadataEngine
     {
       if (tr.IsOneToOne && tr.IsDirect)
       {
-        return this.Entity(tr.ForeignTable);
+        return Entity(tr.ForeignTable);
       }
 
       if (tr.IsManyToMany)
       {
         if (tr.ForeignTable.PrimaryKeys.Count == 2)
         {
-          return this.Entity(tr.CrossReferenceTable);
+          return Entity(tr.CrossReferenceTable);
         }
       }
 
       if (tr.IsManyToOne)
       {
-        return this.Entity(tr.ForeignTable);
+        return Entity(tr.ForeignTable);
       }
 
       return null;
@@ -2732,18 +2677,12 @@ namespace EntitySpaces.MetadataEngine
     /// <summary>
     /// The Version Number of EntitySpace.Core and EntitySpaces.Interfaces
     /// </summary>
-    public string esVersion
-    {
-      get { return "2024.1.4.0"; }
-    }
+    public string esVersion => "2024.1.4.0";
 
     /// <summary>
     /// The database driver specified in the Settings file.
     /// </summary>
-    public string esDriver
-    {
-      get { return Settings.Driver; }
-    }
+    public string esDriver => Settings.Driver;
 
     /// <summary>
     /// Trims the characters in TrimList including spaces from the string passed in and
@@ -2772,7 +2711,7 @@ namespace EntitySpaces.MetadataEngine
     /// </example>
     /// <param name="col"></param>
     /// <returns></returns>
-    public string CSharpToSystemType(IColumn col)
+    public static string CSharpToSystemType(IColumn col)
     {
       return CSharpToSystemType(col.LanguageType);
     }
@@ -2793,7 +2732,7 @@ namespace EntitySpaces.MetadataEngine
     /// </example>
     /// <param name="csharpType"></param>
     /// <returns></returns>
-    public string CSharpToSystemType(string csharpType)
+    public static string CSharpToSystemType(string csharpType)
     {
       switch (csharpType)
       {
@@ -2954,7 +2893,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public string NullableType(IColumn column)
     {
-      string newType = CSharpToSystemType(column.LanguageType);
+      var newType = CSharpToSystemType(column.LanguageType);
 
       switch (newType)
       {
@@ -3001,7 +2940,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public string NullableType(string type)
     {
-      string newType = CSharpToSystemType(type);
+      var newType = CSharpToSystemType(type);
 
       switch (newType)
       {
@@ -3054,7 +2993,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public string NullableTypeVB(IColumn column)
     {
-      string newType = CSharpToSystemType(column.LanguageType);
+      var newType = CSharpToSystemType(column.LanguageType);
 
       switch (newType)
       {
@@ -3105,7 +3044,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public string NullableTypeVB(string type)
     {
-      string newType = CSharpToSystemType(type);
+      var newType = CSharpToSystemType(type);
 
       switch (newType)
       {
@@ -3159,7 +3098,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public string esSystemType(IColumn column)
     {
-      string theType = CSharpToSystemType(column);
+      var theType = CSharpToSystemType(column);
 
       switch (theType)
       {
@@ -3230,7 +3169,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public bool IsArrayType(IColumn column)
     {
-      return this.IsArrayType(column.LanguageType);
+      return IsArrayType(column.LanguageType);
     }
 
     /// <summary>
@@ -3265,7 +3204,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public bool IsObjectType(IColumn column)
     {
-      return this.IsObjectType(column.LanguageType);
+      return IsObjectType(column.LanguageType);
     }
 
     /// <summary>
@@ -3290,7 +3229,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public bool IsNullableType(IColumn column)
     {
-      string newType = CSharpToSystemType(column.LanguageType);
+      var newType = CSharpToSystemType(column.LanguageType);
 
       switch (newType)
       {
@@ -3328,7 +3267,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public bool IsNullableType(string type)
     {
-      string newType = CSharpToSystemType(type);
+      var newType = CSharpToSystemType(type);
 
       switch (newType)
       {
@@ -3362,9 +3301,9 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public string GetRowAccessor(IColumn column)
     {
-      string type = CSharpToSystemType(column.LanguageType);
+      var type = CSharpToSystemType(column.LanguageType);
 
-      string acc = type.Replace(".", "");
+      var acc = type.Replace(".", "");
       if (acc.EndsWith("[]"))
       {
         acc = acc.Replace("[]", "Array");
@@ -3389,7 +3328,7 @@ namespace EntitySpaces.MetadataEngine
     {
       type = CSharpToSystemType(type);
 
-      string acc = type.Replace(".", "");
+      var acc = type.Replace(".", "");
       if (acc.EndsWith("[]"))
       {
         acc = acc.Replace("[]", "Array");
@@ -3404,7 +3343,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public string SetRowAccessor(IColumn column)
     {
-      return this.SetRowAccessor(column.LanguageType);
+      return SetRowAccessor(column.LanguageType);
     }
 
     /// <summary>
@@ -3416,7 +3355,7 @@ namespace EntitySpaces.MetadataEngine
     {
       type = CSharpToSystemType(type);
 
-      string acc = type.Replace(".", "");
+      var acc = type.Replace(".", "");
       if (acc.EndsWith("[]"))
       {
         acc = acc.Replace("[]", "Array");
@@ -3433,7 +3372,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public string GetStringConversion(IColumn column, string variableName)
     {
-      return this.GetStringConversion(column.LanguageType, variableName);
+      return GetStringConversion(column.LanguageType, variableName);
     }
 
     /// <summary>
@@ -3446,9 +3385,9 @@ namespace EntitySpaces.MetadataEngine
     {
       type = CSharpToSystemType(type);
 
-      string str = "";
+      var str = "";
 
-      int i = type.IndexOf('.');
+      var i = type.IndexOf('.');
 
       if (i != -1)
       {
@@ -3477,7 +3416,7 @@ namespace EntitySpaces.MetadataEngine
     /// <returns></returns>
     public string SetStringConversion(IColumn column, string variableName)
     {
-      return this.SetStringConversion(column.LanguageType, variableName);
+      return SetStringConversion(column.LanguageType, variableName);
     }
 
     /// <summary>
@@ -3490,9 +3429,9 @@ namespace EntitySpaces.MetadataEngine
     {
       type = CSharpToSystemType(type);
 
-      string str = "";
+      var str = "";
 
-      int i = type.IndexOf('.');
+      var i = type.IndexOf('.');
 
       if (i != -1)
       {
@@ -3535,8 +3474,8 @@ namespace EntitySpaces.MetadataEngine
     /// </example>
     public Utils Utils
     {
-      get { return utils; }
-      set { utils = value; }
+      get => utils;
+      set => utils = value;
     }
 
     /// <summary>
@@ -3547,10 +3486,7 @@ namespace EntitySpaces.MetadataEngine
     /// recommend standard and has been now for a decade. However, if you do set this to true then <see cref="sTrimList"/> is used
     /// to remove any characters that would be illegal and cause a compile error.
     /// </remarks>>
-    public bool PreserveUnderscores
-    {
-      get { return Settings.PreserveUnderscores; }
-    }
+    public bool PreserveUnderscores => Settings.PreserveUnderscores;
 
     /// <summary>
     /// Set this to true to disable the Pascal naming convention.
@@ -3560,26 +3496,17 @@ namespace EntitySpaces.MetadataEngine
     /// recommend standard and has been now for a decade. However, if you do set this to true then <see cref="sTrimList"/> is used
     /// to remove any characters that would be illegal and cause a compile error.
     /// </remarks>>
-    public bool UseRawNames
-    {
-      get { return Settings.UseRawNames; }
-    }
+    public bool UseRawNames => Settings.UseRawNames;
 
     /// <summary>
     /// 
     /// </summary>
-    public bool UseNullableTypesAlways
-    {
-      get { return Settings.UseNullableTypesAlways; }
-    }
+    public bool UseNullableTypesAlways => Settings.UseNullableTypesAlways;
 
     /// <summary>
     /// 
     /// </summary>
-    public bool TurnOffDateTimeInClassHeaders
-    {
-      get { return Settings.TurnOffDateTimeInClassHeaders; }
-    }
+    public bool TurnOffDateTimeInClassHeaders => Settings.TurnOffDateTimeInClassHeaders;
 
     /// <summary>
     /// Set this to true to change from the default EntityVerb order
@@ -3605,10 +3532,7 @@ namespace EntitySpaces.MetadataEngine
     ///	proc_InsertEmployees
     /// </code>
     /// </example>
-    public bool ProcVerbFirst
-    {
-      get { return Settings.ProcVerbFirst; }
-    }
+    public bool ProcVerbFirst => Settings.ProcVerbFirst;
 
     #endregion
 

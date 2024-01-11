@@ -81,7 +81,7 @@
     </Reference>
     <Reference Include="EntitySpaces.Common, Version=2012.1.930.0, Culture=neutral, PublicKeyToken=127bcb8ceedbe220, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\StandAlone\bin\Release\EntitySpaces.Common.dll</HintPath>
+      <HintPath>..\ClassLibraries\EntitySpaces.Common\bin\Debug\EntitySpaces.Common.dll</HintPath>
     </Reference>
     <Reference Include="EntitySpaces.MetadataEngine, Version=2012.1.930.0, Culture=neutral, PublicKeyToken=127bcb8ceedbe220, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
