@@ -51,7 +51,7 @@ namespace EntitySpaces.MySQLProvider
 
         private sealed class esTraceArguments : EntitySpaces.Interfaces.ITraceArguments, IDisposable
         {
-            static private long packetOrder = 0;
+            private static long packetOrder = 0;
 
             private sealed class esTraceParameter : ITraceParameter
             {
@@ -230,7 +230,7 @@ namespace EntitySpaces.MySQLProvider
             add { DataProvider.sTraceHandler += value; }
             remove { DataProvider.sTraceHandler -= value; }
         }
-        static private event TraceEventHandler sTraceHandler;
+        private static event TraceEventHandler sTraceHandler;
 
         /// <summary>
         /// Returns true if this Provider is current being profiled
@@ -251,7 +251,7 @@ namespace EntitySpaces.MySQLProvider
             get { return DataProvider.sTraceChannel; }
             set { DataProvider.sTraceChannel = value; }
         }
-        static private string sTraceChannel = "Channel1";
+        private static string sTraceChannel = "Channel1";
 
         #endregion
 
@@ -259,12 +259,12 @@ namespace EntitySpaces.MySQLProvider
         /// This method acts as a delegate for esTransactionScope
         /// </summary>
         /// <returns></returns>
-        static private IDbConnection CreateIDbConnectionDelegate()
+        private static IDbConnection CreateIDbConnectionDelegate()
         {
             return new MySqlConnection();
         }
 
-        static private void CleanupCommand(MySqlCommand cmd)
+        private static void CleanupCommand(MySqlCommand cmd)
         {
             if (cmd != null && cmd.Connection != null)
             {
@@ -651,7 +651,7 @@ namespace EntitySpaces.MySQLProvider
 
         #endregion
 
-        static private esDataResponse LoadDataSetFromStoredProcedure(esDataRequest request)
+        private static esDataResponse LoadDataSetFromStoredProcedure(esDataRequest request)
         {
             esDataResponse response = new esDataResponse();
             MySqlCommand cmd = null;
@@ -721,7 +721,7 @@ namespace EntitySpaces.MySQLProvider
             return response;
         }
 
-        static private esDataResponse LoadDataSetFromText(esDataRequest request)
+        private static esDataResponse LoadDataSetFromText(esDataRequest request)
         {
             esDataResponse response = new esDataResponse();
             MySqlCommand cmd = null;
@@ -790,7 +790,7 @@ namespace EntitySpaces.MySQLProvider
             return response;
         }
 
-        static private esDataResponse LoadDataTableFromStoredProcedure(esDataRequest request)
+        private static esDataResponse LoadDataTableFromStoredProcedure(esDataRequest request)
         {
             esDataResponse response = new esDataResponse();
             MySqlCommand cmd = null;
@@ -859,7 +859,7 @@ namespace EntitySpaces.MySQLProvider
             return response;
         }
 
-        static private esDataResponse LoadDataTableFromText(esDataRequest request)
+        private static esDataResponse LoadDataTableFromText(esDataRequest request)
         {
             esDataResponse response = new esDataResponse();
             MySqlCommand cmd = null;
@@ -928,7 +928,7 @@ namespace EntitySpaces.MySQLProvider
             return response;
         }
 
-        static private esDataResponse LoadManyToMany(esDataRequest request)
+        private static esDataResponse LoadManyToMany(esDataRequest request)
         {
             esDataResponse response = new esDataResponse();
             MySqlCommand cmd = null;
@@ -1015,7 +1015,7 @@ namespace EntitySpaces.MySQLProvider
         }
 
         // This is used only to execute the Dynamic Query API
-        static private void LoadDataTableFromDynamicQuery(esDataRequest request, esDataResponse response, MySqlCommand cmd)
+        private static void LoadDataTableFromDynamicQuery(esDataRequest request, esDataResponse response, MySqlCommand cmd)
         {
             try
             {
@@ -1143,7 +1143,7 @@ namespace EntitySpaces.MySQLProvider
 
         #endregion
 
-        static private DataTable SaveStoredProcCollection(esDataRequest request)
+        private static DataTable SaveStoredProcCollection(esDataRequest request)
         {
             bool needToInsert = false;
             bool needToUpdate = false;
@@ -1259,7 +1259,7 @@ namespace EntitySpaces.MySQLProvider
             return request.Table;
         }
 
-        static private DataTable SaveStoredProcEntity(esDataRequest request)
+        private static DataTable SaveStoredProcEntity(esDataRequest request)
         {
             bool needToDelete = request.EntitySavePacket.RowState == esDataRowState.Deleted;
 
@@ -1350,7 +1350,7 @@ namespace EntitySpaces.MySQLProvider
             return dataTable;
         }
 
-        static private DataTable SaveDynamicCollection(esDataRequest request)
+        private static DataTable SaveDynamicCollection(esDataRequest request)
         {
             esEntitySavePacket pkt = request.CollectionSavePacket[0];
 
@@ -1370,7 +1370,7 @@ namespace EntitySpaces.MySQLProvider
             }
         }
 
-        static private DataTable SaveDynamicCollection_InsertsUpdates(esDataRequest request)
+        private static DataTable SaveDynamicCollection_InsertsUpdates(esDataRequest request)
         {
             DataTable dataTable = CreateDataTable(request);
 
@@ -1478,7 +1478,7 @@ namespace EntitySpaces.MySQLProvider
             return dataTable;
         }
 
-        static private DataTable SaveDynamicCollection_Deletes(esDataRequest request)
+        private static DataTable SaveDynamicCollection_Deletes(esDataRequest request)
         {
             MySqlCommand cmd = null;
 
@@ -1551,7 +1551,7 @@ namespace EntitySpaces.MySQLProvider
             return request.Table;
         }
 
-        static private DataTable SaveDynamicEntity(esDataRequest request)
+        private static DataTable SaveDynamicEntity(esDataRequest request)
         {
             bool needToDelete = request.EntitySavePacket.RowState == esDataRowState.Deleted;
 
@@ -1654,7 +1654,7 @@ namespace EntitySpaces.MySQLProvider
             return dataTable;
         }
 
-        static private DataTable CreateDataTable(esDataRequest request)
+        private static DataTable CreateDataTable(esDataRequest request)
         {
             DataTable dataTable = new DataTable();
             DataColumnCollection dataColumns = dataTable.Columns;

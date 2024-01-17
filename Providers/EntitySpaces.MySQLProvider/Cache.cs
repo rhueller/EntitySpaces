@@ -31,77 +31,79 @@ using System;
 using System.Collections.Generic;
 using EntitySpaces.Interfaces;
 using MySqlConnector;
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable ArrangeTypeModifiers
 
 namespace EntitySpaces.MySQLProvider
 {
     class Cache
     {
-        static public Dictionary<string, MySqlParameter> GetParameters(esDataRequest request)
+        public static Dictionary<string, MySqlParameter> GetParameters(esDataRequest request)
         {
             return GetParameters(request.DataID, request.ProviderMetadata, request.Columns);
         }
 
-        static public Dictionary<string, MySqlParameter> GetParameters(Guid dataID,
+        public static Dictionary<string, MySqlParameter> GetParameters(Guid dataId,
             esProviderSpecificMetadata providerMetadata, esColumnMetadataCollection columns)
         {
-            lock (parameterCache)
+            lock (_parameterCache)
             {
-                if (!parameterCache.ContainsKey(dataID))
+                if (_parameterCache.TryGetValue(dataId, out var parameters)) return parameters;
+                
+                // The Parameters for this Table haven't been cached yet, this is a one time operation
+                var types = new Dictionary<string, MySqlParameter>();
+
+                foreach (esColumnMetadata col in columns)
                 {
-                    // The Parameters for this Table haven't been cached yet, this is a one time operation
-                    Dictionary<string, MySqlParameter> types = new Dictionary<string, MySqlParameter>();
+                    var typeMap = providerMetadata.GetTypeMap(col.PropertyName);
+                    if (typeMap == null) continue;
+                    
+                    var nativeType = typeMap.NativeType;
+                    var dbType = NativeTypeToDbType(nativeType);
 
-                    MySqlParameter param1;
-                    foreach (esColumnMetadata col in columns)
-                    {
-                        esTypeMap typeMap = providerMetadata.GetTypeMap(col.PropertyName);
-                        if (typeMap != null)
+                    //param1 = new MySqlParameter(Delimiters.Param + col.PropertyName, dbType, 0, col.Name);
+                    var param1 = new MySqlParameter(Delimiters.Param + col.Name , dbType, 0, col.Name)
                         {
-                            string nativeType = typeMap.NativeType;
-                            MySqlDbType dbType = Cache.NativeTypeToDbType(nativeType);
+                            SourceColumn = col.Name
+                        };
 
-                            param1 = new MySqlParameter(Delimiters.Param + col.PropertyName, dbType, 0, col.Name);
-                            param1.SourceColumn = col.Name;
+                    switch (dbType)
+                    {
+                        case MySqlDbType.Decimal:
+                        case MySqlDbType.NewDecimal:
+                        case MySqlDbType.Double:
+                        case MySqlDbType.Float:
+                        case MySqlDbType.Int16:
+                        case MySqlDbType.Int24:
+                        case MySqlDbType.Int32:
+                        case MySqlDbType.Int64:
+                        case MySqlDbType.UInt16:
+                        case MySqlDbType.UInt24:
+                        case MySqlDbType.UInt32:
+                        case MySqlDbType.UInt64:
 
-                            switch (dbType)
-                            {
-                                case MySqlDbType.Decimal:
-                                case MySqlDbType.NewDecimal:
-                                case MySqlDbType.Double:
-                                case MySqlDbType.Float:
-                                case MySqlDbType.Int16:
-                                case MySqlDbType.Int24:
-                                case MySqlDbType.Int32:
-                                case MySqlDbType.Int64:
-                                case MySqlDbType.UInt16:
-                                case MySqlDbType.UInt24:
-                                case MySqlDbType.UInt32:
-                                case MySqlDbType.UInt64:
+                            param1.Size = (int)col.CharacterMaxLength;
+                            param1.Precision = (byte)col.NumericPrecision;
+                            param1.Scale = (byte)col.NumericScale;
+                            break;
 
-                                    param1.Size = (int)col.CharacterMaxLength;
-                                    param1.Precision = (byte)col.NumericPrecision;
-                                    param1.Scale = (byte)col.NumericScale;
-                                    break;
+                        case MySqlDbType.String:
+                        case MySqlDbType.VarString:
+                        case MySqlDbType.VarChar:
+                            param1.Size = (int)col.CharacterMaxLength;
+                            break;
 
-                                case MySqlDbType.String:
-                                case MySqlDbType.VarString:
-                                case MySqlDbType.VarChar:
-                                    param1.Size = (int)col.CharacterMaxLength;
-                                    break;
-
-                            }
-                            types[col.Name] = param1;
-                        }
                     }
-
-                    parameterCache[dataID] = types;
+                    types[col.Name] = param1;
                 }
+
+                _parameterCache[dataId] = types;
             }
 
-            return parameterCache[dataID];
+            return _parameterCache[dataId];
         }
 
-        static private MySqlDbType NativeTypeToDbType(string nativeType)
+        private static MySqlDbType NativeTypeToDbType(string nativeType)
         {
             switch(nativeType)
             {
@@ -153,13 +155,13 @@ namespace EntitySpaces.MySQLProvider
             }
         }
 
-        static public MySqlParameter CloneParameter(MySqlParameter p)
+        public static MySqlParameter CloneParameter(MySqlParameter p)
         {
-            ICloneable param = p as ICloneable;
+            var param = p as ICloneable;
             return param.Clone() as MySqlParameter;
         }
         
-        static private Dictionary<Guid, Dictionary<string, MySqlParameter>> parameterCache
+        private static Dictionary<Guid, Dictionary<string, MySqlParameter>> _parameterCache
             = new Dictionary<Guid, Dictionary<string, MySqlParameter>>();
     }
 }

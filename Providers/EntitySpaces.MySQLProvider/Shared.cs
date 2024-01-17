@@ -40,7 +40,7 @@ namespace EntitySpaces.MySQLProvider
 {
     class Shared
     {
-        static public MySqlCommand BuildDynamicInsertCommand(esDataRequest request, List<string> modifiedColumns)
+        public static MySqlCommand BuildDynamicInsertCommand(esDataRequest request, List<string> modifiedColumns)
         {
             string sql = String.Empty;
             string defaults = String.Empty;
@@ -190,7 +190,7 @@ namespace EntitySpaces.MySQLProvider
             return cmd;
         }
 
-        static public MySqlCommand BuildDynamicUpdateCommand(esDataRequest request, List<string> modifiedColumns)
+        public static MySqlCommand BuildDynamicUpdateCommand(esDataRequest request, List<string> modifiedColumns)
         {
             string where = String.Empty;
             string scomma = String.Empty;
@@ -325,7 +325,7 @@ namespace EntitySpaces.MySQLProvider
             return cmd;
         }
 
-        static public MySqlCommand BuildDynamicDeleteCommand(esDataRequest request, List<string> modifiedColumns)
+        public static MySqlCommand BuildDynamicDeleteCommand(esDataRequest request, List<string> modifiedColumns)
         {
             Dictionary<string, MySqlParameter> types = Cache.GetParameters(request);
 
@@ -355,7 +355,7 @@ namespace EntitySpaces.MySQLProvider
             return cmd;
         }
 
-        static public MySqlCommand BuildStoredProcInsertCommand(esDataRequest request)
+        public static MySqlCommand BuildStoredProcInsertCommand(esDataRequest request)
         {
             MySqlCommand cmd = new MySqlCommand();
             if(request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
@@ -377,7 +377,7 @@ namespace EntitySpaces.MySQLProvider
             return cmd;
         }
 
-        static public MySqlCommand BuildStoredProcUpdateCommand(esDataRequest request)
+        public static MySqlCommand BuildStoredProcUpdateCommand(esDataRequest request)
         {
             MySqlCommand cmd = new MySqlCommand();
             if(request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
@@ -400,7 +400,7 @@ namespace EntitySpaces.MySQLProvider
             return cmd;
         }
 
-        static public MySqlCommand BuildStoredProcDeleteCommand(esDataRequest request)
+        public static MySqlCommand BuildStoredProcDeleteCommand(esDataRequest request)
         {
             MySqlCommand cmd = new MySqlCommand();
             if(request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
@@ -427,7 +427,7 @@ namespace EntitySpaces.MySQLProvider
             return cmd;
         }
 
-        static public void PopulateStoredProcParameters(MySqlCommand cmd, esDataRequest request)
+        public static void PopulateStoredProcParameters(MySqlCommand cmd, esDataRequest request)
         {
             Dictionary<string, MySqlParameter> types = Cache.GetParameters(request);
 
@@ -448,13 +448,13 @@ namespace EntitySpaces.MySQLProvider
             }
         }
 
-        static private MySqlParameter CloneParameter(MySqlParameter p)
+        private static MySqlParameter CloneParameter(MySqlParameter p)
         {
             ICloneable param = p as ICloneable;
             return param.Clone() as MySqlParameter;
         }
 
-        static public bool HasUpdates(DataRowCollection rows, out bool insert, out bool update, out bool delete)
+        public static bool HasUpdates(DataRowCollection rows, out bool insert, out bool update, out bool delete)
         {
             insert = false;
             update = false;
@@ -479,7 +479,7 @@ namespace EntitySpaces.MySQLProvider
             return (insert || update || delete) ? true : false;
         }
 
-        static public bool HasUpdate(DataRow row, out bool insert, out bool update, out bool delete)
+        public static bool HasUpdate(DataRow row, out bool insert, out bool update, out bool delete)
         {
             insert = false;
             update = false;
@@ -501,7 +501,7 @@ namespace EntitySpaces.MySQLProvider
             return (insert || update || delete) ? true : false;
         }
 
-        static public string CreateFullName(esDataRequest request, esDynamicQuery query)
+        public static string CreateFullName(esDataRequest request, esDynamicQuery query)
         {
             IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
 
@@ -527,7 +527,7 @@ namespace EntitySpaces.MySQLProvider
             return name;
         }
 
-        static public string CreateFullName(esDataRequest request)
+        public static string CreateFullName(esDataRequest request)
         {
             string name = String.Empty;
 
@@ -548,7 +548,7 @@ namespace EntitySpaces.MySQLProvider
             return name;
         }
 
-        static public esConcurrencyException CheckForConcurrencyException(MySqlException ex)
+        public static esConcurrencyException CheckForConcurrencyException(MySqlException ex)
         {
             esConcurrencyException ce = null;
 
@@ -564,7 +564,7 @@ namespace EntitySpaces.MySQLProvider
             return ce;
         }
 
-        static public void AddParameters(MySqlCommand cmd, esDataRequest request)
+        public static void AddParameters(MySqlCommand cmd, esDataRequest request)
         {
             if (request.QueryType == esQueryType.Text && request.QueryText != null && request.QueryText.Contains("{0}"))
             {
@@ -617,7 +617,7 @@ namespace EntitySpaces.MySQLProvider
             }
         }
 
-        static public void GatherReturnParameters(MySqlCommand cmd, esDataRequest request, esDataResponse response)
+        public static void GatherReturnParameters(MySqlCommand cmd, esDataRequest request, esDataResponse response)
         {
             if (cmd.Parameters.Count > 0)
             {
