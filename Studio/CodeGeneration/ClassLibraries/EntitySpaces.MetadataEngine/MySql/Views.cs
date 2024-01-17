@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using System.Data.Common;
 
@@ -6,22 +5,17 @@ namespace EntitySpaces.MetadataEngine.MySql
 {
 	public class MySqlViews : Views
 	{
-		public MySqlViews()
-		{
-
-		}
-
-		override internal void LoadAll()
+        internal override void LoadAll()
 		{
 			try
 			{
-				MySqlDatabases db = this.Database.Databases as MySqlDatabases;
+				MySqlDatabases db = Database.Databases as MySqlDatabases;
 				if(db.Version.StartsWith("5"))
 				{
 					string query = @"SHOW FULL TABLES WHERE Table_type = 'VIEW'";
 
 					DataTable metaData = new DataTable();
-					DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, this.dbRoot.ConnectionString);
+					DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, dbRoot.ConnectionString);
 
 					adapter.Fill(metaData);
 

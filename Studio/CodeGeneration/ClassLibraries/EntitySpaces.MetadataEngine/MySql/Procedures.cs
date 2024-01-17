@@ -1,16 +1,8 @@
-using System;
-using System.Data;
-
 namespace EntitySpaces.MetadataEngine.MySql
 {
 	public class MySqlProcedures : Procedures
 	{
-		public MySqlProcedures()
-		{
-
-		}
-
-		override internal void LoadAll()
+        internal override void LoadAll()
 		{
 			try
 			{

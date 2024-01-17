@@ -94,10 +94,10 @@ namespace EntitySpaces.CodeGenerator
         /// <returns>A unparsed template line index.</returns>
         public int TemplateLineFromErrorLine(int lineNumber)
         {
-            int index = -1;
+            var index = -1;
             if (_codeBuilder != null)
             {
-                List<int> indeces = _codeBuilder.GetRawIndex(lineNumber-1);
+                var indeces = _codeBuilder.GetRawIndex(lineNumber-1);
                 if (indeces.Count > 0) index = indeces[0];
             }
             return index + 1;
@@ -111,7 +111,7 @@ namespace EntitySpaces.CodeGenerator
         {
             this._templateHeader = null;
 
-            CachedTemplate cachedTemplate = TemplateCache.GetCachedTemplate(templateName, CompileAction.ParseOnly);
+            var cachedTemplate = TemplateCache.GetCachedTemplate(templateName, CompileAction.ParseOnly);
 
             _codeBuilder = cachedTemplate.CodeBuilder;
             _assembly = cachedTemplate.CompiledAssembly;
@@ -126,7 +126,7 @@ namespace EntitySpaces.CodeGenerator
         {
             this._templateHeader = null;
 
-            CachedTemplate cachedTemplate = TemplateCache.GetCachedTemplate(templateName, CompileAction.Compile);
+            var cachedTemplate = TemplateCache.GetCachedTemplate(templateName, CompileAction.Compile);
 
             _codeBuilder = cachedTemplate.CodeBuilder;
             _assembly = cachedTemplate.CompiledAssembly;
@@ -153,18 +153,21 @@ namespace EntitySpaces.CodeGenerator
 
                 Compile(templateLocation);
 
-                if (_assembly != null)
-                {
-                    Type type = _assembly.GetTypes()[0];
-                    ConstructorInfo info = type.GetConstructor(new Type[] { typeof(Root), typeof(StringBuilder) });
-                    object o = info.Invoke(new object[] { esMeta, _buffer });
-                    MethodInfo m = type.GetMethod("Render");
-                    m.Invoke(o, new object[] { this });
-                }
+                if (_assembly == null) return;
+                
+                var type = _assembly.GetTypes()[0];
+                var info = type.GetConstructor(new Type[] { typeof(Root), typeof(StringBuilder) });
+                var o = info.Invoke(new object[] { esMeta, _buffer });
+                var m = type.GetMethod("Render");
+                m.Invoke(o, new object[] { this });
             }
             catch (TargetInvocationException tie)
             {
-                throw tie.InnerException;
+                var msg = new StringBuilder();
+                //msg.AppendLine($"Template: {templateLocation}");
+                msg.AppendLine($"{tie.Message}");
+                msg.AppendLine($"{tie.InnerException}");
+                throw new Exception(msg.ToString()) ;
             }
         }
 

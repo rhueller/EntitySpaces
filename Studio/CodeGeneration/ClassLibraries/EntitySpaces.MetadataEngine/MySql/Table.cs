@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using System.Data.Common;
 
@@ -6,25 +5,20 @@ namespace EntitySpaces.MetadataEngine.MySql
 {
 	public class MySqlTable : Table
 	{
-		public MySqlTable()
-		{
-
-		}
-
-		public override IColumns PrimaryKeys
+        public override IColumns PrimaryKeys
 		{
 			get
 			{
 				if(null == _primaryKeys)
 				{
-					_primaryKeys = (Columns)this.dbRoot.ClassFactory.CreateColumns();
+					_primaryKeys = (Columns)dbRoot.ClassFactory.CreateColumns();
 					_primaryKeys.Table = this;
-					_primaryKeys.dbRoot = this.dbRoot;
+					_primaryKeys.dbRoot = dbRoot;
 
-					string query = @"SHOW INDEX FROM `" + this.Name + "`";
+					string query = @"SHOW INDEX FROM `" + Name + "`";
 
 					DataTable metaData = new DataTable();
-					DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, this.dbRoot.ConnectionString);
+					DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, dbRoot.ConnectionString);
 
 					adapter.Fill(metaData);
 
@@ -38,7 +32,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 						if(s == "PRIMARY")
 						{
 							s = metaData.Rows[i]["Column_name"] as string;
-							_primaryKeys.AddColumn((Column)this.Columns[s]);
+							_primaryKeys.AddColumn((Column)Columns[s]);
 						}
 					}
 				}

@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using System.Data.Common;
 
@@ -6,19 +5,14 @@ namespace EntitySpaces.MetadataEngine.MySql
 {
 	public class MySqlIndexes : Indexes
 	{
-		public MySqlIndexes()
-		{
-
-		}
-
-		override internal void LoadAll()
+        internal override void LoadAll()
 		{
 			try
 			{
-				string query = @"SHOW INDEX FROM `" + this.Table.Name + "`";
+				string query = @"SHOW INDEX FROM `" + Table.Name + "`";
 
 				DataTable metaData = new DataTable();
-				DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, this.dbRoot.ConnectionString);
+				DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, dbRoot.ConnectionString);
 
 				adapter.Fill(metaData);
 

@@ -1,16 +1,8 @@
-using System;
-using System.Data;
-
 namespace EntitySpaces.MetadataEngine.MySql
 {
 	public class MySqlDatabase : Database
 	{
-		public MySqlDatabase()
-		{
-
-		}
-
-		override public string Alias
+        public override string Alias
 		{
 			get
 			{
@@ -18,7 +10,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 			}
 		}
 
-		override public string Name
+		public override string Name
 		{
 			get
 			{
@@ -26,7 +18,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 			}
 		}
 
-		override public string Description
+		public override string Description
 		{
 			get
 			{

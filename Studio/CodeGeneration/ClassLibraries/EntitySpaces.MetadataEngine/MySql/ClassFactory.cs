@@ -1,103 +1,97 @@
-using System;
-
+using System.Data;
 
 namespace EntitySpaces.MetadataEngine.MySql
 {
 	public class ClassFactory : IClassFactory
 	{
-		public ClassFactory()
+        public ITables CreateTables()
 		{
-
-		}
-
-		public ITables CreateTables()
-		{
-			return new MySql.MySqlTables();
+			return new MySqlTables();
 		}
 
 		public ITable CreateTable()
 		{
-			return new MySql.MySqlTable();
+			return new MySqlTable();
 		}
 
 		public IColumn CreateColumn()
 		{
-			return new MySql.MySqlColumn();
+			return new MySqlColumn();
 		}
 
 		public IColumns CreateColumns()
 		{
-			return new MySql.MySqlColumns();
+			return new MySqlColumns();
 		}
 
 		public IDatabase CreateDatabase()
 		{
-			return new MySql.MySqlDatabase();
+			return new MySqlDatabase();
 		}
 
 		public IDatabases CreateDatabases()
 		{
-			return new MySql.MySqlDatabases();
+			return new MySqlDatabases();
 		}
 
 		public IProcedure CreateProcedure()
 		{
-			return new MySql.MySqlProcedure();
+			return new MySqlProcedure();
 		}
 
 		public IProcedures CreateProcedures()
 		{
-			return new MySql.MySqlProcedures();
+			return new MySqlProcedures();
 		}
 
 		public IView CreateView()
 		{
-			return new MySql.MySqlView();
+			return new MySqlView();
 		}
 
 		public IViews CreateViews()
 		{
-			return new MySql.MySqlViews();
+			return new MySqlViews();
 		}
 
 		public IParameter CreateParameter()
 		{
-			return new MySql.MySqlParameter();
+			return new MySqlParameter();
 		}
 
 		public IParameters CreateParameters()
 		{
-			return new MySql.MySqlParameters();
+			return new MySqlParameters();
 		}
 
 		public IForeignKey CreateForeignKey()
 		{
-			return new MySql.MySqlForeignKey();
+			return new MySqlForeignKey();
 		}
 
 		public IForeignKeys CreateForeignKeys()
 		{
-			return new MySql.MySqlForeignKeys();
+			return new MySqlForeignKeys();
 		}
 
 		public IIndex CreateIndex()
 		{
-			return new MySql.MySqlIndex();
+			return new MySqlIndex();
 		}
 
 		public IIndexes CreateIndexes()
 		{
-			return new MySql.MySqlIndexes();
+			return new MySqlIndexes();
 		}
 
 		public IResultColumn CreateResultColumn()
 		{
-			return new MySql.MySqlResultColumn();
+			return new MySqlResultColumn();
 		}
 
 		public IResultColumns CreateResultColumns()
 		{
-			return new MySql.MySqlResultColumns();
+			return new MySqlResultColumns();
 		}
 
 		public IDomain CreateDomain()
@@ -120,7 +114,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 			return new ProviderTypes();
 		}
 
-        public System.Data.IDbConnection CreateConnection()
+        public IDbConnection CreateConnection()
         {
             return MySqlDatabases.CreateConnection("");
         }

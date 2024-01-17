@@ -1,23 +1,17 @@
 using System;
-using System.Data;
 
 namespace EntitySpaces.MetadataEngine.MySql
 {
 	public class MySqlColumn : Column
 	{
-		static char[] chars = new char[] {' ', '('};
+		static char[] chars = {' ', '('};
 
-		private int numericScale = 0;
-		private int precision = 0;
-		private int characterLength = 0;
+		private int numericScale;
+		private int precision;
+		private int characterLength;
 		private string dataType = "";
 
-		public MySqlColumn()
-		{
-
-		}
-
-		override internal Column Clone()
+        internal override Column Clone()
 		{
 			Column c = base.Clone();
 
@@ -29,7 +23,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 			get
 			{
 				MySqlColumns cols = Columns as MySqlColumns;
-				string s = this.GetString(cols.f_IsNullable);
+				string s = GetString(cols.f_IsNullable);
 				return (s == "YES") ? true : false;
 			}
 		}
@@ -38,21 +32,21 @@ namespace EntitySpaces.MetadataEngine.MySql
 		{
 			get
 			{
-				return (this.Default == "") ? false : true;
+				return (Default == "") ? false : true;
 			}
 		}
 
-		override public string DataTypeName
+		public override string DataTypeName
 		{
 			get
 			{
 				if(dataType == "")
 				{
 					MySqlColumns cols = Columns as MySqlColumns;
-					string type = this.GetString(cols.f_DataType).ToUpper();
+					string type = GetString(cols.f_DataType).ToUpper();
 
-					string[] data = type.Split(new char[]{' '});
-					string[] typeandsize = data[0].Split(new char[]{'(',')',','});
+					string[] data = type.Split(' ');
+					string[] typeandsize = data[0].Split('(', ')', ',');
 
 					dataType = typeandsize[0];
 
@@ -69,11 +63,11 @@ namespace EntitySpaces.MetadataEngine.MySql
 						{
 							if(dataType == "VARCHAR" || dataType == "CHAR")
 							{
-								this.characterLength = Convert.ToInt32(typeandsize[1]);
+								characterLength = Convert.ToInt32(typeandsize[1]);
 							}
 							else
 							{
-								this.precision = Convert.ToInt32(typeandsize[1]);
+								precision = Convert.ToInt32(typeandsize[1]);
 							}
 						}
 
@@ -81,7 +75,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 						{
 							if(typeandsize[2].Length > 0)
 							{
-								this.numericScale = Convert.ToInt32(typeandsize[2]);
+								numericScale = Convert.ToInt32(typeandsize[2]);
 							}
 						}
 					}
@@ -91,7 +85,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 			}
 		}
 
-		override public string DataTypeNameComplete
+		public override string DataTypeNameComplete
 		{
 			get
 			{
@@ -103,7 +97,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 					string origType = GetString(cols.f_DataType);
 					string type = origType.ToUpper();
 
-					string[] data = type.Split(new char[]{' '});
+					string[] data = type.Split(' ');
 
 					if(data[0].StartsWith("ENUM"))
 					{
@@ -134,7 +128,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 		{
 			get
 			{
-				return this.precision;
+				return precision;
 			}
 		}
 
@@ -142,7 +136,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 		{
 			get
 			{
-				return this.numericScale;
+				return numericScale;
 			}
 		}
 
@@ -150,7 +144,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 		{
 			get
 			{
-				return this.characterLength;
+				return characterLength;
 			}
 		}
 	}

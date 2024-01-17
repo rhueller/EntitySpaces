@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using System.Data.Common;
 
@@ -6,16 +5,11 @@ namespace EntitySpaces.MetadataEngine.MySql
 {
 	public class MySqlForeignKeys : ForeignKeys
 	{
-		public MySqlForeignKeys()
-		{
-
-		}
-
-		override internal void LoadAll()
+        internal override void LoadAll()
 		{
 			try
 			{
-				MySqlDatabase db = (MySqlDatabase)this.Table.Database;
+				MySqlDatabase db = (MySqlDatabase)Table.Database;
 
 				if(!db._FKsInLoad)
 				{
@@ -23,14 +17,14 @@ namespace EntitySpaces.MetadataEngine.MySql
 
 					MySqlForeignKeys fks = null;
 
-					foreach(Table table in this.Table.Tables)
+					foreach(Table table in Table.Tables)
 					{
 						fks = table.ForeignKeys as MySqlForeignKeys;
 					}
 
 					AddMyHalf();
 
-					foreach(Table table in this.Table.Tables)
+					foreach(Table table in Table.Tables)
 					{
 						fks = table.ForeignKeys as MySqlForeignKeys;
 						fks.AddTheOtherHalf();
@@ -50,10 +44,10 @@ namespace EntitySpaces.MetadataEngine.MySql
 
 		internal void AddMyHalf()
 		{
-			string query = @"SHOW CREATE TABLE `" + this.Table.Name + "`";
+			string query = @"SHOW CREATE TABLE `" + Table.Name + "`";
 
 			DataTable dt = new DataTable();
-			DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, this.dbRoot.ConnectionString);
+			DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, dbRoot.ConnectionString);
 
 			adapter.Fill(dt);
 
@@ -127,11 +121,11 @@ namespace EntitySpaces.MetadataEngine.MySql
 						DataRow row = metaData.NewRow();
 						metaData.Rows.Add(row);
 
-						row["PK_TABLE_CATALOG"] = this.Table.Database.Name;
-						row["FK_TABLE_CATALOG"] = this.Table.Database.Name;
+						row["PK_TABLE_CATALOG"] = Table.Database.Name;
+						row["FK_TABLE_CATALOG"] = Table.Database.Name;
 
 						row["PK_TABLE_NAME"] = fkRec[2];
-						row["FK_TABLE_NAME"] = this.Table.Name;
+						row["FK_TABLE_NAME"] = Table.Name;
 						row["FK_NAME"] = fkRec[0];
 						row["PK_COLUMN_NAME"] = pkColumns[i];
 						row["FK_COLUMN_NAME"] = fkColumns[i];
@@ -221,9 +215,9 @@ namespace EntitySpaces.MetadataEngine.MySql
 
 		internal void AddTheOtherHalf()
 		{
-			string myName = this.Table.Name;
+			string myName = Table.Name;
 
-			foreach(Table table in this.Table.Tables)
+			foreach(Table table in Table.Tables)
 			{
 				if(table.Name != myName)
 				{
@@ -231,7 +225,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 					{
 						if(fkey.ForeignTable.Name == myName || fkey.PrimaryTable.Name == myName)
 						{
-							this.AddForeignKey(fkey);
+							AddForeignKey(fkey);
 						}
 					}
 				}

@@ -1,16 +1,8 @@
-using System;
-using System.Data;
-
 namespace EntitySpaces.MetadataEngine.MySql
 {
 	public class MySqlParameters : Parameters
 	{
-		public MySqlParameters()
-		{
-
-		}
-
-		override internal void LoadAll()
+        internal override void LoadAll()
 		{
 			try
 			{

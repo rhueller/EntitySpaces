@@ -1,20 +1,14 @@
 using System;
-using System.Data;
 
 namespace EntitySpaces.MetadataEngine.MySql
 {
 	public class MySqlIndex : Index
 	{
-		public MySqlIndex()
-		{
-
-		}
-
-		public override string Type
+        public override string Type
 		{
 			get
 			{
-				return this.GetString(Indexes.f_Type);
+				return GetString(Indexes.f_Type);
 			}
 		}
 
@@ -31,7 +25,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 		{
 			get
 			{
-				string s = this.GetString(Indexes.f_Collation);
+				string s = GetString(Indexes.f_Collation);
 
 				switch(s)
 				{

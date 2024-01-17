@@ -6,16 +6,11 @@ namespace EntitySpaces.MetadataEngine.MySql
 {
 	public class MySqlTables : Tables
 	{
-		public MySqlTables()
-		{
-
-		}
-
-		override internal void LoadAll()
+        internal override void LoadAll()
 		{
 			try
 			{
-				MySqlDatabases db = this.Database.Databases as MySqlDatabases;
+				MySqlDatabases db = Database.Databases as MySqlDatabases;
 
 				string query = "SHOW TABLES";
 				if(db.Version.StartsWith("5"))
@@ -24,7 +19,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 				}
 
 				DataTable metaData = new DataTable();
-				DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, this.dbRoot.ConnectionString);
+				DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, dbRoot.ConnectionString);
 
 				adapter.Fill(metaData);
 
@@ -45,39 +40,39 @@ namespace EntitySpaces.MetadataEngine.MySql
 			try
 			{
 				//string query = @"SELECT TABLE_NAME, TABLE_COMMENT, CREATE_TIME, UPDATE_TIME FROM information_schema.TABLES WHERE TABLE_SCHEMA = '" + this.Database.Name + "'";
-                string query = @"SELECT TABLE_NAME, TABLE_COMMENT, CREATE_TIME, UPDATE_TIME FROM information_schema.TABLES WHERE TABLE_SCHEMA = '" + this.Database.Name + "' AND Table_type = 'BASE TABLE'";
+                string query = @"SELECT TABLE_NAME, TABLE_COMMENT, CREATE_TIME, UPDATE_TIME FROM information_schema.TABLES WHERE TABLE_SCHEMA = '" + Database.Name + "' AND Table_type = 'BASE TABLE'";
 
 				DataTable metaData = new DataTable();
-				DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, this.dbRoot.ConnectionString);
+				DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, dbRoot.ConnectionString);
 
 				adapter.Fill(metaData);
 
-				if(this.Database.Tables.Count > 0)
+				if(Database.Tables.Count > 0)
 				{
-					Table t = this.Database.Tables[0] as Table;
+					Table t = Database.Tables[0] as Table;
 
 					if(!t._row.Table.Columns.Contains("DESCRIPTION"))
 					{
 						t._row.Table.Columns.Add("DESCRIPTION", Type.GetType("System.String"));
-						this.f_Description = t._row.Table.Columns["DESCRIPTION"];
+						f_Description = t._row.Table.Columns["DESCRIPTION"];
 					}
 
 					if(!t._row.Table.Columns.Contains("TABLE_SCHEMA"))
 					{
 						t._row.Table.Columns.Add("TABLE_SCHEMA", Type.GetType("System.String"));
-						this.f_Schema = t._row.Table.Columns["TABLE_SCHEMA"];
+						f_Schema = t._row.Table.Columns["TABLE_SCHEMA"];
 					}
 
 					if(!t._row.Table.Columns.Contains("DATE_CREATED"))
 					{
 						t._row.Table.Columns.Add("DATE_CREATED", Type.GetType("System.DateTime"));
-						this.f_DateCreated = t._row.Table.Columns["DATE_CREATED"];
+						f_DateCreated = t._row.Table.Columns["DATE_CREATED"];
 					}
 
 					if(!t._row.Table.Columns.Contains("DATE_MODIFIED"))
 					{
 						t._row.Table.Columns.Add("DATE_MODIFIED", Type.GetType("System.DateTime"));
-						this.f_DateModified = t._row.Table.Columns["DATE_MODIFIED"];
+						f_DateModified = t._row.Table.Columns["DATE_MODIFIED"];
 					}
 				}
 

@@ -14,9 +14,9 @@ namespace EntitySpaces.MetadataEngine.MySql
         private static Assembly _asm;
         private static Module   _mod;
 
-		static internal ConstructorInfo IDbConnectionCtor = null;
-		static internal ConstructorInfo IDbDataAdapterCtor = null;
-        static internal ConstructorInfo IDbDataAdapterCtor2 = null;
+		internal static ConstructorInfo IDbConnectionCtor;
+		internal static ConstructorInfo IDbDataAdapterCtor = null;
+        internal static ConstructorInfo IDbDataAdapterCtor2;
 
 		internal string Version = "";
 
@@ -30,7 +30,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 			LoadAssembly();
 		}
 
-        static public void LoadAssembly()
+        public static void LoadAssembly()
         {
             if (_asm != null) return;
             try
@@ -64,9 +64,9 @@ namespace EntitySpaces.MetadataEngine.MySql
 				conn.Close();
 				conn.Dispose();
 
-				var database = (MySqlDatabase)this.dbRoot.ClassFactory.CreateDatabase();
+				var database = (MySqlDatabase)dbRoot.ClassFactory.CreateDatabase();
 				database._name = name;
-				database.dbRoot = this.dbRoot;
+				database.dbRoot = dbRoot;
 				database.Databases = this;
 				_array.Add(database);
 
@@ -90,7 +90,7 @@ namespace EntitySpaces.MetadataEngine.MySql
             }
         }
 
-        static internal IDbConnection CreateConnection(string connStr)
+        internal static IDbConnection CreateConnection(string connStr)
         {
             if (IDbConnectionCtor == null)
             {
@@ -108,7 +108,7 @@ namespace EntitySpaces.MetadataEngine.MySql
             return obj as IDbConnection;
         }
 
-		static internal DbDataAdapter CreateAdapter(string query, string connStr)
+		internal static DbDataAdapter CreateAdapter(string query, string connStr)
 		{
 			if(IDbDataAdapterCtor2 == null)
 			{

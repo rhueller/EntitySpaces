@@ -1,23 +1,17 @@
 using System;
 using System.Data;
 using System.Data.Common;
-using System.Collections;
 
 namespace EntitySpaces.MetadataEngine.MySql
 {
 	public class MySqlColumns : Columns
 	{
-		public MySqlColumns()
+        internal override void LoadForTable()
 		{
+			var query = @"SHOW COLUMNS FROM `" + Table.Name + "`";
 
-		}
-
-		override internal void LoadForTable()
-		{
-			string query = @"SHOW COLUMNS FROM `" + this.Table.Name + "`";
-
-			DataTable metaData = new DataTable();
-			DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, this.dbRoot.ConnectionString);
+			var metaData = new DataTable();
+			var adapter = MySqlDatabases.CreateAdapter(query, dbRoot.ConnectionString);
 
 			adapter.Fill(metaData);
 
@@ -35,7 +29,7 @@ namespace EntitySpaces.MetadataEngine.MySql
 
                 foreach (DataRow row in metaData.Rows)
                 {
-                    string extra = (string)row["extra"];
+                    var extra = (string)row["extra"];
 
                     if (extra != null && extra.Contains("autoincrement"))
                     {
@@ -53,16 +47,16 @@ namespace EntitySpaces.MetadataEngine.MySql
 			LoadTableColumnDescriptions();
 		}
 
-		override internal void LoadForView()
+		internal override void LoadForView()
 		{
-			MySqlDatabase db   = this.View.Database as MySqlDatabase;
-			MySqlDatabases dbs = db.Databases as MySqlDatabases;
+			var db   = View.Database as MySqlDatabase;
+			var dbs = db.Databases as MySqlDatabases;
 			if(dbs.Version.StartsWith("5"))
 			{
-				string query = @"SHOW COLUMNS FROM `" + this.View.Name + "`";
+				var query = @"SHOW COLUMNS FROM `" + View.Name + "`";
 
-				DataTable metaData = new DataTable();
-				DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, this.dbRoot.ConnectionString);
+				var metaData = new DataTable();
+				var adapter = MySqlDatabases.CreateAdapter(query, dbRoot.ConnectionString);
 
 				adapter.Fill(metaData);
 
@@ -81,11 +75,11 @@ namespace EntitySpaces.MetadataEngine.MySql
 		{
 			try
 			{
-				string query = @"SELECT TABLE_NAME, COLUMN_NAME, COLUMN_COMMENT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" + 
-					this.Table.Database.Name + "' AND TABLE_NAME ='" + this.Table.Name + "'";
+				var query = @"SELECT TABLE_NAME, COLUMN_NAME, COLUMN_COMMENT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" + 
+                            Table.Database.Name + "' AND TABLE_NAME ='" + Table.Name + "'";
 
-				DataTable metaData = new DataTable();
-				DbDataAdapter adapter = MySqlDatabases.CreateAdapter(query, this.dbRoot.ConnectionString);
+				var metaData = new DataTable();
+				var adapter = MySqlDatabases.CreateAdapter(query, dbRoot.ConnectionString);
 
 				adapter.Fill(metaData);
 
@@ -93,18 +87,18 @@ namespace EntitySpaces.MetadataEngine.MySql
 				{
 					foreach(DataRow row in metaData.Rows)
 					{
-						Column c = this[row["COLUMN_NAME"] as string] as Column;
+						var c = this[row["COLUMN_NAME"] as string] as Column;
 
 						if(!c._row.Table.Columns.Contains("DESCRIPTION"))
 						{
 							c._row.Table.Columns.Add("DESCRIPTION", Type.GetType("System.String"));
-							this.f_Description = c._row.Table.Columns["DESCRIPTION"];
+							f_Description = c._row.Table.Columns["DESCRIPTION"];
 						}
 
                         c._row["DESCRIPTION"] = row["COLUMN_COMMENT"] as string;
 
                         // We now set the AutoKey flag here ...
-                        string extra = (string)c._row["Extra"];
+                        var extra = (string)c._row["Extra"];
 
                         if(extra != null && extra.Length > 0)
                         {
