@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.1214.0
-EntitySpaces Driver  : SQL
-Date Generated       : 12/14/2019 5:29:50 PM
+EntitySpaces Version : 2024.1.4.0
+EntitySpaces Driver  : MySql
+Date Generated       : 19.01.2024 22:09:28
 ===============================================================================
 */
 
@@ -29,32 +29,30 @@ using EntitySpaces.DynamicQuery;
 
 
 
+// ReSharper disable InconsistentNaming
+
 namespace BusinessObjects
 {
 	/// <summary>
-	/// Encapsulates the 'Order Details' table
+	/// Encapsulates the 'order details' table
 	/// </summary>
 
-    [DebuggerDisplay("Data = {Debug}")]
 	[Serializable]
 	[DataContract]
 	[KnownType(typeof(OrderDetails))]	
 	[XmlType("OrderDetails")]
 	public partial class OrderDetails : esOrderDetails
 	{	
-		[DebuggerBrowsable(DebuggerBrowsableState.RootHidden | DebuggerBrowsableState.Never)]
-		protected override esEntityDebuggerView[] Debug
-		{
-			get { return base.Debug; }
-		}
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		protected override esEntityDebuggerView[] Debug => base.Debug;
 
-		override public esEntity CreateInstance()
+		public override esEntity CreateInstance()
 		{
 			return new OrderDetails();
 		}
 		
 		#region Static Quick Access Methods
-		static public void Delete(System.Int32 orderID, System.Int32 productID)
+		public static void Delete(System.Int32 orderID, System.Int32 productID)
 		{
 			var obj = new OrderDetails();
 			obj.OrderID = orderID;
@@ -64,7 +62,7 @@ namespace BusinessObjects
 			obj.Save();
 		}
 
-	    static public void Delete(System.Int32 orderID, System.Int32 productID, esSqlAccessType sqlAccessType)
+	    public static void Delete(System.Int32 orderID, System.Int32 productID, esSqlAccessType sqlAccessType)
 		{
 			var obj = new OrderDetails();
 			obj.OrderID = orderID;
@@ -83,7 +81,6 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Count = {Count}")]
 	[Serializable]
 	[CollectionDataContract]
 	[XmlType("OrderDetailsCollection")]
@@ -100,22 +97,21 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Query = {Parse()}")]
 	[Serializable]	
 	public partial class OrderDetailsQuery : esOrderDetailsQuery
 	{
 		public OrderDetailsQuery(string joinAlias)
 		{
-			this.es.JoinAlias = joinAlias;
+			es.JoinAlias = joinAlias;
 		}	
 
-		public OrderDetailsQuery(string joinAlias, out OrderDetailsQuery query)
+    public OrderDetailsQuery(string joinAlias, out OrderDetailsQuery query)
 		{
-			query = this;
-			this.es.JoinAlias = joinAlias;
-		}
+      query = this;
+			es.JoinAlias = joinAlias;
+		}	
 
-		override protected string GetQueryName()
+		protected override string GetQueryName()
 		{
 			return "OrderDetailsQuery";
 		}
@@ -139,7 +135,7 @@ namespace BusinessObjects
 
 	[DataContract]
 	[Serializable]
-	abstract public partial class esOrderDetails : esEntity
+	public abstract partial class esOrderDetails : esEntity
 	{
 		public esOrderDetails()
 		{
@@ -183,122 +179,98 @@ namespace BusinessObjects
 		
 		
 		/// <summary>
-		/// Maps to Order Details.OrderID
+		/// Maps to order details.OrderID
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int32? OrderID
+		public virtual System.Int32? OrderID
 		{
-			get
-			{
-				return base.GetSystemInt32(OrderDetailsMetadata.ColumnNames.OrderID);
-			}
+			get => GetSystemInt32(OrderDetailsMetadata.ColumnNames.OrderID);
 			
 			set
 			{
-				if(base.SetSystemInt32(OrderDetailsMetadata.ColumnNames.OrderID, value))
-				{
-					this._Orders = null;
-					this.OnPropertyChanged("Orders");
-					OnPropertyChanged(OrderDetailsMetadata.PropertyNames.OrderID);
-				}
+				if (!SetSystemInt32(OrderDetailsMetadata.ColumnNames.OrderID, value)) return;
+				
+				_UpToOrdersByOrderID = null;
+				OnPropertyChanged("UpToOrdersByOrderID");
+				OnPropertyChanged(OrderDetailsMetadata.PropertyNames.OrderID);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Order Details.ProductID
+		/// Maps to order details.ProductID
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int32? ProductID
+		public virtual System.Int32? ProductID
 		{
-			get
-			{
-				return base.GetSystemInt32(OrderDetailsMetadata.ColumnNames.ProductID);
-			}
+			get => GetSystemInt32(OrderDetailsMetadata.ColumnNames.ProductID);
 			
 			set
 			{
-				if(base.SetSystemInt32(OrderDetailsMetadata.ColumnNames.ProductID, value))
-				{
-					this._Products = null;
-					this.OnPropertyChanged("Products");
-					OnPropertyChanged(OrderDetailsMetadata.PropertyNames.ProductID);
-				}
+				if (!SetSystemInt32(OrderDetailsMetadata.ColumnNames.ProductID, value)) return;
+				
+				_UpToProductsByProductID = null;
+				OnPropertyChanged("UpToProductsByProductID");
+				OnPropertyChanged(OrderDetailsMetadata.PropertyNames.ProductID);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Order Details.UnitPrice
+		/// Maps to order details.UnitPrice
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Decimal? UnitPrice
+		public virtual System.Decimal? UnitPrice
 		{
-			get
-			{
-				return base.GetSystemDecimal(OrderDetailsMetadata.ColumnNames.UnitPrice);
-			}
+			get => GetSystemDecimal(OrderDetailsMetadata.ColumnNames.UnitPrice);
 			
 			set
 			{
-				if(base.SetSystemDecimal(OrderDetailsMetadata.ColumnNames.UnitPrice, value))
-				{
-					OnPropertyChanged(OrderDetailsMetadata.PropertyNames.UnitPrice);
-				}
+				if (!SetSystemDecimal(OrderDetailsMetadata.ColumnNames.UnitPrice, value)) return;
+				
+				OnPropertyChanged(OrderDetailsMetadata.PropertyNames.UnitPrice);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Order Details.Quantity
+		/// Maps to order details.Quantity
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int16? Quantity
+		public virtual System.Int16? Quantity
 		{
-			get
-			{
-				return base.GetSystemInt16(OrderDetailsMetadata.ColumnNames.Quantity);
-			}
+			get => GetSystemInt16(OrderDetailsMetadata.ColumnNames.Quantity);
 			
 			set
 			{
-				if(base.SetSystemInt16(OrderDetailsMetadata.ColumnNames.Quantity, value))
-				{
-					OnPropertyChanged(OrderDetailsMetadata.PropertyNames.Quantity);
-				}
+				if (!SetSystemInt16(OrderDetailsMetadata.ColumnNames.Quantity, value)) return;
+				
+				OnPropertyChanged(OrderDetailsMetadata.PropertyNames.Quantity);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Order Details.Discount
+		/// Maps to order details.Discount
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Single? Discount
+		public virtual System.Double? Discount
 		{
-			get
-			{
-				return base.GetSystemSingle(OrderDetailsMetadata.ColumnNames.Discount);
-			}
+			get => GetSystemDouble(OrderDetailsMetadata.ColumnNames.Discount);
 			
 			set
 			{
-				if(base.SetSystemSingle(OrderDetailsMetadata.ColumnNames.Discount, value))
-				{
-					OnPropertyChanged(OrderDetailsMetadata.PropertyNames.Discount);
-				}
+				if (!SetSystemDouble(OrderDetailsMetadata.ColumnNames.Discount, value)) return;
+				
+				OnPropertyChanged(OrderDetailsMetadata.PropertyNames.Discount);
 			}
-		}
+		}		
 		
-		internal protected Orders _Orders;
-		internal protected Products _Products;
+		
+		protected internal Orders _UpToOrdersByOrderID;
+		
+		protected internal Products _UpToProductsByProductID;
 		#endregion
 		
 		#region Housekeeping methods
 
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return OrderDetailsMetadata.Meta();
-			}
-		}
+		protected override IMetadata Meta => OrderDetailsMetadata.Meta();
 
 		#endregion		
 		
@@ -308,36 +280,28 @@ namespace BusinessObjects
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new OrderDetailsQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new OrderDetailsQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(OrderDetailsQuery query)
+		public bool Load(OrderDetailsQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
-			return this.Query.Load();
+			query = paraQuery;
+			InitQuery(query);
+			return Query.Load();
 		}
-
-		protected void InitQuery(OrderDetailsQuery query)
+		
+		protected void InitQuery(OrderDetailsQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntity)this).Connection;
+				paraQuery.es2.Connection = ((IEntity)this).Connection;
 			}			
-		}
-
-		protected override void HookupQuery(esDynamicQuery query)
-		{
-			this.InitQuery((OrderDetailsQuery)query);
 		}
 
 		#endregion
@@ -349,73 +313,60 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esOrderDetailsCollection : esEntityCollection<OrderDetails>
+	public abstract class esOrderDetailsCollection : esEntityCollection<OrderDetails>
 	{
 		#region Housekeeping methods
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return OrderDetailsMetadata.Meta();
-			}
-		}
-
+		protected override IMetadata Meta => OrderDetailsMetadata.Meta();
 		protected override string GetCollectionName()
 		{
 			return "OrderDetailsCollection";
 		}
-
 		#endregion		
 		
 		#region Query Logic
 
 	#if (!WindowsCE)
-		[BrowsableAttribute(false)]
+		[Browsable(false)]
 	#endif
 		public OrderDetailsQuery Query
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new OrderDetailsQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new OrderDetailsQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(OrderDetailsQuery query)
+		public bool Load(OrderDetailsQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
+			query = paraQuery;
+			InitQuery(query);
 			return Query.Load();
 		}
 
-		override protected esDynamicQuery GetDynamicQuery()
+		protected override esDynamicQuery GetDynamicQuery()
 		{
-			if (this.query == null)
-			{
-				this.query = new OrderDetailsQuery();
-				this.InitQuery(query);
-			}
-			return this.query;
+			if (query != null) return query;
+			query = new OrderDetailsQuery();
+			InitQuery(query);
+			return query;
 		}
 
-		protected void InitQuery(OrderDetailsQuery query)
+		protected void InitQuery(OrderDetailsQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntityCollection)this).Connection;
+				paraQuery.es2.Connection = ((IEntityCollection)this).Connection;
 			}			
 		}
 
-		protected override void HookupQuery(esDynamicQuery query)
+		protected override void HookupQuery(esDynamicQuery paraQuery)
 		{
-			this.InitQuery((OrderDetailsQuery)query);
+			InitQuery((OrderDetailsQuery)paraQuery);
 		}
 
 		#endregion
@@ -426,60 +377,38 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esOrderDetailsQuery : esDynamicQuery
+	public abstract class esOrderDetailsQuery : esDynamicQuery
 	{
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return OrderDetailsMetadata.Meta();
-			}
-		}	
+		protected override IMetadata Meta => OrderDetailsMetadata.Meta();
 		
 		#region QueryItemFromName
 		
         protected override esQueryItem QueryItemFromName(string name)
         {
-            switch (name)
+            return name switch
             {
-				case "OrderID": return this.OrderID;
-				case "ProductID": return this.ProductID;
-				case "UnitPrice": return this.UnitPrice;
-				case "Quantity": return this.Quantity;
-				case "Discount": return this.Discount;
-
-                default: return null;
-            }
+              "OrderID" => OrderID,
+              "ProductID" => ProductID,
+              "UnitPrice" => UnitPrice,
+              "Quantity" => Quantity,
+              "Discount" => Discount,
+              _ => null
+            };
         }		
 		
 		#endregion
 		
 		#region esQueryItems
 
-		public esQueryItem OrderID
-		{
-			get { return new esQueryItem(this, OrderDetailsMetadata.ColumnNames.OrderID, esSystemType.Int32); }
-		} 
+		public esQueryItem OrderID => new (this, OrderDetailsMetadata.ColumnNames.OrderID, esSystemType.Int32);
 		
-		public esQueryItem ProductID
-		{
-			get { return new esQueryItem(this, OrderDetailsMetadata.ColumnNames.ProductID, esSystemType.Int32); }
-		} 
+		public esQueryItem ProductID => new (this, OrderDetailsMetadata.ColumnNames.ProductID, esSystemType.Int32);
 		
-		public esQueryItem UnitPrice
-		{
-			get { return new esQueryItem(this, OrderDetailsMetadata.ColumnNames.UnitPrice, esSystemType.Decimal); }
-		} 
+		public esQueryItem UnitPrice => new (this, OrderDetailsMetadata.ColumnNames.UnitPrice, esSystemType.Decimal);
 		
-		public esQueryItem Quantity
-		{
-			get { return new esQueryItem(this, OrderDetailsMetadata.ColumnNames.Quantity, esSystemType.Int16); }
-		} 
+		public esQueryItem Quantity => new (this, OrderDetailsMetadata.ColumnNames.Quantity, esSystemType.Int16);
 		
-		public esQueryItem Discount
-		{
-			get { return new esQueryItem(this, OrderDetailsMetadata.ColumnNames.Discount, esSystemType.Single); }
-		} 
+		public esQueryItem Discount => new (this, OrderDetailsMetadata.ColumnNames.Discount, esSystemType.Double);
 		
 		#endregion
 		
@@ -490,115 +419,127 @@ namespace BusinessObjects
 	public partial class OrderDetails : esOrderDetails
 	{
 
-		
-		#region Orders - Many To One (FK_Order_Details_Orders)
-		
-	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeOrders()
+				
+				
+		#region UpToOrdersByOrderID - Many To One
+		/// <summary>
+		/// Many to One
+		/// Foreign Key Name - FK_Order_Details_Orders
+		/// </summary>
+			[EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToOrdersByOrderID()
 		{
-		    return this._Orders != null ? true : false;
+				return _UpToOrdersByOrderID != null;
 		}
 		
 
-		[DataMember(Name="Orders", EmitDefaultValue = false)]
+		[DataMember(Name="UpToOrdersByOrderID", EmitDefaultValue = false)]
 					
-		public Orders Orders
+		public Orders UpToOrdersByOrderID
 		{
 			get
 			{
-                if (this._Orders == null)
-                {
-                    this._Orders = new Orders();
-                    this._Orders.es.Connection.Name = this.es.Connection.Name;
-                    this.SetPreSave("Orders", this._Orders);
+				if (_UpToOrdersByOrderID != null) return _UpToOrdersByOrderID;
+				
+				_UpToOrdersByOrderID = new Orders();
+				_UpToOrdersByOrderID.es.Connection.Name = es.Connection.Name;
+				SetPreSave("UpToOrdersByOrderID", _UpToOrdersByOrderID);
 
-					if(this._Orders == null && OrderID != null)
-                    {
-                        if (!this.es.IsLazyLoadDisabled)
-                        {
-							this._Orders.Query.Where(this._Orders.Query.OrderID == this.OrderID);
-							this._Orders.Query.Load();
-                        }
-                    }
-                }
-
-				return this._Orders;
+				if (_UpToOrdersByOrderID == null && OrderID != null)
+				{
+					if (es.IsLazyLoadDisabled) return _UpToOrdersByOrderID;
+					
+					_UpToOrdersByOrderID.Query.Where(_UpToOrdersByOrderID.Query.OrderID == OrderID);
+					_UpToOrdersByOrderID.Query.Load();
+				}
+				return _UpToOrdersByOrderID;
 			}
 			
 			set
 			{
-				this.RemovePreSave("Orders");
+				RemovePreSave("UpToOrdersByOrderID");
 				
+				var changed = _UpToOrdersByOrderID != value;
 
-				if(value == null)
+				if (value == null)
 				{
-					this.OrderID = null;
-					this._Orders = null;
+					OrderID = null;
+					_UpToOrdersByOrderID = null;
 				}
 				else
 				{
-					this.OrderID = value.OrderID;
-					this._Orders = value;
-					this.SetPreSave("Orders", this._Orders);
+					OrderID = value.OrderID;
+					_UpToOrdersByOrderID = value;
+					SetPreSave("UpToOrdersByOrderID", _UpToOrdersByOrderID);
 				}
 				
+				if (changed)
+				{
+					OnPropertyChanged("UpToOrdersByOrderID");
+				}
 			}
 		}
 		#endregion
 		
 
-		
-		#region Products - Many To One (FK_Order_Details_Products)
-		
-	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeProducts()
+				
+				
+		#region UpToProductsByProductID - Many To One
+		/// <summary>
+		/// Many to One
+		/// Foreign Key Name - FK_Order_Details_Products
+		/// </summary>
+			[EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToProductsByProductID()
 		{
-		    return this._Products != null ? true : false;
+				return _UpToProductsByProductID != null;
 		}
 		
 
-		[DataMember(Name="Products", EmitDefaultValue = false)]
+		[DataMember(Name="UpToProductsByProductID", EmitDefaultValue = false)]
 					
-		public Products Products
+		public Products UpToProductsByProductID
 		{
 			get
 			{
-                if (this._Products == null)
-                {
-                    this._Products = new Products();
-                    this._Products.es.Connection.Name = this.es.Connection.Name;
-                    this.SetPreSave("Products", this._Products);
+				if (_UpToProductsByProductID != null) return _UpToProductsByProductID;
+				
+				_UpToProductsByProductID = new Products();
+				_UpToProductsByProductID.es.Connection.Name = es.Connection.Name;
+				SetPreSave("UpToProductsByProductID", _UpToProductsByProductID);
 
-					if(this._Products == null && ProductID != null)
-                    {
-                        if (!this.es.IsLazyLoadDisabled)
-                        {
-							this._Products.Query.Where(this._Products.Query.ProductID == this.ProductID);
-							this._Products.Query.Load();
-                        }
-                    }
-                }
-
-				return this._Products;
+				if (_UpToProductsByProductID == null && ProductID != null)
+				{
+					if (es.IsLazyLoadDisabled) return _UpToProductsByProductID;
+					
+					_UpToProductsByProductID.Query.Where(_UpToProductsByProductID.Query.ProductID == ProductID);
+					_UpToProductsByProductID.Query.Load();
+				}
+				return _UpToProductsByProductID;
 			}
 			
 			set
 			{
-				this.RemovePreSave("Products");
+				RemovePreSave("UpToProductsByProductID");
 				
+				var changed = _UpToProductsByProductID != value;
 
-				if(value == null)
+				if (value == null)
 				{
-					this.ProductID = null;
-					this._Products = null;
+					ProductID = null;
+					_UpToProductsByProductID = null;
 				}
 				else
 				{
-					this.ProductID = value.ProductID;
-					this._Products = value;
-					this.SetPreSave("Products", this._Products);
+					ProductID = value.ProductID;
+					_UpToProductsByProductID = value;
+					SetPreSave("UpToProductsByProductID", _UpToProductsByProductID);
 				}
 				
+				if (changed)
+				{
+					OnPropertyChanged("UpToProductsByProductID");
+				}
 			}
 		}
 		#endregion
@@ -611,13 +552,13 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPreSaveKeys()
 		{
-			if(!this.es.IsDeleted && this._Orders != null)
+			if(!es.IsDeleted && _UpToOrdersByOrderID != null)
 			{
-				this.OrderID = this._Orders.OrderID;
+				OrderID = _UpToOrdersByOrderID.OrderID;
 			}
-			if(!this.es.IsDeleted && this._Products != null)
+			if(!es.IsDeleted && _UpToProductsByProductID != null)
 			{
-				this.ProductID = this._Products.ProductID;
+				ProductID = _UpToProductsByProductID.ProductID;
 			}
 		}
 		
@@ -635,61 +576,53 @@ namespace BusinessObjects
 			m_columns = new esColumnMetadataCollection();
 			esColumnMetadata c;
 
-			c = new esColumnMetadata(OrderDetailsMetadata.ColumnNames.OrderID, 0, typeof(System.Int32), esSystemType.Int32);
-			c.PropertyName = OrderDetailsMetadata.PropertyNames.OrderID;
+			c = new esColumnMetadata(ColumnNames.OrderID, 0, typeof(System.Int32), esSystemType.Int32);
+			c.PropertyName = PropertyNames.OrderID;
 			c.IsInPrimaryKey = true;
-			c.NumericPrecision = 10;
+			c.NumericPrecision = 11;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(OrderDetailsMetadata.ColumnNames.ProductID, 1, typeof(System.Int32), esSystemType.Int32);
-			c.PropertyName = OrderDetailsMetadata.PropertyNames.ProductID;
+			c = new esColumnMetadata(ColumnNames.ProductID, 1, typeof(System.Int32), esSystemType.Int32);
+			c.PropertyName = PropertyNames.ProductID;
 			c.IsInPrimaryKey = true;
+			c.NumericPrecision = 11;
+			m_columns.Add(c);
+				
+			c = new esColumnMetadata(ColumnNames.UnitPrice, 2, typeof(System.Decimal), esSystemType.Decimal);
+			c.PropertyName = PropertyNames.UnitPrice;
 			c.NumericPrecision = 10;
+			c.NumericScale = 4;
+			c.HasDefault = true;
+			c.Default = @"0.0000";
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(OrderDetailsMetadata.ColumnNames.UnitPrice, 2, typeof(System.Decimal), esSystemType.Decimal);
-			c.PropertyName = OrderDetailsMetadata.PropertyNames.UnitPrice;
-			c.NumericPrecision = 19;
+			c = new esColumnMetadata(ColumnNames.Quantity, 3, typeof(System.Int16), esSystemType.Int16);
+			c.PropertyName = PropertyNames.Quantity;
+			c.NumericPrecision = 2;
 			c.HasDefault = true;
-			c.Default = @"((0))";
+			c.Default = @"1";
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(OrderDetailsMetadata.ColumnNames.Quantity, 3, typeof(System.Int16), esSystemType.Int16);
-			c.PropertyName = OrderDetailsMetadata.PropertyNames.Quantity;
-			c.NumericPrecision = 5;
+			c = new esColumnMetadata(ColumnNames.Discount, 4, typeof(System.Double), esSystemType.Double);
+			c.PropertyName = PropertyNames.Discount;
+			c.NumericPrecision = 8;
 			c.HasDefault = true;
-			c.Default = @"((1))";
-			m_columns.Add(c);
-				
-			c = new esColumnMetadata(OrderDetailsMetadata.ColumnNames.Discount, 4, typeof(System.Single), esSystemType.Single);
-			c.PropertyName = OrderDetailsMetadata.PropertyNames.Discount;
-			c.NumericPrecision = 7;
-			c.HasDefault = true;
-			c.Default = @"((0))";
+			c.Default = @"0";
 			m_columns.Add(c);
 				
 		}
 		#endregion	
 	
-		static public OrderDetailsMetadata Meta()
+		public static OrderDetailsMetadata Meta()
 		{
 			return meta;
 		}	
 		
-		public Guid DataID
-		{
-			get { return base.m_dataID; }
-		}	
-		
-		public bool MultiProviderMode
-		{
-			get { return false; }
-		}		
+		public Guid DataID => m_dataID;
 
-		public esColumnMetadataCollection Columns
-		{
-			get	{ return base.m_columns; }
-		}
+		public bool MultiProviderMode => false;
+
+		public esColumnMetadataCollection Columns => m_columns;
 		
 		#region ColumnNames
 		public class ColumnNames
@@ -715,32 +648,20 @@ namespace BusinessObjects
 
 		public esProviderSpecificMetadata GetProviderMetadata(string mapName)
 		{
-			MapToMeta mapMethod = mapDelegates[mapName];
-
-			if (mapMethod != null)
-				return mapMethod(mapName);
-			else
-				return null;
+			var mapMethod = mapDelegates[mapName];
+      return mapMethod?.Invoke(mapName);
 		}
 		
 		#region MAP esDefault
 		
-		static private int RegisterDelegateesDefault()
+		private static int RegisterDelegateesDefault()
 		{
 			// This is only executed once per the life of the application
 			lock (typeof(OrderDetailsMetadata))
 			{
-				if(OrderDetailsMetadata.mapDelegates == null)
-				{
-					OrderDetailsMetadata.mapDelegates = new Dictionary<string,MapToMeta>();
-				}
-				
-				if (OrderDetailsMetadata.meta == null)
-				{
-					OrderDetailsMetadata.meta = new OrderDetailsMetadata();
-				}
-				
-				MapToMeta mapMethod = new MapToMeta(meta.esDefault);
+				mapDelegates ??= new Dictionary<string, MapToMeta>();
+				meta ??= new OrderDetailsMetadata();
+				var mapMethod = new MapToMeta(meta.esDefault);
 				mapDelegates.Add("esDefault", mapMethod);
 				mapMethod("esDefault");
 			}
@@ -749,38 +670,39 @@ namespace BusinessObjects
 
 		private esProviderSpecificMetadata esDefault(string mapName)
 		{
+			// ReSharper disable once InvertIf
 			if(!m_providerMetadataMaps.ContainsKey(mapName))
 			{
-				esProviderSpecificMetadata meta = new esProviderSpecificMetadata();			
+				var specMeta = new esProviderSpecificMetadata();			
 
 
-				meta.AddTypeMap("OrderID", new esTypeMap("int", "System.Int32"));
-				meta.AddTypeMap("ProductID", new esTypeMap("int", "System.Int32"));
-				meta.AddTypeMap("UnitPrice", new esTypeMap("money", "System.Decimal"));
-				meta.AddTypeMap("Quantity", new esTypeMap("smallint", "System.Int16"));
-				meta.AddTypeMap("Discount", new esTypeMap("real", "System.Single"));			
+				specMeta.AddTypeMap("OrderID", new esTypeMap("INT", "System.Int32"));
+				specMeta.AddTypeMap("ProductID", new esTypeMap("INT", "System.Int32"));
+				specMeta.AddTypeMap("UnitPrice", new esTypeMap("DECIMAL", "System.Decimal"));
+				specMeta.AddTypeMap("Quantity", new esTypeMap("SMALLINT", "System.Int16"));
+				specMeta.AddTypeMap("Discount", new esTypeMap("DOUBLE", "System.Double"));			
 				
 				
 				
-				meta.Source = "Order Details";
-				meta.Destination = "Order Details";
+				specMeta.Source = "order details";
+				specMeta.Destination = "order details";
 				
-				meta.spInsert = "proc_Order DetailsInsert";				
-				meta.spUpdate = "proc_Order DetailsUpdate";		
-				meta.spDelete = "proc_Order DetailsDelete";
-				meta.spLoadAll = "proc_Order DetailsLoadAll";
-				meta.spLoadByPrimaryKey = "proc_Order DetailsLoadByPrimaryKey";
+				specMeta.spInsert = "proc_order detailsInsert";				
+				specMeta.spUpdate = "proc_order detailsUpdate";		
+				specMeta.spDelete = "proc_order detailsDelete";
+				specMeta.spLoadAll = "proc_order detailsLoadAll";
+				specMeta.spLoadByPrimaryKey = "proc_order detailsLoadByPrimaryKey";
 				
-				this.m_providerMetadataMaps["esDefault"] = meta;
+				m_providerMetadataMaps["esDefault"] = specMeta;
 			}
 			
-			return this.m_providerMetadataMaps["esDefault"];
+			return m_providerMetadataMaps["esDefault"];
 		}
 
 		#endregion
 
-		static private OrderDetailsMetadata meta;
-		static protected Dictionary<string, MapToMeta> mapDelegates;
-		static private int _esDefault = RegisterDelegateesDefault();
+		private static OrderDetailsMetadata meta;
+		protected static Dictionary<string, MapToMeta> mapDelegates;
+		private static int _esDefault = RegisterDelegateesDefault();
 	}
 }

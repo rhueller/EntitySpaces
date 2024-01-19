@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.1214.0
-EntitySpaces Driver  : SQL
-Date Generated       : 12/14/2019 5:29:45 PM
+EntitySpaces Version : 2024.1.4.0
+EntitySpaces Driver  : MySql
+Date Generated       : 19.01.2024 22:09:28
 ===============================================================================
 */
 
@@ -29,34 +29,32 @@ using EntitySpaces.DynamicQuery;
 
 
 
+// ReSharper disable InconsistentNaming
+
 namespace BusinessObjects
 {
 	/// <summary>
-	/// Encapsulates the 'CustomerCustomerDemo' table
+	/// Encapsulates the 'customercustomerdemo' table
 	/// </summary>
 
-    [DebuggerDisplay("Data = {Debug}")]
 	[Serializable]
 	[DataContract]
-	[KnownType(typeof(CustomerCustomerDemo))]	
-	[XmlType("CustomerCustomerDemo")]
-	public partial class CustomerCustomerDemo : esCustomerCustomerDemo
+	[KnownType(typeof(Customercustomerdemo))]	
+	[XmlType("Customercustomerdemo")]
+	public partial class Customercustomerdemo : esCustomercustomerdemo
 	{	
-		[DebuggerBrowsable(DebuggerBrowsableState.RootHidden | DebuggerBrowsableState.Never)]
-		protected override esEntityDebuggerView[] Debug
-		{
-			get { return base.Debug; }
-		}
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		protected override esEntityDebuggerView[] Debug => base.Debug;
 
-		override public esEntity CreateInstance()
+		public override esEntity CreateInstance()
 		{
-			return new CustomerCustomerDemo();
+			return new Customercustomerdemo();
 		}
 		
 		#region Static Quick Access Methods
-		static public void Delete(System.String customerID, System.String customerTypeID)
+		public static void Delete(System.String customerID, System.String customerTypeID)
 		{
-			var obj = new CustomerCustomerDemo();
+			var obj = new Customercustomerdemo();
 			obj.CustomerID = customerID;
 			obj.CustomerTypeID = customerTypeID;
 			obj.AcceptChanges();
@@ -64,9 +62,9 @@ namespace BusinessObjects
 			obj.Save();
 		}
 
-	    static public void Delete(System.String customerID, System.String customerTypeID, esSqlAccessType sqlAccessType)
+	    public static void Delete(System.String customerID, System.String customerTypeID, esSqlAccessType sqlAccessType)
 		{
-			var obj = new CustomerCustomerDemo();
+			var obj = new Customercustomerdemo();
 			obj.CustomerID = customerID;
 			obj.CustomerTypeID = customerTypeID;
 			obj.AcceptChanges();
@@ -83,13 +81,12 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Count = {Count}")]
 	[Serializable]
 	[CollectionDataContract]
-	[XmlType("CustomerCustomerDemoCollection")]
-	public partial class CustomerCustomerDemoCollection : esCustomerCustomerDemoCollection, IEnumerable<CustomerCustomerDemo>
+	[XmlType("CustomercustomerdemoCollection")]
+	public partial class CustomercustomerdemoCollection : esCustomercustomerdemoCollection, IEnumerable<Customercustomerdemo>
 	{
-		public CustomerCustomerDemo FindByPrimaryKey(System.String customerID, System.String customerTypeID)
+		public Customercustomerdemo FindByPrimaryKey(System.String customerID, System.String customerTypeID)
 		{
 			return this.SingleOrDefault(e => e.CustomerID == customerID && e.CustomerTypeID == customerTypeID);
 		}
@@ -100,38 +97,37 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Query = {Parse()}")]
 	[Serializable]	
-	public partial class CustomerCustomerDemoQuery : esCustomerCustomerDemoQuery
+	public partial class CustomercustomerdemoQuery : esCustomercustomerdemoQuery
 	{
-		public CustomerCustomerDemoQuery(string joinAlias)
+		public CustomercustomerdemoQuery(string joinAlias)
 		{
-			this.es.JoinAlias = joinAlias;
+			es.JoinAlias = joinAlias;
 		}	
 
-		public CustomerCustomerDemoQuery(string joinAlias, out CustomerCustomerDemoQuery query)
+    public CustomercustomerdemoQuery(string joinAlias, out CustomercustomerdemoQuery query)
 		{
-			query = this;
-			this.es.JoinAlias = joinAlias;
-		}
+      query = this;
+			es.JoinAlias = joinAlias;
+		}	
 
-		override protected string GetQueryName()
+		protected override string GetQueryName()
 		{
-			return "CustomerCustomerDemoQuery";
+			return "CustomercustomerdemoQuery";
 		}
 		
 					
 	
 		#region Explicit Casts
 		
-		public static explicit operator string(CustomerCustomerDemoQuery query)
+		public static explicit operator string(CustomercustomerdemoQuery query)
 		{
-			return CustomerCustomerDemoQuery.SerializeHelper.ToXml(query);
+			return CustomercustomerdemoQuery.SerializeHelper.ToXml(query);
 		}
 
-		public static explicit operator CustomerCustomerDemoQuery(string query)
+		public static explicit operator CustomercustomerdemoQuery(string query)
 		{
-			return (CustomerCustomerDemoQuery)CustomerCustomerDemoQuery.SerializeHelper.FromXml(query, typeof(CustomerCustomerDemoQuery));
+			return (CustomercustomerdemoQuery)CustomercustomerdemoQuery.SerializeHelper.FromXml(query, typeof(CustomercustomerdemoQuery));
 		}
 		
 		#endregion		
@@ -139,9 +135,9 @@ namespace BusinessObjects
 
 	[DataContract]
 	[Serializable]
-	abstract public partial class esCustomerCustomerDemo : esEntity
+	public abstract partial class esCustomercustomerdemo : esEntity
 	{
-		public esCustomerCustomerDemo()
+		public esCustomercustomerdemo()
 		{
 
 		}
@@ -165,7 +161,7 @@ namespace BusinessObjects
 
 		private bool LoadByPrimaryKeyDynamic(System.String customerID, System.String customerTypeID)
 		{
-			CustomerCustomerDemoQuery query = new CustomerCustomerDemoQuery();
+			CustomercustomerdemoQuery query = new CustomercustomerdemoQuery();
 			query.Where(query.CustomerID == customerID, query.CustomerTypeID == customerTypeID);
 			return this.Load(query);
 		}
@@ -183,225 +179,179 @@ namespace BusinessObjects
 		
 		
 		/// <summary>
-		/// Maps to CustomerCustomerDemo.CustomerID
+		/// Maps to customercustomerdemo.CustomerID
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String CustomerID
+		public virtual System.String CustomerID
 		{
-			get
-			{
-				return base.GetSystemString(CustomerCustomerDemoMetadata.ColumnNames.CustomerID);
-			}
+			get => GetSystemString(CustomercustomerdemoMetadata.ColumnNames.CustomerID);
 			
 			set
 			{
-				if(base.SetSystemString(CustomerCustomerDemoMetadata.ColumnNames.CustomerID, value))
-				{
-					this._Customers = null;
-					this.OnPropertyChanged("Customers");
-					OnPropertyChanged(CustomerCustomerDemoMetadata.PropertyNames.CustomerID);
-				}
+				if (!SetSystemString(CustomercustomerdemoMetadata.ColumnNames.CustomerID, value)) return;
+				
+				_UpToCustomersByCustomerID = null;
+				OnPropertyChanged("UpToCustomersByCustomerID");
+				OnPropertyChanged(CustomercustomerdemoMetadata.PropertyNames.CustomerID);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to CustomerCustomerDemo.CustomerTypeID
+		/// Maps to customercustomerdemo.CustomerTypeID
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String CustomerTypeID
+		public virtual System.String CustomerTypeID
 		{
-			get
-			{
-				return base.GetSystemString(CustomerCustomerDemoMetadata.ColumnNames.CustomerTypeID);
-			}
+			get => GetSystemString(CustomercustomerdemoMetadata.ColumnNames.CustomerTypeID);
 			
 			set
 			{
-				if(base.SetSystemString(CustomerCustomerDemoMetadata.ColumnNames.CustomerTypeID, value))
-				{
-					this._CustomerDemographics = null;
-					this.OnPropertyChanged("CustomerDemographics");
-					OnPropertyChanged(CustomerCustomerDemoMetadata.PropertyNames.CustomerTypeID);
-				}
+				if (!SetSystemString(CustomercustomerdemoMetadata.ColumnNames.CustomerTypeID, value)) return;
+				
+				_UpToCustomerdemographicsByCustomerTypeID = null;
+				OnPropertyChanged("UpToCustomerdemographicsByCustomerTypeID");
+				OnPropertyChanged(CustomercustomerdemoMetadata.PropertyNames.CustomerTypeID);
 			}
-		}
+		}		
 		
-		internal protected CustomerDemographics _CustomerDemographics;
-		internal protected Customers _Customers;
+		
+		protected internal Customerdemographics _UpToCustomerdemographicsByCustomerTypeID;
+		
+		protected internal Customers _UpToCustomersByCustomerID;
 		#endregion
 		
 		#region Housekeeping methods
 
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return CustomerCustomerDemoMetadata.Meta();
-			}
-		}
+		protected override IMetadata Meta => CustomercustomerdemoMetadata.Meta();
 
 		#endregion		
 		
 		#region Query Logic
 
-		public CustomerCustomerDemoQuery Query
+		public CustomercustomerdemoQuery Query
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new CustomerCustomerDemoQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new CustomercustomerdemoQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(CustomerCustomerDemoQuery query)
+		public bool Load(CustomercustomerdemoQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
-			return this.Query.Load();
+			query = paraQuery;
+			InitQuery(query);
+			return Query.Load();
 		}
-
-		protected void InitQuery(CustomerCustomerDemoQuery query)
+		
+		protected void InitQuery(CustomercustomerdemoQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntity)this).Connection;
+				paraQuery.es2.Connection = ((IEntity)this).Connection;
 			}			
-		}
-
-		protected override void HookupQuery(esDynamicQuery query)
-		{
-			this.InitQuery((CustomerCustomerDemoQuery)query);
 		}
 
 		#endregion
 		
         [IgnoreDataMember]
-		private CustomerCustomerDemoQuery query;		
+		private CustomercustomerdemoQuery query;		
 	}
 
 
 
 	[Serializable]
-	abstract public partial class esCustomerCustomerDemoCollection : esEntityCollection<CustomerCustomerDemo>
+	public abstract class esCustomercustomerdemoCollection : esEntityCollection<Customercustomerdemo>
 	{
 		#region Housekeeping methods
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return CustomerCustomerDemoMetadata.Meta();
-			}
-		}
-
+		protected override IMetadata Meta => CustomercustomerdemoMetadata.Meta();
 		protected override string GetCollectionName()
 		{
-			return "CustomerCustomerDemoCollection";
+			return "CustomercustomerdemoCollection";
 		}
-
 		#endregion		
 		
 		#region Query Logic
 
 	#if (!WindowsCE)
-		[BrowsableAttribute(false)]
+		[Browsable(false)]
 	#endif
-		public CustomerCustomerDemoQuery Query
+		public CustomercustomerdemoQuery Query
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new CustomerCustomerDemoQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new CustomercustomerdemoQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(CustomerCustomerDemoQuery query)
+		public bool Load(CustomercustomerdemoQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
+			query = paraQuery;
+			InitQuery(query);
 			return Query.Load();
 		}
 
-		override protected esDynamicQuery GetDynamicQuery()
+		protected override esDynamicQuery GetDynamicQuery()
 		{
-			if (this.query == null)
-			{
-				this.query = new CustomerCustomerDemoQuery();
-				this.InitQuery(query);
-			}
-			return this.query;
+			if (query != null) return query;
+			query = new CustomercustomerdemoQuery();
+			InitQuery(query);
+			return query;
 		}
 
-		protected void InitQuery(CustomerCustomerDemoQuery query)
+		protected void InitQuery(CustomercustomerdemoQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntityCollection)this).Connection;
+				paraQuery.es2.Connection = ((IEntityCollection)this).Connection;
 			}			
 		}
 
-		protected override void HookupQuery(esDynamicQuery query)
+		protected override void HookupQuery(esDynamicQuery paraQuery)
 		{
-			this.InitQuery((CustomerCustomerDemoQuery)query);
+			InitQuery((CustomercustomerdemoQuery)paraQuery);
 		}
 
 		#endregion
 		
-		private CustomerCustomerDemoQuery query;
+		private CustomercustomerdemoQuery query;
 	}
 
 
 
 	[Serializable]
-	abstract public partial class esCustomerCustomerDemoQuery : esDynamicQuery
+	public abstract class esCustomercustomerdemoQuery : esDynamicQuery
 	{
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return CustomerCustomerDemoMetadata.Meta();
-			}
-		}	
+		protected override IMetadata Meta => CustomercustomerdemoMetadata.Meta();
 		
 		#region QueryItemFromName
 		
         protected override esQueryItem QueryItemFromName(string name)
         {
-            switch (name)
+            return name switch
             {
-				case "CustomerID": return this.CustomerID;
-				case "CustomerTypeID": return this.CustomerTypeID;
-
-                default: return null;
-            }
+              "CustomerID" => CustomerID,
+              "CustomerTypeID" => CustomerTypeID,
+              _ => null
+            };
         }		
 		
 		#endregion
 		
 		#region esQueryItems
 
-		public esQueryItem CustomerID
-		{
-			get { return new esQueryItem(this, CustomerCustomerDemoMetadata.ColumnNames.CustomerID, esSystemType.String); }
-		} 
+		public esQueryItem CustomerID => new (this, CustomercustomerdemoMetadata.ColumnNames.CustomerID, esSystemType.String);
 		
-		public esQueryItem CustomerTypeID
-		{
-			get { return new esQueryItem(this, CustomerCustomerDemoMetadata.ColumnNames.CustomerTypeID, esSystemType.String); }
-		} 
+		public esQueryItem CustomerTypeID => new (this, CustomercustomerdemoMetadata.ColumnNames.CustomerTypeID, esSystemType.String);
 		
 		#endregion
 		
@@ -409,118 +359,130 @@ namespace BusinessObjects
 
 
 	
-	public partial class CustomerCustomerDemo : esCustomerCustomerDemo
+	public partial class Customercustomerdemo : esCustomercustomerdemo
 	{
 
-		
-		#region CustomerDemographics - Many To One (FK_CustomerCustomerDemo)
-		
-	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeCustomerDemographics()
+				
+				
+		#region UpToCustomerdemographicsByCustomerTypeID - Many To One
+		/// <summary>
+		/// Many to One
+		/// Foreign Key Name - FK_CustomerCustomerDemo
+		/// </summary>
+			[EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToCustomerdemographicsByCustomerTypeID()
 		{
-		    return this._CustomerDemographics != null ? true : false;
+				return _UpToCustomerdemographicsByCustomerTypeID != null;
 		}
 		
 
-		[DataMember(Name="CustomerDemographics", EmitDefaultValue = false)]
+		[DataMember(Name="UpToCustomerdemographicsByCustomerTypeID", EmitDefaultValue = false)]
 					
-		public CustomerDemographics CustomerDemographics
+		public Customerdemographics UpToCustomerdemographicsByCustomerTypeID
 		{
 			get
 			{
-                if (this._CustomerDemographics == null)
-                {
-                    this._CustomerDemographics = new CustomerDemographics();
-                    this._CustomerDemographics.es.Connection.Name = this.es.Connection.Name;
-                    this.SetPreSave("CustomerDemographics", this._CustomerDemographics);
+				if (_UpToCustomerdemographicsByCustomerTypeID != null) return _UpToCustomerdemographicsByCustomerTypeID;
+				
+				_UpToCustomerdemographicsByCustomerTypeID = new Customerdemographics();
+				_UpToCustomerdemographicsByCustomerTypeID.es.Connection.Name = es.Connection.Name;
+				SetPreSave("UpToCustomerdemographicsByCustomerTypeID", _UpToCustomerdemographicsByCustomerTypeID);
 
-					if(this._CustomerDemographics == null && CustomerTypeID != null)
-                    {
-                        if (!this.es.IsLazyLoadDisabled)
-                        {
-							this._CustomerDemographics.Query.Where(this._CustomerDemographics.Query.CustomerTypeID == this.CustomerTypeID);
-							this._CustomerDemographics.Query.Load();
-                        }
-                    }
-                }
-
-				return this._CustomerDemographics;
+				if (_UpToCustomerdemographicsByCustomerTypeID == null && CustomerTypeID != null)
+				{
+					if (es.IsLazyLoadDisabled) return _UpToCustomerdemographicsByCustomerTypeID;
+					
+					_UpToCustomerdemographicsByCustomerTypeID.Query.Where(_UpToCustomerdemographicsByCustomerTypeID.Query.CustomerTypeID == CustomerTypeID);
+					_UpToCustomerdemographicsByCustomerTypeID.Query.Load();
+				}
+				return _UpToCustomerdemographicsByCustomerTypeID;
 			}
 			
 			set
 			{
-				this.RemovePreSave("CustomerDemographics");
+				RemovePreSave("UpToCustomerdemographicsByCustomerTypeID");
 				
+				var changed = _UpToCustomerdemographicsByCustomerTypeID != value;
 
-				if(value == null)
+				if (value == null)
 				{
-					this.CustomerTypeID = null;
-					this._CustomerDemographics = null;
+					CustomerTypeID = null;
+					_UpToCustomerdemographicsByCustomerTypeID = null;
 				}
 				else
 				{
-					this.CustomerTypeID = value.CustomerTypeID;
-					this._CustomerDemographics = value;
-					this.SetPreSave("CustomerDemographics", this._CustomerDemographics);
+					CustomerTypeID = value.CustomerTypeID;
+					_UpToCustomerdemographicsByCustomerTypeID = value;
+					SetPreSave("UpToCustomerdemographicsByCustomerTypeID", _UpToCustomerdemographicsByCustomerTypeID);
 				}
 				
+				if (changed)
+				{
+					OnPropertyChanged("UpToCustomerdemographicsByCustomerTypeID");
+				}
 			}
 		}
 		#endregion
 		
 
-		
-		#region Customers - Many To One (FK_CustomerCustomerDemo_Customers)
-		
-	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeCustomers()
+				
+				
+		#region UpToCustomersByCustomerID - Many To One
+		/// <summary>
+		/// Many to One
+		/// Foreign Key Name - FK_CustomerCustomerDemo_Customers
+		/// </summary>
+			[EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToCustomersByCustomerID()
 		{
-		    return this._Customers != null ? true : false;
+				return _UpToCustomersByCustomerID != null;
 		}
 		
 
-		[DataMember(Name="Customers", EmitDefaultValue = false)]
+		[DataMember(Name="UpToCustomersByCustomerID", EmitDefaultValue = false)]
 					
-		public Customers Customers
+		public Customers UpToCustomersByCustomerID
 		{
 			get
 			{
-                if (this._Customers == null)
-                {
-                    this._Customers = new Customers();
-                    this._Customers.es.Connection.Name = this.es.Connection.Name;
-                    this.SetPreSave("Customers", this._Customers);
+				if (_UpToCustomersByCustomerID != null) return _UpToCustomersByCustomerID;
+				
+				_UpToCustomersByCustomerID = new Customers();
+				_UpToCustomersByCustomerID.es.Connection.Name = es.Connection.Name;
+				SetPreSave("UpToCustomersByCustomerID", _UpToCustomersByCustomerID);
 
-					if(this._Customers == null && CustomerID != null)
-                    {
-                        if (!this.es.IsLazyLoadDisabled)
-                        {
-							this._Customers.Query.Where(this._Customers.Query.CustomerID == this.CustomerID);
-							this._Customers.Query.Load();
-                        }
-                    }
-                }
-
-				return this._Customers;
+				if (_UpToCustomersByCustomerID == null && CustomerID != null)
+				{
+					if (es.IsLazyLoadDisabled) return _UpToCustomersByCustomerID;
+					
+					_UpToCustomersByCustomerID.Query.Where(_UpToCustomersByCustomerID.Query.CustomerID == CustomerID);
+					_UpToCustomersByCustomerID.Query.Load();
+				}
+				return _UpToCustomersByCustomerID;
 			}
 			
 			set
 			{
-				this.RemovePreSave("Customers");
+				RemovePreSave("UpToCustomersByCustomerID");
 				
+				var changed = _UpToCustomersByCustomerID != value;
 
-				if(value == null)
+				if (value == null)
 				{
-					this.CustomerID = null;
-					this._Customers = null;
+					CustomerID = null;
+					_UpToCustomersByCustomerID = null;
 				}
 				else
 				{
-					this.CustomerID = value.CustomerID;
-					this._Customers = value;
-					this.SetPreSave("Customers", this._Customers);
+					CustomerID = value.CustomerID;
+					_UpToCustomersByCustomerID = value;
+					SetPreSave("UpToCustomersByCustomerID", _UpToCustomersByCustomerID);
 				}
 				
+				if (changed)
+				{
+					OnPropertyChanged("UpToCustomersByCustomerID");
+				}
 			}
 		}
 		#endregion
@@ -534,22 +496,22 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	public partial class CustomerCustomerDemoMetadata : esMetadata, IMetadata
+	public partial class CustomercustomerdemoMetadata : esMetadata, IMetadata
 	{
 		#region Protected Constructor
-		protected CustomerCustomerDemoMetadata()
+		protected CustomercustomerdemoMetadata()
 		{
 			m_columns = new esColumnMetadataCollection();
 			esColumnMetadata c;
 
-			c = new esColumnMetadata(CustomerCustomerDemoMetadata.ColumnNames.CustomerID, 0, typeof(System.String), esSystemType.String);
-			c.PropertyName = CustomerCustomerDemoMetadata.PropertyNames.CustomerID;
+			c = new esColumnMetadata(ColumnNames.CustomerID, 0, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.CustomerID;
 			c.IsInPrimaryKey = true;
 			c.CharacterMaxLength = 5;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(CustomerCustomerDemoMetadata.ColumnNames.CustomerTypeID, 1, typeof(System.String), esSystemType.String);
-			c.PropertyName = CustomerCustomerDemoMetadata.PropertyNames.CustomerTypeID;
+			c = new esColumnMetadata(ColumnNames.CustomerTypeID, 1, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.CustomerTypeID;
 			c.IsInPrimaryKey = true;
 			c.CharacterMaxLength = 10;
 			m_columns.Add(c);
@@ -557,25 +519,16 @@ namespace BusinessObjects
 		}
 		#endregion	
 	
-		static public CustomerCustomerDemoMetadata Meta()
+		public static CustomercustomerdemoMetadata Meta()
 		{
 			return meta;
 		}	
 		
-		public Guid DataID
-		{
-			get { return base.m_dataID; }
-		}	
-		
-		public bool MultiProviderMode
-		{
-			get { return false; }
-		}		
+		public Guid DataID => m_dataID;
 
-		public esColumnMetadataCollection Columns
-		{
-			get	{ return base.m_columns; }
-		}
+		public bool MultiProviderMode => false;
+
+		public esColumnMetadataCollection Columns => m_columns;
 		
 		#region ColumnNames
 		public class ColumnNames
@@ -595,32 +548,20 @@ namespace BusinessObjects
 
 		public esProviderSpecificMetadata GetProviderMetadata(string mapName)
 		{
-			MapToMeta mapMethod = mapDelegates[mapName];
-
-			if (mapMethod != null)
-				return mapMethod(mapName);
-			else
-				return null;
+			var mapMethod = mapDelegates[mapName];
+      return mapMethod?.Invoke(mapName);
 		}
 		
 		#region MAP esDefault
 		
-		static private int RegisterDelegateesDefault()
+		private static int RegisterDelegateesDefault()
 		{
 			// This is only executed once per the life of the application
-			lock (typeof(CustomerCustomerDemoMetadata))
+			lock (typeof(CustomercustomerdemoMetadata))
 			{
-				if(CustomerCustomerDemoMetadata.mapDelegates == null)
-				{
-					CustomerCustomerDemoMetadata.mapDelegates = new Dictionary<string,MapToMeta>();
-				}
-				
-				if (CustomerCustomerDemoMetadata.meta == null)
-				{
-					CustomerCustomerDemoMetadata.meta = new CustomerCustomerDemoMetadata();
-				}
-				
-				MapToMeta mapMethod = new MapToMeta(meta.esDefault);
+				mapDelegates ??= new Dictionary<string, MapToMeta>();
+				meta ??= new CustomercustomerdemoMetadata();
+				var mapMethod = new MapToMeta(meta.esDefault);
 				mapDelegates.Add("esDefault", mapMethod);
 				mapMethod("esDefault");
 			}
@@ -629,35 +570,36 @@ namespace BusinessObjects
 
 		private esProviderSpecificMetadata esDefault(string mapName)
 		{
+			// ReSharper disable once InvertIf
 			if(!m_providerMetadataMaps.ContainsKey(mapName))
 			{
-				esProviderSpecificMetadata meta = new esProviderSpecificMetadata();			
+				var specMeta = new esProviderSpecificMetadata();			
 
 
-				meta.AddTypeMap("CustomerID", new esTypeMap("nchar", "System.String"));
-				meta.AddTypeMap("CustomerTypeID", new esTypeMap("nchar", "System.String"));			
+				specMeta.AddTypeMap("CustomerID", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("CustomerTypeID", new esTypeMap("VARCHAR", "System.String"));			
 				
 				
 				
-				meta.Source = "CustomerCustomerDemo";
-				meta.Destination = "CustomerCustomerDemo";
+				specMeta.Source = "customercustomerdemo";
+				specMeta.Destination = "customercustomerdemo";
 				
-				meta.spInsert = "proc_CustomerCustomerDemoInsert";				
-				meta.spUpdate = "proc_CustomerCustomerDemoUpdate";		
-				meta.spDelete = "proc_CustomerCustomerDemoDelete";
-				meta.spLoadAll = "proc_CustomerCustomerDemoLoadAll";
-				meta.spLoadByPrimaryKey = "proc_CustomerCustomerDemoLoadByPrimaryKey";
+				specMeta.spInsert = "proc_customercustomerdemoInsert";				
+				specMeta.spUpdate = "proc_customercustomerdemoUpdate";		
+				specMeta.spDelete = "proc_customercustomerdemoDelete";
+				specMeta.spLoadAll = "proc_customercustomerdemoLoadAll";
+				specMeta.spLoadByPrimaryKey = "proc_customercustomerdemoLoadByPrimaryKey";
 				
-				this.m_providerMetadataMaps["esDefault"] = meta;
+				m_providerMetadataMaps["esDefault"] = specMeta;
 			}
 			
-			return this.m_providerMetadataMaps["esDefault"];
+			return m_providerMetadataMaps["esDefault"];
 		}
 
 		#endregion
 
-		static private CustomerCustomerDemoMetadata meta;
-		static protected Dictionary<string, MapToMeta> mapDelegates;
-		static private int _esDefault = RegisterDelegateesDefault();
+		private static CustomercustomerdemoMetadata meta;
+		protected static Dictionary<string, MapToMeta> mapDelegates;
+		private static int _esDefault = RegisterDelegateesDefault();
 	}
 }

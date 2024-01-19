@@ -42,12 +42,14 @@ namespace EntitySpaces.MySQLProvider
     {
         public static MySqlCommand PrepareCommand(esDataRequest request)
         {
-            StandardProviderParameters std = new StandardProviderParameters();
-            std.cmd = new MySqlCommand();
+            var std = new StandardProviderParameters
+            {
+                cmd = new MySqlCommand()
+            };
             std.pindex = NextParamIndex(std.cmd);
             std.request = request;
 
-            string sql = BuildQuery(std, request.DynamicQuery);
+            var sql = BuildQuery(std, request.DynamicQuery);
 
             std.cmd.CommandText = sql;
             return (MySqlCommand)std.cmd;
@@ -55,27 +57,23 @@ namespace EntitySpaces.MySQLProvider
 
         protected static string BuildQuery(StandardProviderParameters std, esDynamicQuery query)
         {
-            bool paging = false;
+            var paging = query.pageNumber.HasValue && query.pageSize.HasValue;
+            var iQuery = query as IDynamicQueryInternal;
 
-            if (query.pageNumber.HasValue && query.pageSize.HasValue)
-                paging = true;
+            var select = GetSelectStatement(std, query);
+            var from = GetFromStatement(std, query);
+            var join = GetJoinStatement(std, query);
+            var where = GetComparisonStatement(std, query, iQuery.InternalWhereItems, " WHERE ");
+            var groupBy = GetGroupByStatement(std, query);
+            var having = GetComparisonStatement(std, query, iQuery.InternalHavingItems, " HAVING ");
+            var orderBy = GetOrderByStatement(std, query);
+            var setOperation = GetSetOperationStatement(std, query);
 
-            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
-
-            string select = GetSelectStatement(std, query);
-            string from = GetFromStatement(std, query);
-            string join = GetJoinStatement(std, query);
-            string where = GetComparisonStatement(std, query, iQuery.InternalWhereItems, " WHERE ");
-            string groupBy = GetGroupByStatement(std, query);
-            string having = GetComparisonStatement(std, query, iQuery.InternalHavingItems, " HAVING ");
-            string orderBy = GetOrderByStatement(std, query);
-            string setOperation = GetSetOperationStatement(std, query);
-
-            string sql = "SELECT " + select + " FROM " + from + join + where + setOperation + groupBy + having + orderBy;
+            var sql = "SELECT " + select + " FROM " + from + join + where + setOperation + groupBy + having + orderBy;
 
             if (paging)
             {
-                int begRow = ((query.pageNumber.Value - 1) * query.pageSize.Value);
+                var begRow = ((query.pageNumber.Value - 1) * query.pageSize.Value);
 
                 sql += " LIMIT " + query.pageSize.ToString();
                 sql += " OFFSET " + begRow.ToString() + " ";
@@ -253,315 +251,312 @@ namespace EntitySpaces.MySQLProvider
             return sql;
         }
 
-        protected static string GetComparisonStatement(StandardProviderParameters std, esDynamicQuery query, List<esComparison> items, string prefix)
+        private static string GetComparisonStatement(StandardProviderParameters std, esDynamicQuery query, List<esComparison> items, string prefix)
         {
-            string sql = String.Empty;
-            string comma = String.Empty;
-
-            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
+            var sql = string.Empty;
+            var iQuery = query as IDynamicQueryInternal;
 
             //=======================================
             // WHERE
             //=======================================
-            if (items != null)
+            if (items == null) return sql;
+            
+            sql += prefix;
+
+            foreach (esComparison comparisonItem in items)
             {
-                sql += prefix;
+                esComparison.esComparisonData comparisonData = (esComparison.esComparisonData)comparisonItem;
+                esDynamicQuery subQuery = null;
 
-                string compareTo = String.Empty;
-                foreach (esComparison comparisonItem in items)
+                bool requiresParam = true;
+                bool needsStringParameter = false;
+                std.needsStringParameter = false;
+
+                if (comparisonData.IsParenthesis)
                 {
-                    esComparison.esComparisonData comparisonData = (esComparison.esComparisonData)comparisonItem;
-                    esDynamicQuery subQuery = null;
+                    if (comparisonData.Parenthesis == esParenthesis.Open)
+                        sql += "(";
+                    else
+                        sql += ")";
 
-                    bool requiresParam = true;
-                    bool needsStringParameter = false;
-                   std.needsStringParameter = false;
+                    continue;
+                }
 
-                    if (comparisonData.IsParenthesis)
+                if (comparisonData.IsConjunction)
+                {
+                    switch (comparisonData.Conjunction)
                     {
-                        if (comparisonData.Parenthesis == esParenthesis.Open)
-                            sql += "(";
-                        else
-                            sql += ")";
-
-                        continue;
+                        case esConjunction.And: sql += " AND "; break;
+                        case esConjunction.Or: sql += " OR "; break;
+                        case esConjunction.AndNot: sql += " AND NOT "; break;
+                        case esConjunction.OrNot: sql += " OR NOT "; break;
                     }
+                    continue;
+                }
 
-                    if (comparisonData.IsConjunction)
+                Dictionary<string, MySqlParameter> types = null;
+                if (comparisonData.Column.Query != null)
+                {
+                    IDynamicQueryInternal iLocalQuery = comparisonData.Column.Query as IDynamicQueryInternal;
+                    types = Cache.GetParameters(iLocalQuery.DataID, (esProviderSpecificMetadata)iLocalQuery.ProviderMetadata, (esColumnMetadataCollection)iLocalQuery.Columns);
+                }
+
+                if (comparisonData.IsLiteral)
+                {
+                    if (comparisonData.Column.Name[0] == '<')
                     {
-                        switch (comparisonData.Conjunction)
-                        {
-                            case esConjunction.And: sql += " AND "; break;
-                            case esConjunction.Or: sql += " OR "; break;
-                            case esConjunction.AndNot: sql += " AND NOT "; break;
-                            case esConjunction.OrNot: sql += " OR NOT "; break;
-                        }
-                        continue;
+                        sql += comparisonData.Column.Name.Substring(1, comparisonData.Column.Name.Length - 2);
                     }
-
-                    Dictionary<string, MySqlParameter> types = null;
-                    if (comparisonData.Column.Query != null)
+                    else
                     {
-                        IDynamicQueryInternal iLocalQuery = comparisonData.Column.Query as IDynamicQueryInternal;
-                        types = Cache.GetParameters(iLocalQuery.DataID, (esProviderSpecificMetadata)iLocalQuery.ProviderMetadata, (esColumnMetadataCollection)iLocalQuery.Columns);
+                        sql += comparisonData.Column.Name;
                     }
+                    continue;
+                }
 
-                    if (comparisonData.IsLiteral)
+                string compareTo;
+                if (comparisonData.ComparisonColumn.Name == null)
+                {
+                    subQuery = comparisonData.Value as esDynamicQuery;
+
+                    if (subQuery == null)
                     {
-                        if (comparisonData.Column.Name[0] == '<')
+                        if (comparisonData.Column.Name != null)
                         {
-                            sql += comparisonData.Column.Name.Substring(1, comparisonData.Column.Name.Length - 2);
-                        }
-                        else
-                        {
-                            sql += comparisonData.Column.Name;
-                        }
-                        continue;
-                    }
-
-                    if (comparisonData.ComparisonColumn.Name == null)
-                    {
-                        subQuery = comparisonData.Value as esDynamicQuery;
-
-                        if (subQuery == null)
-                        {
-                            if (comparisonData.Column.Name != null)
-                            {
-                                IDynamicQueryInternal iColQuery = comparisonData.Column.Query as IDynamicQueryInternal;
-                                esColumnMetadataCollection columns = (esColumnMetadataCollection)iColQuery.Columns;
-                                compareTo = Delimiters.Param + columns[comparisonData.Column.Name].PropertyName + (++std.pindex).ToString();
-                            }
-                            else
-                            {
-                                compareTo = Delimiters.Param + "Expr" + (++std.pindex).ToString();
-                            }
+                            IDynamicQueryInternal iColQuery = comparisonData.Column.Query as IDynamicQueryInternal;
+                            esColumnMetadataCollection columns = (esColumnMetadataCollection)iColQuery.Columns;
+                            compareTo = Delimiters.Param + columns[comparisonData.Column.Name].PropertyName + (++std.pindex).ToString();
                         }
                         else
                         {
-                            // It's a sub query
-                            compareTo = GetSubquerySearchCondition(subQuery) + " (" + BuildQuery(std, subQuery) + ") ";
-                            requiresParam = false;
+                            compareTo = Delimiters.Param + "Expr" + (++std.pindex).ToString();
                         }
                     }
                     else
                     {
-                        compareTo = GetColumnName(comparisonData.ComparisonColumn);
+                        // It's a sub query
+                        compareTo = GetSubquerySearchCondition(subQuery) + " (" + BuildQuery(std, subQuery) + ") ";
                         requiresParam = false;
                     }
+                }
+                else
+                {
+                    compareTo = GetColumnName(comparisonData.ComparisonColumn);
+                    requiresParam = false;
+                }
 
-                    switch (comparisonData.Operand)
-                    {
-                        case esComparisonOperand.Exists:
-                            sql += " EXISTS" + compareTo;
-                            break;
-                        case esComparisonOperand.NotExists:
-                            sql += " NOT EXISTS" + compareTo;
-                            break;
+                switch (comparisonData.Operand)
+                {
+                    case esComparisonOperand.Exists:
+                        sql += " EXISTS" + compareTo;
+                        break;
+                    case esComparisonOperand.NotExists:
+                        sql += " NOT EXISTS" + compareTo;
+                        break;
 
-                        //-----------------------------------------------------------
-                        // Comparison operators, left side vs right side
-                        //-----------------------------------------------------------
-                        case esComparisonOperand.Equal:
-                            if (comparisonData.ItemFirst)
-                                sql += ApplyWhereSubOperations(std, query, comparisonData) + " = " + compareTo;
-                            else
-                                sql += compareTo + " = " + ApplyWhereSubOperations(std, query, comparisonData);
-                            break;
-                        case esComparisonOperand.NotEqual:
-                            if (comparisonData.ItemFirst)
-                                sql += ApplyWhereSubOperations(std, query, comparisonData) + " <> " + compareTo;
-                            else
-                                sql += compareTo + " <> " + ApplyWhereSubOperations(std, query, comparisonData);
-                            break;
-                        case esComparisonOperand.GreaterThan:
-                            if (comparisonData.ItemFirst)
-                                sql += ApplyWhereSubOperations(std, query, comparisonData) + " > " + compareTo;
-                            else
-                                sql += compareTo + " > " + ApplyWhereSubOperations(std, query, comparisonData);
-                            break;
-                        case esComparisonOperand.LessThan:
-                            if (comparisonData.ItemFirst)
-                                sql += ApplyWhereSubOperations(std, query, comparisonData) + " < " + compareTo;
-                            else
-                                sql += compareTo + " < " + ApplyWhereSubOperations(std, query, comparisonData);
-                            break;
-                        case esComparisonOperand.LessThanOrEqual:
-                            if (comparisonData.ItemFirst)
-                                sql += ApplyWhereSubOperations(std, query, comparisonData) + " <= " + compareTo;
-                            else
-                                sql += compareTo + " <= " + ApplyWhereSubOperations(std, query, comparisonData);
-                            break;
-                        case esComparisonOperand.GreaterThanOrEqual:
-                            if (comparisonData.ItemFirst)
-                                sql += ApplyWhereSubOperations(std, query, comparisonData) + " >= " + compareTo;
-                            else
-                                sql += compareTo + " >= " + ApplyWhereSubOperations(std, query, comparisonData);
-                            break;
+                    //-----------------------------------------------------------
+                    // Comparison operators, left side vs right side
+                    //-----------------------------------------------------------
+                    case esComparisonOperand.Equal:
+                        if (comparisonData.ItemFirst)
+                            sql += ApplyWhereSubOperations(std, query, comparisonData) + " = " + compareTo;
+                        else
+                            sql += compareTo + " = " + ApplyWhereSubOperations(std, query, comparisonData);
+                        break;
+                    case esComparisonOperand.NotEqual:
+                        if (comparisonData.ItemFirst)
+                            sql += ApplyWhereSubOperations(std, query, comparisonData) + " <> " + compareTo;
+                        else
+                            sql += compareTo + " <> " + ApplyWhereSubOperations(std, query, comparisonData);
+                        break;
+                    case esComparisonOperand.GreaterThan:
+                        if (comparisonData.ItemFirst)
+                            sql += ApplyWhereSubOperations(std, query, comparisonData) + " > " + compareTo;
+                        else
+                            sql += compareTo + " > " + ApplyWhereSubOperations(std, query, comparisonData);
+                        break;
+                    case esComparisonOperand.LessThan:
+                        if (comparisonData.ItemFirst)
+                            sql += ApplyWhereSubOperations(std, query, comparisonData) + " < " + compareTo;
+                        else
+                            sql += compareTo + " < " + ApplyWhereSubOperations(std, query, comparisonData);
+                        break;
+                    case esComparisonOperand.LessThanOrEqual:
+                        if (comparisonData.ItemFirst)
+                            sql += ApplyWhereSubOperations(std, query, comparisonData) + " <= " + compareTo;
+                        else
+                            sql += compareTo + " <= " + ApplyWhereSubOperations(std, query, comparisonData);
+                        break;
+                    case esComparisonOperand.GreaterThanOrEqual:
+                        if (comparisonData.ItemFirst)
+                            sql += ApplyWhereSubOperations(std, query, comparisonData) + " >= " + compareTo;
+                        else
+                            sql += compareTo + " >= " + ApplyWhereSubOperations(std, query, comparisonData);
+                        break;
 
-                        case esComparisonOperand.Like:
-                            string esc = comparisonData.LikeEscape.ToString();
-                            if (String.IsNullOrEmpty(esc) || esc == "\0")
-                            {
-                                sql += ApplyWhereSubOperations(std, query, comparisonData) + " LIKE " + compareTo;
-                                needsStringParameter = true;
-                            }
-                            else
-                            {
-                                sql += ApplyWhereSubOperations(std, query, comparisonData) + " LIKE " + compareTo;
-                                sql += " ESCAPE '" + esc + "'";
-                                needsStringParameter = true;
-                            }
-                            break;
-                        case esComparisonOperand.NotLike:
-                            esc = comparisonData.LikeEscape.ToString();
-                            if (String.IsNullOrEmpty(esc) || esc == "\0")
-                            {
-                                sql += ApplyWhereSubOperations(std, query, comparisonData) + " NOT LIKE " + compareTo;
-                                needsStringParameter = true;
-                            }
-                            else
-                            {
-                                sql += ApplyWhereSubOperations(std, query, comparisonData) + " NOT LIKE " + compareTo;
-                                sql += " ESCAPE '" + esc + "'";
-                                needsStringParameter = true;
-                            }
-                            break;
-                        case esComparisonOperand.Contains:
-                            sql += " CONTAINS(" + GetColumnName(comparisonData.Column) +
-                                ", " + compareTo + ")";
-                            needsStringParameter = true;
-                            break;
-                        case esComparisonOperand.IsNull:
-                            sql += ApplyWhereSubOperations(std, query, comparisonData) + " IS NULL";
-                            requiresParam = false;
-                            break;
-                        case esComparisonOperand.IsNotNull:
-                            sql += ApplyWhereSubOperations(std, query, comparisonData) + " IS NOT NULL";
-                            requiresParam = false;
-                            break;
-                        case esComparisonOperand.In:
-                        case esComparisonOperand.NotIn:
-                            {
-                                if (subQuery != null)
-                                {
-                                    // They used a subquery for In or Not 
-                                    sql += ApplyWhereSubOperations(std, query, comparisonData);
-                                    sql += (comparisonData.Operand == esComparisonOperand.In) ? " IN" : " NOT IN";
-                                    sql += compareTo;
-                                }
-                                else
-                                {
-                                    comma = String.Empty;
-                                    if (comparisonData.Operand == esComparisonOperand.In)
-                                    {
-                                        sql += ApplyWhereSubOperations(std, query, comparisonData) + " IN (";
-                                    }
-                                    else
-                                    {
-                                        sql += ApplyWhereSubOperations(std, query, comparisonData) + " NOT IN (";
-                                    }
-
-                                    foreach (object oin in comparisonData.Values)
-                                    {
-                                        string str = oin as string;
-                                        if (str != null)
-                                        {
-                                            // STRING
-                                            sql += comma + Delimiters.StringOpen + str + Delimiters.StringClose;
-                                            comma = ",";
-                                        }
-                                        else if (null != oin as System.Collections.IEnumerable)
-                                        {
-                                            // LIST OR COLLECTION OF SOME SORT
-                                            System.Collections.IEnumerable enumer = oin as System.Collections.IEnumerable;
-                                            if (enumer != null)
-                                            {
-                                                System.Collections.IEnumerator iter = enumer.GetEnumerator();
-
-                                                while (iter.MoveNext())
-                                                {
-                                                    object o = iter.Current;
-
-                                                    string soin = o as string;
-
-                                                    if (soin != null)
-                                                        sql += comma + Delimiters.StringOpen + soin + Delimiters.StringClose;
-                                                    else
-                                                        sql += comma + Convert.ToString(o);
-
-                                                    comma = ",";
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            // NON STRING OR LIST
-                                            sql += comma + Convert.ToString(oin);
-                                            comma = ",";
-                                        }
-                                    }
-                                    sql += ")";
-                                    requiresParam = false;
-                                }
-                            }
-                            break;
-
-                        case esComparisonOperand.Between:
-
-                            MySqlCommand sqlCommand = std.cmd as MySqlCommand;
-
-                            sql += ApplyWhereSubOperations(std, query, comparisonData) + " BETWEEN ";
-                            sql += compareTo;
-                            if (comparisonData.ComparisonColumn.Name == null)
-                            {
-                                sqlCommand.Parameters.AddWithValue(compareTo, comparisonData.BetweenBegin);
-                            }
-
-                            if (comparisonData.ComparisonColumn2.Name == null)
-                            {
-                                IDynamicQueryInternal iColQuery = comparisonData.Column.Query as IDynamicQueryInternal;
-                                esColumnMetadataCollection columns = (esColumnMetadataCollection)iColQuery.Columns;
-                                compareTo = Delimiters.Param + columns[comparisonData.Column.Name].PropertyName + (++std.pindex).ToString();
-
-                                sql += " AND " + compareTo;
-                                sqlCommand.Parameters.AddWithValue(compareTo, comparisonData.BetweenEnd);
-                            }
-                            else
-                            {
-                                sql += " AND " + Delimiters.ColumnOpen + comparisonData.ComparisonColumn2 + Delimiters.ColumnClose;
-                            }
-
-                            requiresParam = false;
-                            break;
-                    }
-
-                    if (requiresParam)
-                    {
-                        MySqlParameter p;
-
-                        if (comparisonData.Column.Name != null)
+                    case esComparisonOperand.Like:
+                        string esc = comparisonData.LikeEscape.ToString();
+                        if (string.IsNullOrEmpty(esc) || esc == "\0")
                         {
-                            p = types[comparisonData.Column.Name];
-
-                            p = Cache.CloneParameter(p);
-                            p.ParameterName = compareTo;
-                            p.Value = comparisonData.Value;
-                            if (needsStringParameter)
-                            {
-                                p.DbType = DbType.String;
-                            }
-                            else if (std.needsIntegerParameter)
-                            {
-                                p.DbType = DbType.Int32;
-                            }
+                            sql += ApplyWhereSubOperations(std, query, comparisonData) + " LIKE " + compareTo;
+                            needsStringParameter = true;
                         }
                         else
                         {
-                            p = new MySqlParameter(compareTo, comparisonData.Value);
+                            sql += ApplyWhereSubOperations(std, query, comparisonData) + " LIKE " + compareTo;
+                            sql += " ESCAPE '" + esc + "'";
+                            needsStringParameter = true;
+                        }
+                        break;
+                    case esComparisonOperand.NotLike:
+                        esc = comparisonData.LikeEscape.ToString();
+                        if (string.IsNullOrEmpty(esc) || esc == "\0")
+                        {
+                            sql += ApplyWhereSubOperations(std, query, comparisonData) + " NOT LIKE " + compareTo;
+                            needsStringParameter = true;
+                        }
+                        else
+                        {
+                            sql += ApplyWhereSubOperations(std, query, comparisonData) + " NOT LIKE " + compareTo;
+                            sql += " ESCAPE '" + esc + "'";
+                            needsStringParameter = true;
+                        }
+                        break;
+                    case esComparisonOperand.Contains:
+                        sql += " CONTAINS(" + GetColumnName(comparisonData.Column) +
+                               ", " + compareTo + ")";
+                        needsStringParameter = true;
+                        break;
+                    case esComparisonOperand.IsNull:
+                        sql += ApplyWhereSubOperations(std, query, comparisonData) + " IS NULL";
+                        requiresParam = false;
+                        break;
+                    case esComparisonOperand.IsNotNull:
+                        sql += ApplyWhereSubOperations(std, query, comparisonData) + " IS NOT NULL";
+                        requiresParam = false;
+                        break;
+                    case esComparisonOperand.In:
+                    case esComparisonOperand.NotIn:
+                    {
+                        if (subQuery != null)
+                        {
+                            // They used a subquery for In or Not 
+                            sql += ApplyWhereSubOperations(std, query, comparisonData);
+                            sql += (comparisonData.Operand == esComparisonOperand.In) ? " IN" : " NOT IN";
+                            sql += compareTo;
+                        }
+                        else
+                        {
+                            var comma = string.Empty;
+                            if (comparisonData.Operand == esComparisonOperand.In)
+                            {
+                                sql += ApplyWhereSubOperations(std, query, comparisonData) + " IN (";
+                            }
+                            else
+                            {
+                                sql += ApplyWhereSubOperations(std, query, comparisonData) + " NOT IN (";
+                            }
+
+                            foreach (object oin in comparisonData.Values)
+                            {
+                                string str = oin as string;
+                                if (str != null)
+                                {
+                                    // STRING
+                                    sql += comma + Delimiters.StringOpen + str + Delimiters.StringClose;
+                                    comma = ",";
+                                }
+                                else if (null != oin as System.Collections.IEnumerable)
+                                {
+                                    // LIST OR COLLECTION OF SOME SORT
+                                    System.Collections.IEnumerable enumer = oin as System.Collections.IEnumerable;
+                                    if (enumer != null)
+                                    {
+                                        System.Collections.IEnumerator iter = enumer.GetEnumerator();
+
+                                        while (iter.MoveNext())
+                                        {
+                                            object o = iter.Current;
+
+                                            string soin = o as string;
+
+                                            if (soin != null)
+                                                sql += comma + Delimiters.StringOpen + soin + Delimiters.StringClose;
+                                            else
+                                                sql += comma + Convert.ToString(o);
+
+                                            comma = ",";
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    // NON STRING OR LIST
+                                    sql += comma + Convert.ToString(oin);
+                                    comma = ",";
+                                }
+                            }
+                            sql += ")";
+                            requiresParam = false;
+                        }
+                    }
+                        break;
+
+                    case esComparisonOperand.Between:
+
+                        MySqlCommand sqlCommand = std.cmd as MySqlCommand;
+
+                        sql += ApplyWhereSubOperations(std, query, comparisonData) + " BETWEEN ";
+                        sql += compareTo;
+                        if (comparisonData.ComparisonColumn.Name == null)
+                        {
+                            sqlCommand.Parameters.AddWithValue(compareTo, comparisonData.BetweenBegin);
                         }
 
-                        std.cmd.Parameters.Add(p);
+                        if (comparisonData.ComparisonColumn2.Name == null)
+                        {
+                            IDynamicQueryInternal iColQuery = comparisonData.Column.Query as IDynamicQueryInternal;
+                            esColumnMetadataCollection columns = (esColumnMetadataCollection)iColQuery.Columns;
+                            compareTo = Delimiters.Param + columns[comparisonData.Column.Name].PropertyName + (++std.pindex).ToString();
+
+                            sql += " AND " + compareTo;
+                            sqlCommand.Parameters.AddWithValue(compareTo, comparisonData.BetweenEnd);
+                        }
+                        else
+                        {
+                            sql += " AND " + Delimiters.ColumnOpen + comparisonData.ComparisonColumn2 + Delimiters.ColumnClose;
+                        }
+
+                        requiresParam = false;
+                        break;
+                }
+
+                if (requiresParam)
+                {
+                    MySqlParameter p;
+
+                    if (comparisonData.Column.Name != null)
+                    {
+                        p = types[comparisonData.Column.Name];
+
+                        p = Cache.CloneParameter(p);
+                        p.ParameterName = compareTo;
+                        p.Value = comparisonData.Value;
+                        if (needsStringParameter)
+                        {
+                            p.DbType = DbType.String;
+                        }
+                        else if (std.needsIntegerParameter)
+                        {
+                            p.DbType = DbType.Int32;
+                        }
                     }
+                    else
+                    {
+                        p = new MySqlParameter(compareTo, comparisonData.Value);
+                    }
+
+                    std.cmd.Parameters.Add(p);
                 }
             }
 

@@ -88,6 +88,8 @@ using EntitySpaces.DynamicQuery;
 using DotNetNuke.Framework.Providers;
 <%}%>
 
+// ReSharper disable InconsistentNaming
+
 namespace <%=Namespace%>
 {<% 
 		if(table != null)
@@ -117,11 +119,8 @@ namespace <%=Namespace%>
 	[Table(Name="<%=source.Entity%>")]<%}%>
 	public partial class <%=source.Entity%> : <%=source.esEntity%>
 	{<%if(!TargetTheCompactFramework){%>	
-		[DebuggerBrowsable(DebuggerBrowsableState.RootHidden | DebuggerBrowsableState.Never)]<%}%>
-		protected override esEntityDebuggerView[] Debug
-		{
-			get { return base.Debug; }
-		}
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]<%}%>
+		protected override esEntityDebuggerView[] Debug => base.Debug;
 
 		public override esEntity CreateInstance()
 		{

@@ -262,8 +262,8 @@ Namespace <%=Namespace%>
 <%			}
 			// Many to Many
             if ((IsBinaryManyToMany(tr) && !SelectedTablesOnly) ||
-				(IsBinaryManyToMany(tr) && SelectedTablesOnly && 
-				 entities.Contains(tr.CrossReferenceTable.FullName)))
+				        (IsBinaryManyToMany(tr) && SelectedTablesOnly && 
+				         entities.Contains(tr.CrossReferenceTable.FullName)))
 			{
 				string objName = upToPrefix + esMeta.esPlugIn.CollectionRelationName(tr.CrossReferenceTable, tr.ForeignTable);
 				string manyName = esMeta.esPlugIn.CollectionRelationName(tr.PrimaryTable, tr.ForeignTable);

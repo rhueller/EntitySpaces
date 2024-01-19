@@ -44,10 +44,7 @@ using System.Data.Linq;
 using System.Linq;
 #endif
 
-
-
 //SharpArgumentInfo.Create'	EntitySpaces.ORM.SqlServer C:\Users\MikeGriffin\source\repos\EntitySpaces_DotNetStandard\EntitySpaces.DynamicQuery\esDynamicQuery.cs	349	N/A
-
 
 namespace EntitySpaces.Interfaces
 {
@@ -123,7 +120,7 @@ namespace EntitySpaces.Interfaces
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override DynamicMetaObject GetMetaObject(Expression parameter)
         {
-            DynamicMetaObject meta =  base.GetMetaObject(parameter);
+            var meta =  base.GetMetaObject(parameter);
             return meta;
         }
 
@@ -162,7 +159,7 @@ namespace EntitySpaces.Interfaces
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
         {
-            string property = (string)indexes[0];
+            var property = (string)indexes[0];
 
             if(!dyno.ContainsKey(property))
             {
@@ -202,7 +199,7 @@ namespace EntitySpaces.Interfaces
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
         {
-            string property = (string)indexes[0];
+            var property = (string)indexes[0];
 
             if (dyno.ContainsKey(property))
             {
@@ -304,7 +301,7 @@ namespace EntitySpaces.Interfaces
             esQueryItem queryItem = null;
             esExpression sItem = null;
 
-            esCast cast = obj as esCast;
+            var cast = obj as esCast;
             if (cast != null)
             {
                 queryItem = cast.item;
@@ -327,7 +324,7 @@ namespace EntitySpaces.Interfaces
             }
             else if (obj is IOverClause)
             {
-                IOverClause iOverClause = obj as IOverClause;
+                var iOverClause = obj as IOverClause;
                 if (iOverClause != null)
                 {
                     sItem = new esExpression();
@@ -335,7 +332,7 @@ namespace EntitySpaces.Interfaces
 
                     if (sItem.OverClause.OrderByColumns != null)
                     {
-                        foreach (esOrderByItem oi in sItem.OverClause.OrderByColumns)
+                        foreach (var oi in sItem.OverClause.OrderByColumns)
                         {
                             oi.Expression.Query = this.fromQuery ?? this;
                             oi.Expression.Column.Query = this.fromQuery ?? this;
@@ -346,7 +343,7 @@ namespace EntitySpaces.Interfaces
             else
             {
                 sItem = new esExpression();
-                esDynamicQuery query = obj as esDynamicQuery;
+                var query = obj as esDynamicQuery;
                 if (query != null)
                 {
                     AddQueryToList(query);
@@ -386,12 +383,12 @@ namespace EntitySpaces.Interfaces
                 this.selectColumns = new List<esExpression>();
             }
 
-            foreach (object obj in columns)
+            foreach (var obj in columns)
             {
                 esQueryItem queryItem = null;
                 esExpression sItem = null;
 
-                esCast cast = obj as esCast;
+                var cast = obj as esCast;
                 if (cast != null)
                 {
                     queryItem = cast.item;
@@ -414,7 +411,7 @@ namespace EntitySpaces.Interfaces
                 }
                 else if (obj is IOverClause || obj is IOverClauseComponent)
                 {
-                    IOverClause iOverClause = obj as IOverClause;
+                    var iOverClause = obj as IOverClause;
                     if (iOverClause == null)
                     {
                         iOverClause = ((IOverClauseComponent)obj).GetOverClause();
@@ -427,7 +424,7 @@ namespace EntitySpaces.Interfaces
 
                         if (sItem.OverClause.OrderByColumns != null)
                         {
-                            foreach (esOrderByItem oi in sItem.OverClause.OrderByColumns)
+                            foreach (var oi in sItem.OverClause.OrderByColumns)
                             {
                                 oi.Expression.Query = this.fromQuery ?? this;
                                 oi.Expression.Column.Query = this.fromQuery ?? this;
@@ -438,7 +435,7 @@ namespace EntitySpaces.Interfaces
                 else
                 {
                     sItem = new esExpression();
-                    esDynamicQuery query = obj as esDynamicQuery;
+                    var query = obj as esDynamicQuery;
                     if (query != null)
                     {
                         AddQueryToList(query);
@@ -462,7 +459,7 @@ namespace EntitySpaces.Interfaces
         /// <returns></returns>
         public esQueryItem Count()
         {
-            esQueryItem count = new esQueryItem(this, "<COUNT(*)>", esSystemType.Int32);
+            var count = new esQueryItem(this, "<COUNT(*)>", esSystemType.Int32);
             return count;
         }
 
@@ -495,7 +492,7 @@ namespace EntitySpaces.Interfaces
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
         public esJoinItem InnerJoin(esDynamicQuery joinQuery)
         {
-            dynamic thisAsDynamic = (dynamic)this;
+            var thisAsDynamic = (dynamic)this;
             thisAsDynamic[joinQuery.joinAlias] = joinQuery;
             return JoinCommon(joinQuery, esJoinType.InnerJoin);
         }
@@ -511,7 +508,7 @@ namespace EntitySpaces.Interfaces
         {
             query = new T();
             query.joinAlias = alias;
-            dynamic thisAsDynamic = (dynamic)this;
+            var thisAsDynamic = (dynamic)this;
             thisAsDynamic[alias] = query;
             return JoinCommon(query, esJoinType.InnerJoin);
         }
@@ -523,7 +520,7 @@ namespace EntitySpaces.Interfaces
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
         public esJoinItem LeftJoin(esDynamicQuery joinQuery)
         {
-            dynamic thisAsDynamic = (dynamic)this;
+            var thisAsDynamic = (dynamic)this;
             thisAsDynamic[joinQuery.joinAlias] = joinQuery;
             return JoinCommon(joinQuery, esJoinType.LeftJoin);
         }
@@ -539,7 +536,7 @@ namespace EntitySpaces.Interfaces
         {
             query = new T();
             query.joinAlias = alias;
-            dynamic thisAsDynamic = (dynamic)this;
+            var thisAsDynamic = (dynamic)this;
             thisAsDynamic[alias] = query;
             return JoinCommon(query, esJoinType.LeftJoin);
         }
@@ -552,7 +549,7 @@ namespace EntitySpaces.Interfaces
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
         public esJoinItem RightJoin(esDynamicQuery joinQuery)
         {
-            dynamic thisAsDynamic = (dynamic)this;
+            var thisAsDynamic = (dynamic)this;
             thisAsDynamic[joinQuery.joinAlias] = joinQuery;
             return JoinCommon(joinQuery, esJoinType.RightJoin);
         }
@@ -568,7 +565,7 @@ namespace EntitySpaces.Interfaces
         {
             query = new T();
             query.joinAlias = alias;
-            dynamic thisAsDynamic = (dynamic)this;
+            var thisAsDynamic = (dynamic)this;
             thisAsDynamic[alias] = query;
             return JoinCommon(query, esJoinType.RightJoin);
         }
@@ -580,7 +577,7 @@ namespace EntitySpaces.Interfaces
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
         public esJoinItem FullJoin(esDynamicQuery joinQuery)
         {
-            dynamic thisAsDynamic = (dynamic)this;
+            var thisAsDynamic = (dynamic)this;
             thisAsDynamic[joinQuery.joinAlias] = joinQuery;
             return JoinCommon(joinQuery, esJoinType.FullJoin);
         }
@@ -596,7 +593,7 @@ namespace EntitySpaces.Interfaces
         {
             query = new T();
             query.joinAlias = alias;
-            dynamic thisAsDynamic = (dynamic)this;
+            var thisAsDynamic = (dynamic)this;
             thisAsDynamic[alias] = query;
             return JoinCommon(query, esJoinType.FullJoin);
         }
@@ -608,7 +605,7 @@ namespace EntitySpaces.Interfaces
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
         public esJoinItem CrossJoin(esDynamicQuery joinQuery)
         {
-            dynamic thisAsDynamic = (dynamic)this;
+            var thisAsDynamic = (dynamic)this;
             thisAsDynamic[joinQuery.joinAlias] = joinQuery;
             return JoinCommon(joinQuery, esJoinType.CrossJoin);
         }
@@ -624,7 +621,7 @@ namespace EntitySpaces.Interfaces
         {
             query = new T();
             query.joinAlias = alias;
-            dynamic thisAsDynamic = (dynamic)this;
+            var thisAsDynamic = (dynamic)this;
             thisAsDynamic[alias] = query;
             return JoinCommon(query, esJoinType.CrossJoin);
         }
@@ -648,7 +645,7 @@ namespace EntitySpaces.Interfaces
                 this.joinItems = new List<esJoinItem>();
             }
 
-            esJoinItem joinItem = new esJoinItem(this);
+            var joinItem = new esJoinItem(this);
             joinItem.data.Query = joinQuery;
             joinItem.data.JoinType = joinType;
 
@@ -676,10 +673,10 @@ namespace EntitySpaces.Interfaces
                 this.applyItems = new List<esApplyItem>();
             }
 
-            dynamic thisAsDynamic = (dynamic)this;
+            var thisAsDynamic = (dynamic)this;
             thisAsDynamic[applyQuery.joinAlias] = applyQuery;
 
-            esApplyItem applyItem = new esApplyItem(this);
+            var applyItem = new esApplyItem(this);
             applyItem.data.Query = applyQuery;
             applyItem.data.ApplyType = esApplyType.CrossApply;
 
@@ -692,13 +689,13 @@ namespace EntitySpaces.Interfaces
 
         public esDynamicQuery CrossApply(Func<esDynamicQuery> func)
         {
-            esDynamicQuery query = func();
+            var query = func();
             return CrossApply(query);
         }
 
         public esDynamicQuery CrossApply<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuery theQuery = func();
+            var theQuery = func();
             query = (T)theQuery;
             return CrossApply(theQuery);
         }
@@ -714,7 +711,7 @@ namespace EntitySpaces.Interfaces
         {
             query = new T();
             query.joinAlias = alias;
-            dynamic thisAsDynamic = (dynamic)this;
+            var thisAsDynamic = (dynamic)this;
             thisAsDynamic[alias] = query;
             return CrossApply(query);
         }
@@ -736,10 +733,10 @@ namespace EntitySpaces.Interfaces
                 this.applyItems = new List<esApplyItem>();
             }
 
-            dynamic thisAsDynamic = (dynamic)this;
+            var thisAsDynamic = (dynamic)this;
             thisAsDynamic[applyQuery.joinAlias] = applyQuery;
 
-            esApplyItem applyItem = new esApplyItem(this);
+            var applyItem = new esApplyItem(this);
             applyItem.data.Query = applyQuery;
             applyItem.data.ApplyType = esApplyType.OuterApply;
 
@@ -752,13 +749,13 @@ namespace EntitySpaces.Interfaces
 
         public esDynamicQuery OuterApply(Func<esDynamicQuery> func)
         {
-            esDynamicQuery query = func();
+            var query = func();
             return OuterApply(query);
         }
 
         public esDynamicQuery OuterApply<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuery theQuery = func();
+            var theQuery = func();
             query = (T)theQuery;
             return OuterApply(theQuery);
         }
@@ -774,7 +771,7 @@ namespace EntitySpaces.Interfaces
         {
             query = new T();
             query.joinAlias = alias;
-            dynamic thisAsDynamic = (dynamic)this;
+            var thisAsDynamic = (dynamic)this;
             thisAsDynamic[alias] = query;
             return OuterApply(query);
         }
@@ -804,7 +801,7 @@ namespace EntitySpaces.Interfaces
 
         public esDynamicQuery From<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuery theQuery = func();
+            var theQuery = func();
             query = (T)theQuery;
             this.fromQuery = theQuery;
             return From(theQuery);
@@ -816,7 +813,7 @@ namespace EntitySpaces.Interfaces
         /// <returns></returns>
         public esDynamicQuery Union(esDynamicQuery query)
         {
-            esSetOperation setOperation = new esSetOperation(query);
+            var setOperation = new esSetOperation(query);
             setOperation.SetOperationType = esSetOperationType.Union;
 
             if (setOperations == null)
@@ -835,13 +832,13 @@ namespace EntitySpaces.Interfaces
         /// <returns></returns>
         public esDynamicQuery Union(Func<esDynamicQuery> func)
         {
-            esDynamicQuery query = func();
+            var query = func();
             return Union(query);
         }
 
         public esDynamicQuery Union<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuery theQuery = func();
+            var theQuery = func();
             query = (T)theQuery;
             return Union(theQuery);
         }
@@ -852,7 +849,7 @@ namespace EntitySpaces.Interfaces
         /// <returns></returns>
         public esDynamicQuery UnionAll(esDynamicQuery query)
         {
-            esSetOperation setOperation = new esSetOperation(query);
+            var setOperation = new esSetOperation(query);
             setOperation.SetOperationType = esSetOperationType.UnionAll;
 
             if (setOperations == null)
@@ -871,13 +868,13 @@ namespace EntitySpaces.Interfaces
         /// <returns></returns>
         public esDynamicQuery UnionAll(Func<esDynamicQuery> func)
         {
-            esDynamicQuery query = func();
+            var query = func();
             return UnionAll(query);
         }
 
         public esDynamicQuery UnionAll<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuery theQuery = func();
+            var theQuery = func();
             query = (T)theQuery;
             return UnionAll(theQuery);
         }
@@ -888,7 +885,7 @@ namespace EntitySpaces.Interfaces
         /// <returns></returns>
         public esDynamicQuery Intersect(esDynamicQuery query)
         {
-            esSetOperation setOperation = new esSetOperation(query);
+            var setOperation = new esSetOperation(query);
             setOperation.SetOperationType = esSetOperationType.Intersect;
 
             if (setOperations == null)
@@ -907,13 +904,13 @@ namespace EntitySpaces.Interfaces
         /// <returns></returns>
         public esDynamicQuery Intersect(Func<esDynamicQuery> func)
         {
-            esDynamicQuery query = func();
+            var query = func();
             return Intersect(query);
         }
 
         public esDynamicQuery Intersect<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuery theQuery = func();
+            var theQuery = func();
             query = (T)theQuery;
             return Intersect(theQuery);
         }
@@ -924,7 +921,7 @@ namespace EntitySpaces.Interfaces
         /// <returns></returns>
         public esDynamicQuery Except(esDynamicQuery query)
         {
-            esSetOperation setOperation = new esSetOperation(query);
+            var setOperation = new esSetOperation(query);
             setOperation.SetOperationType = esSetOperationType.Except;
 
             if (setOperations == null)
@@ -939,13 +936,13 @@ namespace EntitySpaces.Interfaces
 
         public esDynamicQuery Except(Func<esDynamicQuery> func)
         {
-            esDynamicQuery query = func();
+            var query = func();
             return Except(query);
         }
 
         public esDynamicQuery Except<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuery theQuery = func();
+            var theQuery = func();
             query = (T)theQuery;
             return Except(theQuery);
         }
@@ -984,7 +981,7 @@ namespace EntitySpaces.Interfaces
         /// <returns>An esDynamicQueryTransport containing a where clause.</returns>
         public esDynamicQuery Where(params object[] items)
         {
-            bool first = true;
+            var first = true;
 
             if (this.whereItems == null)
             {
@@ -1002,9 +999,9 @@ namespace EntitySpaces.Interfaces
                 }
             }
 
-            foreach (object item in items)
+            foreach (var item in items)
             {
-                esComparison wi = item as esComparison;
+                var wi = item as esComparison;
 
                 if (wi != null)
                 {
@@ -1019,11 +1016,11 @@ namespace EntitySpaces.Interfaces
 
                     if (wi.data.WhereExpression != null)
                     {
-                        foreach (esComparison expItem in wi.data.WhereExpression)
+                        foreach (var expItem in wi.data.WhereExpression)
                         {
                             if (expItem.Value != null)
                             {
-                                esDynamicQuery q = expItem.data.Value as esDynamicQuery;
+                                var q = expItem.data.Value as esDynamicQuery;
                                 if (q != null)
                                 {
                                     AddQueryToList(q);
@@ -1042,7 +1039,7 @@ namespace EntitySpaces.Interfaces
                         this.whereItems.Add(wi);
                     }
 
-                    esDynamicQuery query = wi.Value as esDynamicQuery;
+                    var query = wi.Value as esDynamicQuery;
 
                     if (query != null)
                     {
@@ -1169,7 +1166,7 @@ namespace EntitySpaces.Interfaces
         /// <returns>An esDynamicQueryTransport containing a where clause.</returns>
         public esDynamicQuery Having(params object[] items)
         {
-            bool first = true;
+            var first = true;
 
             if (this.havingItems == null)
             {
@@ -1187,9 +1184,9 @@ namespace EntitySpaces.Interfaces
                 }
             }
 
-            foreach (object item in items)
+            foreach (var item in items)
             {
-                esComparison wi = item as esComparison;
+                var wi = item as esComparison;
 
                 if (wi != null)
                 {
@@ -1204,11 +1201,11 @@ namespace EntitySpaces.Interfaces
 
                     if (wi.data.WhereExpression != null)
                     {
-                        foreach (esComparison expItem in wi.data.WhereExpression)
+                        foreach (var expItem in wi.data.WhereExpression)
                         {
                             if (expItem.Value != null)
                             {
-                                esDynamicQuery q = expItem.data.Value as esDynamicQuery;
+                                var q = expItem.data.Value as esDynamicQuery;
                                 if (q != null)
                                 {
                                     AddQueryToList(q);
@@ -1227,7 +1224,7 @@ namespace EntitySpaces.Interfaces
                         this.havingItems.Add(wi);
                     }
 
-                    esDynamicQuery query = wi.Value as esDynamicQuery;
+                    var query = wi.Value as esDynamicQuery;
 
                     if (query != null)
                     {
@@ -1257,7 +1254,7 @@ namespace EntitySpaces.Interfaces
         {
             AddQueryToList(query);
 
-            esComparison where = new esComparison(query);
+            var where = new esComparison(query);
             where.Operand = esComparisonOperand.Exists;
             where.Value = query;
             return where;
@@ -1270,13 +1267,13 @@ namespace EntitySpaces.Interfaces
         /// <returns></returns>
         public esComparison Exists(Func<esDynamicQuery> func)
         {
-            esDynamicQuery query = func();
+            var query = func();
             return Exists(query);
         }
 
         public esComparison Exists<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuery theQuery = func();
+            var theQuery = func();
             query = (T)theQuery;
             return Exists(theQuery);
         }
@@ -1290,7 +1287,7 @@ namespace EntitySpaces.Interfaces
         {
             AddQueryToList(query);
 
-            esComparison where = new esComparison(query);
+            var where = new esComparison(query);
             where.Operand = esComparisonOperand.NotExists;
             where.Value = query;
             return where;
@@ -1303,13 +1300,13 @@ namespace EntitySpaces.Interfaces
         /// <returns></returns>
         public esComparison NotExists(Func<esDynamicQuery> func)
         {
-            esDynamicQuery query = func();
+            var query = func();
             return NotExists(query);
         }
 
         public esComparison NotExists<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuery theQuery = func();
+            var theQuery = func();
             query = (T)theQuery;
             return NotExists(theQuery);
         }
@@ -1432,7 +1429,7 @@ namespace EntitySpaces.Interfaces
                 this.orderByItems = new List<esOrderByItem>();
             }
 
-            foreach (esOrderByItem orderByItem in orderByItems)
+            foreach (var orderByItem in orderByItems)
             {
                 if (orderByItem.Expression.Column.IsOutVar)
                 {
@@ -1466,7 +1463,7 @@ namespace EntitySpaces.Interfaces
                 this.orderByItems = new List<esOrderByItem>();
             }
 
-            esOrderByItem item = new esOrderByItem();
+            var item = new esOrderByItem();
 
             item.Expression = new esExpression();
             item.Expression.Query = this;
@@ -1506,9 +1503,9 @@ namespace EntitySpaces.Interfaces
                 this.groupByItems = new List<esGroupByItem>();
             }
 
-            foreach (esQueryItem item in columns)
+            foreach (var item in columns)
             {
-                esGroupByItem groupBy = new esGroupByItem();
+                var groupBy = new esGroupByItem();
                 groupBy.Expression = item;
                 this.groupByItems.Add(groupBy);
             }
@@ -1542,9 +1539,9 @@ namespace EntitySpaces.Interfaces
                 this.groupByItems = new List<esGroupByItem>();
             }
 
-            foreach (string column in columns)
+            foreach (var column in columns)
             {
-                esGroupByItem item = new esGroupByItem();
+                var item = new esGroupByItem();
                 item.Expression = new esExpression();
                 item.Expression.Column.Name = column;
                 item.Expression.Column.Alias = column;
@@ -1561,12 +1558,12 @@ namespace EntitySpaces.Interfaces
         /// <returns>The Query if found, otherwise null</returns>
         public T GetQuery<T>() where T : esDynamicQuery
         {
-            Type type = typeof(T);
-            string strType = type.ToString();
+            var type = typeof(T);
+            var strType = type.ToString();
 
-            foreach (esJoinItem joinItem in this.joinItems)
+            foreach (var joinItem in this.joinItems)
             {
-                esJoinItem.esJoinItemData data = (esJoinItem.esJoinItemData)joinItem;
+                var data = (esJoinItem.esJoinItemData)joinItem;
 
                 if (data.Query.GetType().ToString() == strType)
                 {
@@ -1614,18 +1611,18 @@ namespace EntitySpaces.Interfaces
         #region Helper Routine
         private List<esComparison> ProcessWhereItems(esConjunction conj, params object[] theItems)
         {
-            List<esComparison> items = new List<esComparison>();
+            var items = new List<esComparison>();
 
             items.Add(new esComparison(esParenthesis.Open));
 
-            bool first = true;
+            var first = true;
 
             esComparison whereItem;
-            int count = theItems.Length;
+            var count = theItems.Length;
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
-                object o = theItems[i];
+                var o = theItems[i];
 
                 whereItem = o as esComparison;
                 if (whereItem != null)
@@ -1639,7 +1636,7 @@ namespace EntitySpaces.Interfaces
                 }
                 else
                 {
-                    List<esComparison> listItem = o as List<esComparison>;
+                    var listItem = o as List<esComparison>;
                     if (listItem != null)
                     {
                         if (!first)
@@ -1673,7 +1670,7 @@ namespace EntitySpaces.Interfaces
             {
                 if (query.queries != null)
                 {
-                    foreach (esDynamicQuery nestedQuery in query.queries.Values)
+                    foreach (var nestedQuery in query.queries.Values)
                     {
                         nestedQuery.withNoLock = true;
 
@@ -1716,7 +1713,7 @@ namespace EntitySpaces.Interfaces
                 this.partitionByColumns = new List<esQueryItem>();
             }
 
-            foreach (esQueryItem item in partitionByColumns)
+            foreach (var item in partitionByColumns)
             {
                 this.partitionByColumns.Add(item);
             }
@@ -1733,7 +1730,7 @@ namespace EntitySpaces.Interfaces
                 this.partitionByDistinctColumns = new List<esQueryItem>();
             }
 
-            foreach (esQueryItem item in partitionDistinctColumns)
+            foreach (var item in partitionDistinctColumns)
             {
                 this.partitionByDistinctColumns.Add(item);
             }
@@ -1750,7 +1747,7 @@ namespace EntitySpaces.Interfaces
                 this.partitionByOrderByItems = new List<esOrderByItem>();
             }
 
-            foreach (esOrderByItem item in partitionByorderByItems)
+            foreach (var item in partitionByorderByItems)
             {
                 this.partitionByOrderByItems.Add(item);
             }
@@ -1979,21 +1976,21 @@ namespace EntitySpaces.Interfaces
         {
             static public List<System.Type> GetKnownTypes(esDynamicQuery query)
             {
-                List<System.Type> types = new List<Type>();
+                var types = new List<Type>();
                 GetKnownTypes(query, types);
                 return types;
             }
 
             static public DataContractSerializer GetSerializer(esDynamicQuery query)
             {
-                List<System.Type> types = GetKnownTypes(query);
+                var types = GetKnownTypes(query);
                 return new DataContractSerializer(query.GetType(), query.GetQueryName(),
                     "http://www.entityspaces.net", types);
             }
 
             static public DataContractSerializer GetSerializer(esDynamicQuery query, Type type)
             {
-                List<System.Type> types = GetKnownTypes(query);
+                var types = GetKnownTypes(query);
                 return new DataContractSerializer(type, query.GetQueryName(),
                     "http://www.entityspaces.net", types);
             }
@@ -2012,16 +2009,16 @@ namespace EntitySpaces.Interfaces
 
             static public string ToXml(esDynamicQuery query)
             {
-                string xml = "";
+                var xml = "";
 
-                DataContractSerializer dcs = GetSerializer(query);
+                var dcs = GetSerializer(query);
 
-                using (MemoryStream ms = new MemoryStream())
+                using (var ms = new MemoryStream())
                 {
                     dcs.WriteObject(ms, query);
                     ms.Seek(0, SeekOrigin.Begin);
 
-                    using (StreamReader sr = new StreamReader(ms))
+                    using (var sr = new StreamReader(ms))
                     {
                         xml = sr.ReadToEnd();
                     }
@@ -2036,14 +2033,14 @@ namespace EntitySpaces.Interfaces
 
                 using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(xml)))
                 {
-                    XmlReaderSettings settings = new XmlReaderSettings();
+                    var settings = new XmlReaderSettings();
                     settings.MaxCharactersFromEntities = long.MaxValue;
                     settings.MaxCharactersInDocument = long.MaxValue;
 
                     using (var reader = System.Xml.XmlDictionaryReader.Create(memoryStream, settings))
                     {
                         // Deserialize
-                        DataContractSerializer serializer = new DataContractSerializer(type, type.Name, "http://www.entityspaces.net");
+                        var serializer = new DataContractSerializer(type, type.Name, "http://www.entityspaces.net");
                         query = serializer.ReadObject(reader) as esDynamicQuery;
                     }
                 }
@@ -2057,14 +2054,14 @@ namespace EntitySpaces.Interfaces
 
                 using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(xml)))
                 {
-                    XmlReaderSettings settings = new XmlReaderSettings();
+                    var settings = new XmlReaderSettings();
                     settings.MaxCharactersFromEntities = long.MaxValue;
                     settings.MaxCharactersInDocument = long.MaxValue;
 
                     using (var reader = System.Xml.XmlDictionaryReader.Create(memoryStream, settings))
                     {
                         // Deserialize
-                        DataContractSerializer serializer = new DataContractSerializer(type, type.Name, "http://www.entityspaces.net",
+                        var serializer = new DataContractSerializer(type, type.Name, "http://www.entityspaces.net",
                             knownTypes);
                         query = serializer.ReadObject(reader) as esDynamicQuery;
                     }
@@ -2075,11 +2072,11 @@ namespace EntitySpaces.Interfaces
 
             static private void GetKnownTypes(esDynamicQuery query, List<System.Type> types)
             {
-                bool found = false;
+                var found = false;
 
-                string strType = query.GetType().ToString();
+                var strType = query.GetType().ToString();
 
-                foreach (Type t in types)
+                foreach (var t in types)
                 {
                     if (t.ToString() == strType)
                     {
@@ -2092,7 +2089,7 @@ namespace EntitySpaces.Interfaces
                     types.Add(query.GetType());
                 }
 
-                foreach (esDynamicQuery subQuery in query.queries.Values)
+                foreach (var subQuery in query.queries.Values)
                 {
                     GetKnownTypes(subQuery, types);
                 }

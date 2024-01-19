@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.1214.0
-EntitySpaces Driver  : SQL
-Date Generated       : 12/14/2019 5:29:52 PM
+EntitySpaces Version : 2024.1.4.0
+EntitySpaces Driver  : MySql
+Date Generated       : 19.01.2024 22:09:28
 ===============================================================================
 */
 
@@ -29,32 +29,30 @@ using EntitySpaces.DynamicQuery;
 
 
 
+// ReSharper disable InconsistentNaming
+
 namespace BusinessObjects
 {
 	/// <summary>
-	/// Encapsulates the 'Suppliers' table
+	/// Encapsulates the 'suppliers' table
 	/// </summary>
 
-    [DebuggerDisplay("Data = {Debug}")]
 	[Serializable]
 	[DataContract]
 	[KnownType(typeof(Suppliers))]	
 	[XmlType("Suppliers")]
 	public partial class Suppliers : esSuppliers
 	{	
-		[DebuggerBrowsable(DebuggerBrowsableState.RootHidden | DebuggerBrowsableState.Never)]
-		protected override esEntityDebuggerView[] Debug
-		{
-			get { return base.Debug; }
-		}
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		protected override esEntityDebuggerView[] Debug => base.Debug;
 
-		override public esEntity CreateInstance()
+		public override esEntity CreateInstance()
 		{
 			return new Suppliers();
 		}
 		
 		#region Static Quick Access Methods
-		static public void Delete(System.Int32 supplierID)
+		public static void Delete(System.Int32 supplierID)
 		{
 			var obj = new Suppliers();
 			obj.SupplierID = supplierID;
@@ -63,7 +61,7 @@ namespace BusinessObjects
 			obj.Save();
 		}
 
-	    static public void Delete(System.Int32 supplierID, esSqlAccessType sqlAccessType)
+	    public static void Delete(System.Int32 supplierID, esSqlAccessType sqlAccessType)
 		{
 			var obj = new Suppliers();
 			obj.SupplierID = supplierID;
@@ -81,7 +79,6 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Count = {Count}")]
 	[Serializable]
 	[CollectionDataContract]
 	[XmlType("SuppliersCollection")]
@@ -98,22 +95,21 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Query = {Parse()}")]
 	[Serializable]	
 	public partial class SuppliersQuery : esSuppliersQuery
 	{
 		public SuppliersQuery(string joinAlias)
 		{
-			this.es.JoinAlias = joinAlias;
+			es.JoinAlias = joinAlias;
 		}	
 
-		public SuppliersQuery(string joinAlias, out SuppliersQuery query)
+    public SuppliersQuery(string joinAlias, out SuppliersQuery query)
 		{
-			query = this;
-			this.es.JoinAlias = joinAlias;
-		}
+      query = this;
+			es.JoinAlias = joinAlias;
+		}	
 
-		override protected string GetQueryName()
+		protected override string GetQueryName()
 		{
 			return "SuppliersQuery";
 		}
@@ -137,7 +133,7 @@ namespace BusinessObjects
 
 	[DataContract]
 	[Serializable]
-	abstract public partial class esSuppliers : esEntity
+	public abstract partial class esSuppliers : esEntity
 	{
 		public esSuppliers()
 		{
@@ -181,256 +177,202 @@ namespace BusinessObjects
 		
 		
 		/// <summary>
-		/// Maps to Suppliers.SupplierID
+		/// Maps to suppliers.SupplierID
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int32? SupplierID
+		public virtual System.Int32? SupplierID
 		{
-			get
-			{
-				return base.GetSystemInt32(SuppliersMetadata.ColumnNames.SupplierID);
-			}
+			get => GetSystemInt32(SuppliersMetadata.ColumnNames.SupplierID);
 			
 			set
 			{
-				if(base.SetSystemInt32(SuppliersMetadata.ColumnNames.SupplierID, value))
-				{
-					OnPropertyChanged(SuppliersMetadata.PropertyNames.SupplierID);
-				}
+				if (!SetSystemInt32(SuppliersMetadata.ColumnNames.SupplierID, value)) return;
+				
+				OnPropertyChanged(SuppliersMetadata.PropertyNames.SupplierID);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Suppliers.CompanyName
+		/// Maps to suppliers.CompanyName
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String CompanyName
+		public virtual System.String CompanyName
 		{
-			get
-			{
-				return base.GetSystemString(SuppliersMetadata.ColumnNames.CompanyName);
-			}
+			get => GetSystemString(SuppliersMetadata.ColumnNames.CompanyName);
 			
 			set
 			{
-				if(base.SetSystemString(SuppliersMetadata.ColumnNames.CompanyName, value))
-				{
-					OnPropertyChanged(SuppliersMetadata.PropertyNames.CompanyName);
-				}
+				if (!SetSystemString(SuppliersMetadata.ColumnNames.CompanyName, value)) return;
+				
+				OnPropertyChanged(SuppliersMetadata.PropertyNames.CompanyName);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Suppliers.ContactName
+		/// Maps to suppliers.ContactName
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String ContactName
+		public virtual System.String ContactName
 		{
-			get
-			{
-				return base.GetSystemString(SuppliersMetadata.ColumnNames.ContactName);
-			}
+			get => GetSystemString(SuppliersMetadata.ColumnNames.ContactName);
 			
 			set
 			{
-				if(base.SetSystemString(SuppliersMetadata.ColumnNames.ContactName, value))
-				{
-					OnPropertyChanged(SuppliersMetadata.PropertyNames.ContactName);
-				}
+				if (!SetSystemString(SuppliersMetadata.ColumnNames.ContactName, value)) return;
+				
+				OnPropertyChanged(SuppliersMetadata.PropertyNames.ContactName);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Suppliers.ContactTitle
+		/// Maps to suppliers.ContactTitle
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String ContactTitle
+		public virtual System.String ContactTitle
 		{
-			get
-			{
-				return base.GetSystemString(SuppliersMetadata.ColumnNames.ContactTitle);
-			}
+			get => GetSystemString(SuppliersMetadata.ColumnNames.ContactTitle);
 			
 			set
 			{
-				if(base.SetSystemString(SuppliersMetadata.ColumnNames.ContactTitle, value))
-				{
-					OnPropertyChanged(SuppliersMetadata.PropertyNames.ContactTitle);
-				}
+				if (!SetSystemString(SuppliersMetadata.ColumnNames.ContactTitle, value)) return;
+				
+				OnPropertyChanged(SuppliersMetadata.PropertyNames.ContactTitle);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Suppliers.Address
+		/// Maps to suppliers.Address
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String Address
+		public virtual System.String Address
 		{
-			get
-			{
-				return base.GetSystemString(SuppliersMetadata.ColumnNames.Address);
-			}
+			get => GetSystemString(SuppliersMetadata.ColumnNames.Address);
 			
 			set
 			{
-				if(base.SetSystemString(SuppliersMetadata.ColumnNames.Address, value))
-				{
-					OnPropertyChanged(SuppliersMetadata.PropertyNames.Address);
-				}
+				if (!SetSystemString(SuppliersMetadata.ColumnNames.Address, value)) return;
+				
+				OnPropertyChanged(SuppliersMetadata.PropertyNames.Address);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Suppliers.City
+		/// Maps to suppliers.City
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String City
+		public virtual System.String City
 		{
-			get
-			{
-				return base.GetSystemString(SuppliersMetadata.ColumnNames.City);
-			}
+			get => GetSystemString(SuppliersMetadata.ColumnNames.City);
 			
 			set
 			{
-				if(base.SetSystemString(SuppliersMetadata.ColumnNames.City, value))
-				{
-					OnPropertyChanged(SuppliersMetadata.PropertyNames.City);
-				}
+				if (!SetSystemString(SuppliersMetadata.ColumnNames.City, value)) return;
+				
+				OnPropertyChanged(SuppliersMetadata.PropertyNames.City);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Suppliers.Region
+		/// Maps to suppliers.Region
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String Region
+		public virtual System.String Region
 		{
-			get
-			{
-				return base.GetSystemString(SuppliersMetadata.ColumnNames.Region);
-			}
+			get => GetSystemString(SuppliersMetadata.ColumnNames.Region);
 			
 			set
 			{
-				if(base.SetSystemString(SuppliersMetadata.ColumnNames.Region, value))
-				{
-					OnPropertyChanged(SuppliersMetadata.PropertyNames.Region);
-				}
+				if (!SetSystemString(SuppliersMetadata.ColumnNames.Region, value)) return;
+				
+				OnPropertyChanged(SuppliersMetadata.PropertyNames.Region);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Suppliers.PostalCode
+		/// Maps to suppliers.PostalCode
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String PostalCode
+		public virtual System.String PostalCode
 		{
-			get
-			{
-				return base.GetSystemString(SuppliersMetadata.ColumnNames.PostalCode);
-			}
+			get => GetSystemString(SuppliersMetadata.ColumnNames.PostalCode);
 			
 			set
 			{
-				if(base.SetSystemString(SuppliersMetadata.ColumnNames.PostalCode, value))
-				{
-					OnPropertyChanged(SuppliersMetadata.PropertyNames.PostalCode);
-				}
+				if (!SetSystemString(SuppliersMetadata.ColumnNames.PostalCode, value)) return;
+				
+				OnPropertyChanged(SuppliersMetadata.PropertyNames.PostalCode);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Suppliers.Country
+		/// Maps to suppliers.Country
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String Country
+		public virtual System.String Country
 		{
-			get
-			{
-				return base.GetSystemString(SuppliersMetadata.ColumnNames.Country);
-			}
+			get => GetSystemString(SuppliersMetadata.ColumnNames.Country);
 			
 			set
 			{
-				if(base.SetSystemString(SuppliersMetadata.ColumnNames.Country, value))
-				{
-					OnPropertyChanged(SuppliersMetadata.PropertyNames.Country);
-				}
+				if (!SetSystemString(SuppliersMetadata.ColumnNames.Country, value)) return;
+				
+				OnPropertyChanged(SuppliersMetadata.PropertyNames.Country);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Suppliers.Phone
+		/// Maps to suppliers.Phone
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String Phone
+		public virtual System.String Phone
 		{
-			get
-			{
-				return base.GetSystemString(SuppliersMetadata.ColumnNames.Phone);
-			}
+			get => GetSystemString(SuppliersMetadata.ColumnNames.Phone);
 			
 			set
 			{
-				if(base.SetSystemString(SuppliersMetadata.ColumnNames.Phone, value))
-				{
-					OnPropertyChanged(SuppliersMetadata.PropertyNames.Phone);
-				}
+				if (!SetSystemString(SuppliersMetadata.ColumnNames.Phone, value)) return;
+				
+				OnPropertyChanged(SuppliersMetadata.PropertyNames.Phone);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Suppliers.Fax
+		/// Maps to suppliers.Fax
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String Fax
+		public virtual System.String Fax
 		{
-			get
-			{
-				return base.GetSystemString(SuppliersMetadata.ColumnNames.Fax);
-			}
+			get => GetSystemString(SuppliersMetadata.ColumnNames.Fax);
 			
 			set
 			{
-				if(base.SetSystemString(SuppliersMetadata.ColumnNames.Fax, value))
-				{
-					OnPropertyChanged(SuppliersMetadata.PropertyNames.Fax);
-				}
+				if (!SetSystemString(SuppliersMetadata.ColumnNames.Fax, value)) return;
+				
+				OnPropertyChanged(SuppliersMetadata.PropertyNames.Fax);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Suppliers.HomePage
+		/// Maps to suppliers.HomePage
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String HomePage
+		public virtual System.String HomePage
 		{
-			get
-			{
-				return base.GetSystemString(SuppliersMetadata.ColumnNames.HomePage);
-			}
+			get => GetSystemString(SuppliersMetadata.ColumnNames.HomePage);
 			
 			set
 			{
-				if(base.SetSystemString(SuppliersMetadata.ColumnNames.HomePage, value))
-				{
-					OnPropertyChanged(SuppliersMetadata.PropertyNames.HomePage);
-				}
+				if (!SetSystemString(SuppliersMetadata.ColumnNames.HomePage, value)) return;
+				
+				OnPropertyChanged(SuppliersMetadata.PropertyNames.HomePage);
 			}
-		}
+		}		
 		
 		#endregion
 		
 		#region Housekeeping methods
 
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return SuppliersMetadata.Meta();
-			}
-		}
+		protected override IMetadata Meta => SuppliersMetadata.Meta();
 
 		#endregion		
 		
@@ -440,36 +382,28 @@ namespace BusinessObjects
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new SuppliersQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new SuppliersQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(SuppliersQuery query)
+		public bool Load(SuppliersQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
-			return this.Query.Load();
+			query = paraQuery;
+			InitQuery(query);
+			return Query.Load();
 		}
-
-		protected void InitQuery(SuppliersQuery query)
+		
+		protected void InitQuery(SuppliersQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntity)this).Connection;
+				paraQuery.es2.Connection = ((IEntity)this).Connection;
 			}			
-		}
-
-		protected override void HookupQuery(esDynamicQuery query)
-		{
-			this.InitQuery((SuppliersQuery)query);
 		}
 
 		#endregion
@@ -481,73 +415,60 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esSuppliersCollection : esEntityCollection<Suppliers>
+	public abstract class esSuppliersCollection : esEntityCollection<Suppliers>
 	{
 		#region Housekeeping methods
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return SuppliersMetadata.Meta();
-			}
-		}
-
+		protected override IMetadata Meta => SuppliersMetadata.Meta();
 		protected override string GetCollectionName()
 		{
 			return "SuppliersCollection";
 		}
-
 		#endregion		
 		
 		#region Query Logic
 
 	#if (!WindowsCE)
-		[BrowsableAttribute(false)]
+		[Browsable(false)]
 	#endif
 		public SuppliersQuery Query
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new SuppliersQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new SuppliersQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(SuppliersQuery query)
+		public bool Load(SuppliersQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
+			query = paraQuery;
+			InitQuery(query);
 			return Query.Load();
 		}
 
-		override protected esDynamicQuery GetDynamicQuery()
+		protected override esDynamicQuery GetDynamicQuery()
 		{
-			if (this.query == null)
-			{
-				this.query = new SuppliersQuery();
-				this.InitQuery(query);
-			}
-			return this.query;
+			if (query != null) return query;
+			query = new SuppliersQuery();
+			InitQuery(query);
+			return query;
 		}
 
-		protected void InitQuery(SuppliersQuery query)
+		protected void InitQuery(SuppliersQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntityCollection)this).Connection;
+				paraQuery.es2.Connection = ((IEntityCollection)this).Connection;
 			}			
 		}
 
-		protected override void HookupQuery(esDynamicQuery query)
+		protected override void HookupQuery(esDynamicQuery paraQuery)
 		{
-			this.InitQuery((SuppliersQuery)query);
+			InitQuery((SuppliersQuery)paraQuery);
 		}
 
 		#endregion
@@ -558,102 +479,59 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esSuppliersQuery : esDynamicQuery
+	public abstract class esSuppliersQuery : esDynamicQuery
 	{
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return SuppliersMetadata.Meta();
-			}
-		}	
+		protected override IMetadata Meta => SuppliersMetadata.Meta();
 		
 		#region QueryItemFromName
 		
         protected override esQueryItem QueryItemFromName(string name)
         {
-            switch (name)
+            return name switch
             {
-				case "SupplierID": return this.SupplierID;
-				case "CompanyName": return this.CompanyName;
-				case "ContactName": return this.ContactName;
-				case "ContactTitle": return this.ContactTitle;
-				case "Address": return this.Address;
-				case "City": return this.City;
-				case "Region": return this.Region;
-				case "PostalCode": return this.PostalCode;
-				case "Country": return this.Country;
-				case "Phone": return this.Phone;
-				case "Fax": return this.Fax;
-				case "HomePage": return this.HomePage;
-
-                default: return null;
-            }
+              "SupplierID" => SupplierID,
+              "CompanyName" => CompanyName,
+              "ContactName" => ContactName,
+              "ContactTitle" => ContactTitle,
+              "Address" => Address,
+              "City" => City,
+              "Region" => Region,
+              "PostalCode" => PostalCode,
+              "Country" => Country,
+              "Phone" => Phone,
+              "Fax" => Fax,
+              "HomePage" => HomePage,
+              _ => null
+            };
         }		
 		
 		#endregion
 		
 		#region esQueryItems
 
-		public esQueryItem SupplierID
-		{
-			get { return new esQueryItem(this, SuppliersMetadata.ColumnNames.SupplierID, esSystemType.Int32); }
-		} 
+		public esQueryItem SupplierID => new (this, SuppliersMetadata.ColumnNames.SupplierID, esSystemType.Int32);
 		
-		public esQueryItem CompanyName
-		{
-			get { return new esQueryItem(this, SuppliersMetadata.ColumnNames.CompanyName, esSystemType.String); }
-		} 
+		public esQueryItem CompanyName => new (this, SuppliersMetadata.ColumnNames.CompanyName, esSystemType.String);
 		
-		public esQueryItem ContactName
-		{
-			get { return new esQueryItem(this, SuppliersMetadata.ColumnNames.ContactName, esSystemType.String); }
-		} 
+		public esQueryItem ContactName => new (this, SuppliersMetadata.ColumnNames.ContactName, esSystemType.String);
 		
-		public esQueryItem ContactTitle
-		{
-			get { return new esQueryItem(this, SuppliersMetadata.ColumnNames.ContactTitle, esSystemType.String); }
-		} 
+		public esQueryItem ContactTitle => new (this, SuppliersMetadata.ColumnNames.ContactTitle, esSystemType.String);
 		
-		public esQueryItem Address
-		{
-			get { return new esQueryItem(this, SuppliersMetadata.ColumnNames.Address, esSystemType.String); }
-		} 
+		public esQueryItem Address => new (this, SuppliersMetadata.ColumnNames.Address, esSystemType.String);
 		
-		public esQueryItem City
-		{
-			get { return new esQueryItem(this, SuppliersMetadata.ColumnNames.City, esSystemType.String); }
-		} 
+		public esQueryItem City => new (this, SuppliersMetadata.ColumnNames.City, esSystemType.String);
 		
-		public esQueryItem Region
-		{
-			get { return new esQueryItem(this, SuppliersMetadata.ColumnNames.Region, esSystemType.String); }
-		} 
+		public esQueryItem Region => new (this, SuppliersMetadata.ColumnNames.Region, esSystemType.String);
 		
-		public esQueryItem PostalCode
-		{
-			get { return new esQueryItem(this, SuppliersMetadata.ColumnNames.PostalCode, esSystemType.String); }
-		} 
+		public esQueryItem PostalCode => new (this, SuppliersMetadata.ColumnNames.PostalCode, esSystemType.String);
 		
-		public esQueryItem Country
-		{
-			get { return new esQueryItem(this, SuppliersMetadata.ColumnNames.Country, esSystemType.String); }
-		} 
+		public esQueryItem Country => new (this, SuppliersMetadata.ColumnNames.Country, esSystemType.String);
 		
-		public esQueryItem Phone
-		{
-			get { return new esQueryItem(this, SuppliersMetadata.ColumnNames.Phone, esSystemType.String); }
-		} 
+		public esQueryItem Phone => new (this, SuppliersMetadata.ColumnNames.Phone, esSystemType.String);
 		
-		public esQueryItem Fax
-		{
-			get { return new esQueryItem(this, SuppliersMetadata.ColumnNames.Fax, esSystemType.String); }
-		} 
+		public esQueryItem Fax => new (this, SuppliersMetadata.ColumnNames.Fax, esSystemType.String);
 		
-		public esQueryItem HomePage
-		{
-			get { return new esQueryItem(this, SuppliersMetadata.ColumnNames.HomePage, esSystemType.String); }
-		} 
+		public esQueryItem HomePage => new (this, SuppliersMetadata.ColumnNames.HomePage, esSystemType.String);
 		
 		#endregion
 		
@@ -664,16 +542,16 @@ namespace BusinessObjects
 	public partial class Suppliers : esSuppliers
 	{
 
-		#region ProductsCollection - Zero To Many (FK_Products_Suppliers)
+		#region ProductsBySupplierID - Zero To Many
 		
-		static public esPrefetchMap Prefetch_ProductsCollection
+		public static esPrefetchMap Prefetch_ProductsBySupplierID
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap
+				var map = new esPrefetchMap
 				{
-					PrefetchDelegate = BusinessObjects.Suppliers.ProductsCollection_Delegate,
-					PropertyName = "ProductsCollection",
+					PrefetchDelegate = ProductsBySupplierID_Delegate,
+					PropertyName = "ProductsBySupplierID",
 					MyColumnName = "SupplierID",
 					ParentColumnName = "SupplierID",
 					IsMultiPartKey = false
@@ -682,18 +560,13 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void ProductsCollection_Delegate(esPrefetchParameters data)
+		private static void ProductsBySupplierID_Delegate(esPrefetchParameters data)
 		{
-			SuppliersQuery parent = new SuppliersQuery(data.NextAlias());
+			var parent = new SuppliersQuery(data.NextAlias());
+			var me = data.You != null ? data.You as ProductsQuery : new ProductsQuery(data.NextAlias());
 
-			ProductsQuery me = data.You != null ? data.You as ProductsQuery : new ProductsQuery(data.NextAlias());
-
-			if (data.Root == null)
-			{
-				data.Root = me;
-			}
-			
-			data.Root.InnerJoin(parent).On(parent.SupplierID == me.SupplierID);
+			data.Root ??= me;
+			data.Root?.InnerJoin(parent).On(parent.SupplierID == me?.SupplierID);
 
 			data.You = parent;
 		}	
@@ -703,60 +576,52 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_Products_Suppliers
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeProductsCollection()
+		public bool ShouldSerializeProductsBySupplierID()
 		{
-		    if(this._ProductsCollection != null && this._ProductsCollection.Count > 0)
-				return true;
-            else
-				return false;
+			return _ProductsBySupplierID is { Count: > 0 };
 		}	
 		
 
-		[DataMember(Name="ProductsCollection", EmitDefaultValue = false)]
-		public ProductsCollection ProductsCollection
+		[DataMember(Name="ProductsBySupplierID", EmitDefaultValue = false)]
+		public ProductsCollection ProductsBySupplierID
 		{
 			get
 			{
-				if(this._ProductsCollection == null)
-				{
-					this._ProductsCollection = new ProductsCollection();
-					this._ProductsCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("ProductsCollection", this._ProductsCollection);
+				if (_ProductsBySupplierID != null) return _ProductsBySupplierID;
 				
-					if (this.SupplierID != null)
+				_ProductsBySupplierID = new ProductsCollection();
+				_ProductsBySupplierID.es.Connection.Name = es.Connection.Name;
+				SetPostSave("ProductsBySupplierID", _ProductsBySupplierID);
+				
+				// ReSharper disable once InvertIf
+				if (SupplierID != null)
+				{
+					if (!es.IsLazyLoadDisabled)
 					{
-						if (!this.es.IsLazyLoadDisabled)
-						{
-							this._ProductsCollection.Query.Where(this._ProductsCollection.Query.SupplierID == this.SupplierID);
-							this._ProductsCollection.Query.Load();
-						}
-
-						// Auto-hookup Foreign Keys
-						this._ProductsCollection.fks.Add(ProductsMetadata.ColumnNames.SupplierID, this.SupplierID);
+						_ProductsBySupplierID.Query.Where(_ProductsBySupplierID.Query.SupplierID == SupplierID);
+						_ProductsBySupplierID.Query.Load();
 					}
+
+					// Auto-hookup Foreign Keys
+					_ProductsBySupplierID.fks.Add(ProductsMetadata.ColumnNames.SupplierID, this.SupplierID);
 				}
 
-				return this._ProductsCollection;
+				return _ProductsBySupplierID;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
-			 
-				if (this._ProductsCollection != null) 
-				{ 
-					this.RemovePostSave("ProductsCollection"); 
-					this._ProductsCollection = null;
-					
-				} 
+				if (_ProductsBySupplierID == null) return;
+				RemovePostSave("ProductsBySupplierID"); 
+				_ProductsBySupplierID = null;
+				OnPropertyChanged("ProductsBySupplierID");
 			} 			
 		}
 		
-
-		
 			
 		
-		private ProductsCollection _ProductsCollection;
+		private ProductsCollection _ProductsBySupplierID;
 		#endregion
 
 		
@@ -766,8 +631,8 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "ProductsCollection":
-					coll = this.ProductsCollection;
+				case "ProductsBySupplierID":
+					coll = this.ProductsBySupplierID;
 					break;	
 			}
 
@@ -778,10 +643,8 @@ namespace BusinessObjects
 		/// </summary>
 		protected override List<esPropertyDescriptor> GetHierarchicalProperties()
 		{
-			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
-			
-			props.Add(new esPropertyDescriptor(this, "ProductsCollection", typeof(ProductsCollection), new Products()));
-		
+			var props = new List<esPropertyDescriptor>();
+			props.Add(new esPropertyDescriptor(this, "ProductsBySupplierID", typeof(ProductsCollection), new Products()));
 			return props;
 		}
 		
@@ -808,9 +671,9 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPostSaveKeys()
 		{
-			if(this._ProductsCollection != null)
+			if(this._ProductsBySupplierID != null)
 			{
-				Apply(this._ProductsCollection, "SupplierID", this.SupplierID);
+				Apply(this._ProductsBySupplierID, "SupplierID", this.SupplierID);
 			}
 		}
 		
@@ -828,100 +691,90 @@ namespace BusinessObjects
 			m_columns = new esColumnMetadataCollection();
 			esColumnMetadata c;
 
-			c = new esColumnMetadata(SuppliersMetadata.ColumnNames.SupplierID, 0, typeof(System.Int32), esSystemType.Int32);
-			c.PropertyName = SuppliersMetadata.PropertyNames.SupplierID;
+			c = new esColumnMetadata(ColumnNames.SupplierID, 0, typeof(System.Int32), esSystemType.Int32);
+			c.PropertyName = PropertyNames.SupplierID;
 			c.IsInPrimaryKey = true;
 			c.IsAutoIncrement = true;
-			c.NumericPrecision = 10;
+			c.NumericPrecision = 11;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(SuppliersMetadata.ColumnNames.CompanyName, 1, typeof(System.String), esSystemType.String);
-			c.PropertyName = SuppliersMetadata.PropertyNames.CompanyName;
+			c = new esColumnMetadata(ColumnNames.CompanyName, 1, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.CompanyName;
 			c.CharacterMaxLength = 40;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(SuppliersMetadata.ColumnNames.ContactName, 2, typeof(System.String), esSystemType.String);
-			c.PropertyName = SuppliersMetadata.PropertyNames.ContactName;
+			c = new esColumnMetadata(ColumnNames.ContactName, 2, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.ContactName;
 			c.CharacterMaxLength = 30;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(SuppliersMetadata.ColumnNames.ContactTitle, 3, typeof(System.String), esSystemType.String);
-			c.PropertyName = SuppliersMetadata.PropertyNames.ContactTitle;
+			c = new esColumnMetadata(ColumnNames.ContactTitle, 3, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.ContactTitle;
 			c.CharacterMaxLength = 30;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(SuppliersMetadata.ColumnNames.Address, 4, typeof(System.String), esSystemType.String);
-			c.PropertyName = SuppliersMetadata.PropertyNames.Address;
+			c = new esColumnMetadata(ColumnNames.Address, 4, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.Address;
 			c.CharacterMaxLength = 60;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(SuppliersMetadata.ColumnNames.City, 5, typeof(System.String), esSystemType.String);
-			c.PropertyName = SuppliersMetadata.PropertyNames.City;
+			c = new esColumnMetadata(ColumnNames.City, 5, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.City;
 			c.CharacterMaxLength = 15;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(SuppliersMetadata.ColumnNames.Region, 6, typeof(System.String), esSystemType.String);
-			c.PropertyName = SuppliersMetadata.PropertyNames.Region;
+			c = new esColumnMetadata(ColumnNames.Region, 6, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.Region;
 			c.CharacterMaxLength = 15;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(SuppliersMetadata.ColumnNames.PostalCode, 7, typeof(System.String), esSystemType.String);
-			c.PropertyName = SuppliersMetadata.PropertyNames.PostalCode;
+			c = new esColumnMetadata(ColumnNames.PostalCode, 7, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.PostalCode;
 			c.CharacterMaxLength = 10;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(SuppliersMetadata.ColumnNames.Country, 8, typeof(System.String), esSystemType.String);
-			c.PropertyName = SuppliersMetadata.PropertyNames.Country;
+			c = new esColumnMetadata(ColumnNames.Country, 8, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.Country;
 			c.CharacterMaxLength = 15;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(SuppliersMetadata.ColumnNames.Phone, 9, typeof(System.String), esSystemType.String);
-			c.PropertyName = SuppliersMetadata.PropertyNames.Phone;
+			c = new esColumnMetadata(ColumnNames.Phone, 9, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.Phone;
 			c.CharacterMaxLength = 24;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(SuppliersMetadata.ColumnNames.Fax, 10, typeof(System.String), esSystemType.String);
-			c.PropertyName = SuppliersMetadata.PropertyNames.Fax;
+			c = new esColumnMetadata(ColumnNames.Fax, 10, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.Fax;
 			c.CharacterMaxLength = 24;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(SuppliersMetadata.ColumnNames.HomePage, 11, typeof(System.String), esSystemType.String);
-			c.PropertyName = SuppliersMetadata.PropertyNames.HomePage;
-			c.CharacterMaxLength = 1073741823;
+			c = new esColumnMetadata(ColumnNames.HomePage, 11, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.HomePage;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
 		}
 		#endregion	
 	
-		static public SuppliersMetadata Meta()
+		public static SuppliersMetadata Meta()
 		{
 			return meta;
 		}	
 		
-		public Guid DataID
-		{
-			get { return base.m_dataID; }
-		}	
-		
-		public bool MultiProviderMode
-		{
-			get { return false; }
-		}		
+		public Guid DataID => m_dataID;
 
-		public esColumnMetadataCollection Columns
-		{
-			get	{ return base.m_columns; }
-		}
+		public bool MultiProviderMode => false;
+
+		public esColumnMetadataCollection Columns => m_columns;
 		
 		#region ColumnNames
 		public class ColumnNames
@@ -961,32 +814,20 @@ namespace BusinessObjects
 
 		public esProviderSpecificMetadata GetProviderMetadata(string mapName)
 		{
-			MapToMeta mapMethod = mapDelegates[mapName];
-
-			if (mapMethod != null)
-				return mapMethod(mapName);
-			else
-				return null;
+			var mapMethod = mapDelegates[mapName];
+      return mapMethod?.Invoke(mapName);
 		}
 		
 		#region MAP esDefault
 		
-		static private int RegisterDelegateesDefault()
+		private static int RegisterDelegateesDefault()
 		{
 			// This is only executed once per the life of the application
 			lock (typeof(SuppliersMetadata))
 			{
-				if(SuppliersMetadata.mapDelegates == null)
-				{
-					SuppliersMetadata.mapDelegates = new Dictionary<string,MapToMeta>();
-				}
-				
-				if (SuppliersMetadata.meta == null)
-				{
-					SuppliersMetadata.meta = new SuppliersMetadata();
-				}
-				
-				MapToMeta mapMethod = new MapToMeta(meta.esDefault);
+				mapDelegates ??= new Dictionary<string, MapToMeta>();
+				meta ??= new SuppliersMetadata();
+				var mapMethod = new MapToMeta(meta.esDefault);
 				mapDelegates.Add("esDefault", mapMethod);
 				mapMethod("esDefault");
 			}
@@ -995,45 +836,46 @@ namespace BusinessObjects
 
 		private esProviderSpecificMetadata esDefault(string mapName)
 		{
+			// ReSharper disable once InvertIf
 			if(!m_providerMetadataMaps.ContainsKey(mapName))
 			{
-				esProviderSpecificMetadata meta = new esProviderSpecificMetadata();			
+				var specMeta = new esProviderSpecificMetadata();			
 
 
-				meta.AddTypeMap("SupplierID", new esTypeMap("int", "System.Int32"));
-				meta.AddTypeMap("CompanyName", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("ContactName", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("ContactTitle", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("Address", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("City", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("Region", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("PostalCode", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("Country", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("Phone", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("Fax", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("HomePage", new esTypeMap("ntext", "System.String"));			
+				specMeta.AddTypeMap("SupplierID", new esTypeMap("INT", "System.Int32"));
+				specMeta.AddTypeMap("CompanyName", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("ContactName", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("ContactTitle", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("Address", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("City", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("Region", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("PostalCode", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("Country", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("Phone", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("Fax", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("HomePage", new esTypeMap("MEDIUMTEXT", "System.String"));			
 				
 				
 				
-				meta.Source = "Suppliers";
-				meta.Destination = "Suppliers";
+				specMeta.Source = "suppliers";
+				specMeta.Destination = "suppliers";
 				
-				meta.spInsert = "proc_SuppliersInsert";				
-				meta.spUpdate = "proc_SuppliersUpdate";		
-				meta.spDelete = "proc_SuppliersDelete";
-				meta.spLoadAll = "proc_SuppliersLoadAll";
-				meta.spLoadByPrimaryKey = "proc_SuppliersLoadByPrimaryKey";
+				specMeta.spInsert = "proc_suppliersInsert";				
+				specMeta.spUpdate = "proc_suppliersUpdate";		
+				specMeta.spDelete = "proc_suppliersDelete";
+				specMeta.spLoadAll = "proc_suppliersLoadAll";
+				specMeta.spLoadByPrimaryKey = "proc_suppliersLoadByPrimaryKey";
 				
-				this.m_providerMetadataMaps["esDefault"] = meta;
+				m_providerMetadataMaps["esDefault"] = specMeta;
 			}
 			
-			return this.m_providerMetadataMaps["esDefault"];
+			return m_providerMetadataMaps["esDefault"];
 		}
 
 		#endregion
 
-		static private SuppliersMetadata meta;
-		static protected Dictionary<string, MapToMeta> mapDelegates;
-		static private int _esDefault = RegisterDelegateesDefault();
+		private static SuppliersMetadata meta;
+		protected static Dictionary<string, MapToMeta> mapDelegates;
+		private static int _esDefault = RegisterDelegateesDefault();
 	}
 }

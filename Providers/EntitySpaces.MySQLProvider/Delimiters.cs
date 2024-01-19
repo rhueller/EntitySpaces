@@ -27,9 +27,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace EntitySpaces.MySQLProvider
 {
-    class Delimiters
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    abstract class Delimiters
     {
         private const string tableOpen = "`";
         private const string tableClose = "`";

@@ -77,74 +77,61 @@ namespace <%=Namespace%>
 {<%}%>
 <%if(!TargetTheCompactFramework){%>
 	[Serializable]<%} if (UseCustomBaseClass) {%>
-	public abstract partial class <%=source.esCollection%> : CollectionBase<<%=source.Entity%>><%}else{%>
-	public abstract partial class <%=source.esCollection%> : esEntityCollection<<%=source.Entity%>><%}%>
+	public abstract class <%=source.esCollection%> : CollectionBase<<%=source.Entity%>><%}else{%>
+	public abstract class <%=source.esCollection%> : esEntityCollection<<%=source.Entity%>><%}%>
 	{
 		#region Housekeeping methods
-		protected override IMetadata Meta
-		{
-			get
-			{
-				return <%=source.Metadata%>.Meta();
-			}
-		}
-
+		protected override IMetadata Meta => <%=source.Metadata%>.Meta();
 		protected override string GetCollectionName()
 		{
 			return "<%=source.Collection%>";
 		}
-
 		#endregion		
 		
 		#region Query Logic
 
 	#if (!WindowsCE)
-		[BrowsableAttribute(false)]
+		[Browsable(false)]
 	#endif
 		public <%=source.Query%> Query
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new <%=source.Query%>();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new <%=source.Query%>();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(<%=source.Query%> query)
+		public bool Load(<%=source.Query%> paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
+			query = paraQuery;
+			InitQuery(query);
 			return Query.Load();
 		}
 
 		protected override esDynamicQuery GetDynamicQuery()
 		{
-			if (this.query == null)
-			{
-				this.query = new <%=source.Query%>();
-				this.InitQuery(query);
-			}
-			return this.query;
+			if (query != null) return query;
+			query = new <%=source.Query%>();
+			InitQuery(query);
+			return query;
 		}
 
-		protected void InitQuery(<%=source.Query%> query)
+		protected void InitQuery(<%=source.Query%> paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntityCollection)this).Connection;
+				paraQuery.es2.Connection = ((IEntityCollection)this).Connection;
 			}			
 		}
 
-		protected override void HookupQuery(esDynamicQuery query)
+		protected override void HookupQuery(esDynamicQuery paraQuery)
 		{
-			this.InitQuery((<%=source.Query%>)query);
+			InitQuery((<%=source.Query%>)paraQuery);
 		}
 
 		#endregion

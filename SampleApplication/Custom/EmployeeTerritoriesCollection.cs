@@ -5,9 +5,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0807.0
-EntitySpaces Driver  : SQL
-Date Generated       : 8/8/2019 8:04:57 AM
+EntitySpaces Version : 2024.1.4.0
+EntitySpaces Driver  : MySql
+Date Generated       : 19.01.2024 13:45:51
 ===============================================================================
 */
 
@@ -19,9 +19,9 @@ using EntitySpaces.DynamicQuery;
 
 namespace BusinessObjects
 {
-	public partial class EmployeeTerritoriesCollection : esEmployeeTerritoriesCollection
+	public partial class EmployeeterritoriesCollection : esEmployeeterritoriesCollection
 	{
-		public EmployeeTerritoriesCollection()
+		public EmployeeterritoriesCollection()
 		{
 		
 		}

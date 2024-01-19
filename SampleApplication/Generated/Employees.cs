@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.1214.0
-EntitySpaces Driver  : SQL
-Date Generated       : 12/14/2019 5:29:48 PM
+EntitySpaces Version : 2024.1.4.0
+EntitySpaces Driver  : MySql
+Date Generated       : 19.01.2024 22:09:28
 ===============================================================================
 */
 
@@ -29,32 +29,30 @@ using EntitySpaces.DynamicQuery;
 
 
 
+// ReSharper disable InconsistentNaming
+
 namespace BusinessObjects
 {
 	/// <summary>
-	/// Encapsulates the 'Employees' table
+	/// Encapsulates the 'employees' table
 	/// </summary>
 
-    [DebuggerDisplay("Data = {Debug}")]
 	[Serializable]
 	[DataContract]
 	[KnownType(typeof(Employees))]	
 	[XmlType("Employees")]
 	public partial class Employees : esEmployees
 	{	
-		[DebuggerBrowsable(DebuggerBrowsableState.RootHidden | DebuggerBrowsableState.Never)]
-		protected override esEntityDebuggerView[] Debug
-		{
-			get { return base.Debug; }
-		}
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		protected override esEntityDebuggerView[] Debug => base.Debug;
 
-		override public esEntity CreateInstance()
+		public override esEntity CreateInstance()
 		{
 			return new Employees();
 		}
 		
 		#region Static Quick Access Methods
-		static public void Delete(System.Int32 employeeID)
+		public static void Delete(System.Int32 employeeID)
 		{
 			var obj = new Employees();
 			obj.EmployeeID = employeeID;
@@ -63,7 +61,7 @@ namespace BusinessObjects
 			obj.Save();
 		}
 
-	    static public void Delete(System.Int32 employeeID, esSqlAccessType sqlAccessType)
+	    public static void Delete(System.Int32 employeeID, esSqlAccessType sqlAccessType)
 		{
 			var obj = new Employees();
 			obj.EmployeeID = employeeID;
@@ -81,7 +79,6 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Count = {Count}")]
 	[Serializable]
 	[CollectionDataContract]
 	[XmlType("EmployeesCollection")]
@@ -98,22 +95,21 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Query = {Parse()}")]
 	[Serializable]	
 	public partial class EmployeesQuery : esEmployeesQuery
 	{
 		public EmployeesQuery(string joinAlias)
 		{
-			this.es.JoinAlias = joinAlias;
+			es.JoinAlias = joinAlias;
 		}	
 
-		public EmployeesQuery(string joinAlias, out EmployeesQuery query)
+    public EmployeesQuery(string joinAlias, out EmployeesQuery query)
 		{
-			query = this;
-			this.es.JoinAlias = joinAlias;
-		}
+      query = this;
+			es.JoinAlias = joinAlias;
+		}	
 
-		override protected string GetQueryName()
+		protected override string GetQueryName()
 		{
 			return "EmployeesQuery";
 		}
@@ -137,9 +133,9 @@ namespace BusinessObjects
 
 	[DataContract]
 	[Serializable]
-	abstract public partial class esEmployees : esEntity
+	public abstract partial class esEmployees : esEntity
 	{
-		public esEmployees()
+        protected esEmployees()
 		{
 
 		}
@@ -181,379 +177,318 @@ namespace BusinessObjects
 		
 		
 		/// <summary>
-		/// Maps to Employees.EmployeeID
+		/// Maps to employees.EmployeeID
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int32? EmployeeID
+		public virtual System.Int32? EmployeeID
 		{
-			get
-			{
-				return base.GetSystemInt32(EmployeesMetadata.ColumnNames.EmployeeID);
-			}
+			get => GetSystemInt32(EmployeesMetadata.ColumnNames.EmployeeID);
 			
 			set
 			{
-				if(base.SetSystemInt32(EmployeesMetadata.ColumnNames.EmployeeID, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.EmployeeID);
-				}
+				if (!SetSystemInt32(EmployeesMetadata.ColumnNames.EmployeeID, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.EmployeeID);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.LastName
+		/// Maps to employees.LastName
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String LastName
+		public virtual System.String LastName
 		{
-			get
-			{
-				return base.GetSystemString(EmployeesMetadata.ColumnNames.LastName);
-			}
+			get => GetSystemString(EmployeesMetadata.ColumnNames.LastName);
 			
 			set
 			{
-				if(base.SetSystemString(EmployeesMetadata.ColumnNames.LastName, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.LastName);
-				}
+				if (!SetSystemString(EmployeesMetadata.ColumnNames.LastName, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.LastName);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.FirstName
+		/// Maps to employees.FirstName
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String FirstName
+		public virtual System.String FirstName
 		{
-			get
-			{
-				return base.GetSystemString(EmployeesMetadata.ColumnNames.FirstName);
-			}
+			get => GetSystemString(EmployeesMetadata.ColumnNames.FirstName);
 			
 			set
 			{
-				if(base.SetSystemString(EmployeesMetadata.ColumnNames.FirstName, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.FirstName);
-				}
+				if (!SetSystemString(EmployeesMetadata.ColumnNames.FirstName, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.FirstName);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.Title
+		/// Maps to employees.Title
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String Title
+		public virtual System.String Title
 		{
-			get
-			{
-				return base.GetSystemString(EmployeesMetadata.ColumnNames.Title);
-			}
+			get => GetSystemString(EmployeesMetadata.ColumnNames.Title);
 			
 			set
 			{
-				if(base.SetSystemString(EmployeesMetadata.ColumnNames.Title, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.Title);
-				}
+				if (!SetSystemString(EmployeesMetadata.ColumnNames.Title, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.Title);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.TitleOfCourtesy
+		/// Maps to employees.TitleOfCourtesy
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String TitleOfCourtesy
+		public virtual System.String TitleOfCourtesy
 		{
-			get
-			{
-				return base.GetSystemString(EmployeesMetadata.ColumnNames.TitleOfCourtesy);
-			}
+			get => GetSystemString(EmployeesMetadata.ColumnNames.TitleOfCourtesy);
 			
 			set
 			{
-				if(base.SetSystemString(EmployeesMetadata.ColumnNames.TitleOfCourtesy, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.TitleOfCourtesy);
-				}
+				if (!SetSystemString(EmployeesMetadata.ColumnNames.TitleOfCourtesy, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.TitleOfCourtesy);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.BirthDate
+		/// Maps to employees.BirthDate
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.DateTime? BirthDate
+		public virtual System.DateTime? BirthDate
 		{
-			get
-			{
-				return base.GetSystemDateTime(EmployeesMetadata.ColumnNames.BirthDate);
-			}
+			get => GetSystemDateTime(EmployeesMetadata.ColumnNames.BirthDate);
 			
 			set
 			{
-				if(base.SetSystemDateTime(EmployeesMetadata.ColumnNames.BirthDate, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.BirthDate);
-				}
+				if (!SetSystemDateTime(EmployeesMetadata.ColumnNames.BirthDate, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.BirthDate);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.HireDate
+		/// Maps to employees.HireDate
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.DateTime? HireDate
+		public virtual System.DateTime? HireDate
 		{
-			get
-			{
-				return base.GetSystemDateTime(EmployeesMetadata.ColumnNames.HireDate);
-			}
+			get => GetSystemDateTime(EmployeesMetadata.ColumnNames.HireDate);
 			
 			set
 			{
-				if(base.SetSystemDateTime(EmployeesMetadata.ColumnNames.HireDate, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.HireDate);
-				}
+				if (!SetSystemDateTime(EmployeesMetadata.ColumnNames.HireDate, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.HireDate);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.Address
+		/// Maps to employees.Address
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String Address
+		public virtual System.String Address
 		{
-			get
-			{
-				return base.GetSystemString(EmployeesMetadata.ColumnNames.Address);
-			}
+			get => GetSystemString(EmployeesMetadata.ColumnNames.Address);
 			
 			set
 			{
-				if(base.SetSystemString(EmployeesMetadata.ColumnNames.Address, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.Address);
-				}
+				if (!SetSystemString(EmployeesMetadata.ColumnNames.Address, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.Address);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.City
+		/// Maps to employees.City
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String City
+		public virtual System.String City
 		{
-			get
-			{
-				return base.GetSystemString(EmployeesMetadata.ColumnNames.City);
-			}
+			get => GetSystemString(EmployeesMetadata.ColumnNames.City);
 			
 			set
 			{
-				if(base.SetSystemString(EmployeesMetadata.ColumnNames.City, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.City);
-				}
+				if (!SetSystemString(EmployeesMetadata.ColumnNames.City, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.City);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.Region
+		/// Maps to employees.Region
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String Region
+		public virtual System.String Region
 		{
-			get
-			{
-				return base.GetSystemString(EmployeesMetadata.ColumnNames.Region);
-			}
+			get => GetSystemString(EmployeesMetadata.ColumnNames.Region);
 			
 			set
 			{
-				if(base.SetSystemString(EmployeesMetadata.ColumnNames.Region, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.Region);
-				}
+				if (!SetSystemString(EmployeesMetadata.ColumnNames.Region, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.Region);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.PostalCode
+		/// Maps to employees.PostalCode
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String PostalCode
+		public virtual System.String PostalCode
 		{
-			get
-			{
-				return base.GetSystemString(EmployeesMetadata.ColumnNames.PostalCode);
-			}
+			get => GetSystemString(EmployeesMetadata.ColumnNames.PostalCode);
 			
 			set
 			{
-				if(base.SetSystemString(EmployeesMetadata.ColumnNames.PostalCode, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.PostalCode);
-				}
+				if (!SetSystemString(EmployeesMetadata.ColumnNames.PostalCode, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.PostalCode);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.Country
+		/// Maps to employees.Country
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String Country
+		public virtual System.String Country
 		{
-			get
-			{
-				return base.GetSystemString(EmployeesMetadata.ColumnNames.Country);
-			}
+			get => GetSystemString(EmployeesMetadata.ColumnNames.Country);
 			
 			set
 			{
-				if(base.SetSystemString(EmployeesMetadata.ColumnNames.Country, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.Country);
-				}
+				if (!SetSystemString(EmployeesMetadata.ColumnNames.Country, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.Country);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.HomePhone
+		/// Maps to employees.HomePhone
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String HomePhone
+		public virtual System.String HomePhone
 		{
-			get
-			{
-				return base.GetSystemString(EmployeesMetadata.ColumnNames.HomePhone);
-			}
+			get => GetSystemString(EmployeesMetadata.ColumnNames.HomePhone);
 			
 			set
 			{
-				if(base.SetSystemString(EmployeesMetadata.ColumnNames.HomePhone, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.HomePhone);
-				}
+				if (!SetSystemString(EmployeesMetadata.ColumnNames.HomePhone, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.HomePhone);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.Extension
+		/// Maps to employees.Extension
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String Extension
+		public virtual System.String Extension
 		{
-			get
-			{
-				return base.GetSystemString(EmployeesMetadata.ColumnNames.Extension);
-			}
+			get => GetSystemString(EmployeesMetadata.ColumnNames.Extension);
 			
 			set
 			{
-				if(base.SetSystemString(EmployeesMetadata.ColumnNames.Extension, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.Extension);
-				}
+				if (!SetSystemString(EmployeesMetadata.ColumnNames.Extension, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.Extension);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.Photo
+		/// Maps to employees.Photo
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Byte[] Photo
+		public virtual System.Byte[] Photo
 		{
-			get
-			{
-				return base.GetSystemByteArray(EmployeesMetadata.ColumnNames.Photo);
-			}
+			get => GetSystemByteArray(EmployeesMetadata.ColumnNames.Photo);
 			
 			set
 			{
-				if(base.SetSystemByteArray(EmployeesMetadata.ColumnNames.Photo, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.Photo);
-				}
+				if (!SetSystemByteArray(EmployeesMetadata.ColumnNames.Photo, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.Photo);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.Notes
+		/// Maps to employees.Notes
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String Notes
+		public virtual System.String Notes
 		{
-			get
-			{
-				return base.GetSystemString(EmployeesMetadata.ColumnNames.Notes);
-			}
+			get => GetSystemString(EmployeesMetadata.ColumnNames.Notes);
 			
 			set
 			{
-				if(base.SetSystemString(EmployeesMetadata.ColumnNames.Notes, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.Notes);
-				}
+				if (!SetSystemString(EmployeesMetadata.ColumnNames.Notes, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.Notes);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.ReportsTo
+		/// Maps to employees.ReportsTo
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int32? ReportsTo
+		public virtual System.Int32? ReportsTo
 		{
-			get
-			{
-				return base.GetSystemInt32(EmployeesMetadata.ColumnNames.ReportsTo);
-			}
+			get => GetSystemInt32(EmployeesMetadata.ColumnNames.ReportsTo);
 			
 			set
 			{
-				if(base.SetSystemInt32(EmployeesMetadata.ColumnNames.ReportsTo, value))
-				{
-					this._Supervisor = null;
-					this.OnPropertyChanged("Supervisor");
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.ReportsTo);
-				}
+				if (!SetSystemInt32(EmployeesMetadata.ColumnNames.ReportsTo, value)) return;
+				
+				_UpToEmployeesByReportsTo = null;
+				OnPropertyChanged("UpToEmployeesByReportsTo");
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.ReportsTo);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Employees.PhotoPath
+		/// Maps to employees.PhotoPath
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String PhotoPath
+		public virtual System.String PhotoPath
 		{
-			get
-			{
-				return base.GetSystemString(EmployeesMetadata.ColumnNames.PhotoPath);
-			}
+			get => GetSystemString(EmployeesMetadata.ColumnNames.PhotoPath);
 			
 			set
 			{
-				if(base.SetSystemString(EmployeesMetadata.ColumnNames.PhotoPath, value))
-				{
-					OnPropertyChanged(EmployeesMetadata.PropertyNames.PhotoPath);
-				}
+				if (!SetSystemString(EmployeesMetadata.ColumnNames.PhotoPath, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.PhotoPath);
 			}
-		}
+		}		
 		
-		internal protected Employees _Supervisor;
+		/// <summary>
+		/// Maps to employees.Salary
+		/// </summary>
+		[DataMember(EmitDefaultValue=false)]
+		public virtual System.Single? Salary
+		{
+			get => GetSystemSingle(EmployeesMetadata.ColumnNames.Salary);
+			
+			set
+			{
+				if (!SetSystemSingle(EmployeesMetadata.ColumnNames.Salary, value)) return;
+				
+				OnPropertyChanged(EmployeesMetadata.PropertyNames.Salary);
+			}
+		}		
+		
+		
+		protected internal Employees _UpToEmployeesByReportsTo;
 		#endregion
 		
 		#region Housekeeping methods
 
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return EmployeesMetadata.Meta();
-			}
-		}
+		protected override IMetadata Meta => EmployeesMetadata.Meta();
 
 		#endregion		
 		
@@ -563,36 +498,28 @@ namespace BusinessObjects
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new EmployeesQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new EmployeesQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(EmployeesQuery query)
+		public bool Load(EmployeesQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
-			return this.Query.Load();
+			query = paraQuery;
+			InitQuery(query);
+			return Query.Load();
 		}
-
-		protected void InitQuery(EmployeesQuery query)
+		
+		protected void InitQuery(EmployeesQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntity)this).Connection;
+				paraQuery.es2.Connection = ((IEntity)this).Connection;
 			}			
-		}
-
-		protected override void HookupQuery(esDynamicQuery query)
-		{
-			this.InitQuery((EmployeesQuery)query);
 		}
 
 		#endregion
@@ -604,73 +531,60 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esEmployeesCollection : esEntityCollection<Employees>
+	public abstract class esEmployeesCollection : esEntityCollection<Employees>
 	{
 		#region Housekeeping methods
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return EmployeesMetadata.Meta();
-			}
-		}
-
+		protected override IMetadata Meta => EmployeesMetadata.Meta();
 		protected override string GetCollectionName()
 		{
 			return "EmployeesCollection";
 		}
-
 		#endregion		
 		
 		#region Query Logic
 
 	#if (!WindowsCE)
-		[BrowsableAttribute(false)]
+		[Browsable(false)]
 	#endif
 		public EmployeesQuery Query
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new EmployeesQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new EmployeesQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(EmployeesQuery query)
+		public bool Load(EmployeesQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
+			query = paraQuery;
+			InitQuery(query);
 			return Query.Load();
 		}
 
-		override protected esDynamicQuery GetDynamicQuery()
+		protected override esDynamicQuery GetDynamicQuery()
 		{
-			if (this.query == null)
-			{
-				this.query = new EmployeesQuery();
-				this.InitQuery(query);
-			}
-			return this.query;
+			if (query != null) return query;
+			query = new EmployeesQuery();
+			InitQuery(query);
+			return query;
 		}
 
-		protected void InitQuery(EmployeesQuery query)
+		protected void InitQuery(EmployeesQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntityCollection)this).Connection;
+				paraQuery.es2.Connection = ((IEntityCollection)this).Connection;
 			}			
 		}
 
-		protected override void HookupQuery(esDynamicQuery query)
+		protected override void HookupQuery(esDynamicQuery paraQuery)
 		{
-			this.InitQuery((EmployeesQuery)query);
+			InitQuery((EmployeesQuery)paraQuery);
 		}
 
 		#endregion
@@ -681,138 +595,80 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esEmployeesQuery : esDynamicQuery
+	public abstract class esEmployeesQuery : esDynamicQuery
 	{
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return EmployeesMetadata.Meta();
-			}
-		}	
+		protected override IMetadata Meta => EmployeesMetadata.Meta();
 		
 		#region QueryItemFromName
 		
         protected override esQueryItem QueryItemFromName(string name)
         {
-            switch (name)
+            return name switch
             {
-				case "EmployeeID": return this.EmployeeID;
-				case "LastName": return this.LastName;
-				case "FirstName": return this.FirstName;
-				case "Title": return this.Title;
-				case "TitleOfCourtesy": return this.TitleOfCourtesy;
-				case "BirthDate": return this.BirthDate;
-				case "HireDate": return this.HireDate;
-				case "Address": return this.Address;
-				case "City": return this.City;
-				case "Region": return this.Region;
-				case "PostalCode": return this.PostalCode;
-				case "Country": return this.Country;
-				case "HomePhone": return this.HomePhone;
-				case "Extension": return this.Extension;
-				case "Photo": return this.Photo;
-				case "Notes": return this.Notes;
-				case "ReportsTo": return this.ReportsTo;
-				case "PhotoPath": return this.PhotoPath;
-
-                default: return null;
-            }
+              "EmployeeID" => EmployeeID,
+              "LastName" => LastName,
+              "FirstName" => FirstName,
+              "Title" => Title,
+              "TitleOfCourtesy" => TitleOfCourtesy,
+              "BirthDate" => BirthDate,
+              "HireDate" => HireDate,
+              "Address" => Address,
+              "City" => City,
+              "Region" => Region,
+              "PostalCode" => PostalCode,
+              "Country" => Country,
+              "HomePhone" => HomePhone,
+              "Extension" => Extension,
+              "Photo" => Photo,
+              "Notes" => Notes,
+              "ReportsTo" => ReportsTo,
+              "PhotoPath" => PhotoPath,
+              "Salary" => Salary,
+              _ => null
+            };
         }		
 		
 		#endregion
 		
 		#region esQueryItems
 
-		public esQueryItem EmployeeID
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.EmployeeID, esSystemType.Int32); }
-		} 
+		public esQueryItem EmployeeID => new (this, EmployeesMetadata.ColumnNames.EmployeeID, esSystemType.Int32);
 		
-		public esQueryItem LastName
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.LastName, esSystemType.String); }
-		} 
+		public esQueryItem LastName => new (this, EmployeesMetadata.ColumnNames.LastName, esSystemType.String);
 		
-		public esQueryItem FirstName
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.FirstName, esSystemType.String); }
-		} 
+		public esQueryItem FirstName => new (this, EmployeesMetadata.ColumnNames.FirstName, esSystemType.String);
 		
-		public esQueryItem Title
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.Title, esSystemType.String); }
-		} 
+		public esQueryItem Title => new (this, EmployeesMetadata.ColumnNames.Title, esSystemType.String);
 		
-		public esQueryItem TitleOfCourtesy
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.TitleOfCourtesy, esSystemType.String); }
-		} 
+		public esQueryItem TitleOfCourtesy => new (this, EmployeesMetadata.ColumnNames.TitleOfCourtesy, esSystemType.String);
 		
-		public esQueryItem BirthDate
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.BirthDate, esSystemType.DateTime); }
-		} 
+		public esQueryItem BirthDate => new (this, EmployeesMetadata.ColumnNames.BirthDate, esSystemType.DateTime);
 		
-		public esQueryItem HireDate
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.HireDate, esSystemType.DateTime); }
-		} 
+		public esQueryItem HireDate => new (this, EmployeesMetadata.ColumnNames.HireDate, esSystemType.DateTime);
 		
-		public esQueryItem Address
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.Address, esSystemType.String); }
-		} 
+		public esQueryItem Address => new (this, EmployeesMetadata.ColumnNames.Address, esSystemType.String);
 		
-		public esQueryItem City
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.City, esSystemType.String); }
-		} 
+		public esQueryItem City => new (this, EmployeesMetadata.ColumnNames.City, esSystemType.String);
 		
-		public esQueryItem Region
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.Region, esSystemType.String); }
-		} 
+		public esQueryItem Region => new (this, EmployeesMetadata.ColumnNames.Region, esSystemType.String);
 		
-		public esQueryItem PostalCode
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.PostalCode, esSystemType.String); }
-		} 
+		public esQueryItem PostalCode => new (this, EmployeesMetadata.ColumnNames.PostalCode, esSystemType.String);
 		
-		public esQueryItem Country
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.Country, esSystemType.String); }
-		} 
+		public esQueryItem Country => new (this, EmployeesMetadata.ColumnNames.Country, esSystemType.String);
 		
-		public esQueryItem HomePhone
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.HomePhone, esSystemType.String); }
-		} 
+		public esQueryItem HomePhone => new (this, EmployeesMetadata.ColumnNames.HomePhone, esSystemType.String);
 		
-		public esQueryItem Extension
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.Extension, esSystemType.String); }
-		} 
+		public esQueryItem Extension => new (this, EmployeesMetadata.ColumnNames.Extension, esSystemType.String);
 		
-		public esQueryItem Photo
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.Photo, esSystemType.ByteArray); }
-		} 
+		public esQueryItem Photo => new (this, EmployeesMetadata.ColumnNames.Photo, esSystemType.ByteArray);
 		
-		public esQueryItem Notes
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.Notes, esSystemType.String); }
-		} 
+		public esQueryItem Notes => new (this, EmployeesMetadata.ColumnNames.Notes, esSystemType.String);
 		
-		public esQueryItem ReportsTo
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.ReportsTo, esSystemType.Int32); }
-		} 
+		public esQueryItem ReportsTo => new (this, EmployeesMetadata.ColumnNames.ReportsTo, esSystemType.Int32);
 		
-		public esQueryItem PhotoPath
-		{
-			get { return new esQueryItem(this, EmployeesMetadata.ColumnNames.PhotoPath, esSystemType.String); }
-		} 
+		public esQueryItem PhotoPath => new (this, EmployeesMetadata.ColumnNames.PhotoPath, esSystemType.String);
+		
+		public esQueryItem Salary => new (this, EmployeesMetadata.ColumnNames.Salary, esSystemType.Single);
 		
 		#endregion
 		
@@ -823,16 +679,16 @@ namespace BusinessObjects
 	public partial class Employees : esEmployees
 	{
 
-		#region EmployeesCollection - Zero To Many (FK_Employees_Employees)
+		#region EmployeesCollectionByReportsTo - Zero To Many
 		
-		static public esPrefetchMap Prefetch_EmployeesCollection
+		public static esPrefetchMap Prefetch_EmployeesCollectionByReportsTo
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap
+				var map = new esPrefetchMap
 				{
-					PrefetchDelegate = BusinessObjects.Employees.EmployeesCollection_Delegate,
-					PropertyName = "EmployeesCollection",
+					PrefetchDelegate = EmployeesCollectionByReportsTo_Delegate,
+					PropertyName = "EmployeesCollectionByReportsTo",
 					MyColumnName = "EmployeeID",
 					ParentColumnName = "ReportsTo",
 					IsMultiPartKey = false
@@ -841,18 +697,13 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void EmployeesCollection_Delegate(esPrefetchParameters data)
+		private static void EmployeesCollectionByReportsTo_Delegate(esPrefetchParameters data)
 		{
-			EmployeesQuery parent = new EmployeesQuery(data.NextAlias());
+			var parent = new EmployeesQuery(data.NextAlias());
+			var me = data.You != null ? data.You as EmployeesQuery : new EmployeesQuery(data.NextAlias());
 
-			EmployeesQuery me = data.You != null ? data.You as EmployeesQuery : new EmployeesQuery(data.NextAlias());
-
-			if (data.Root == null)
-			{
-				data.Root = me;
-			}
-			
-			data.Root.InnerJoin(parent).On(parent.ReportsTo == me.EmployeeID);
+			data.Root ??= me;
+			data.Root?.InnerJoin(parent).On(parent.ReportsTo == me?.EmployeeID);
 
 			data.You = parent;
 		}	
@@ -862,166 +713,163 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_Employees_Employees
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeEmployeesCollection()
+		public bool ShouldSerializeEmployeesCollectionByReportsTo()
 		{
-		    if(this._EmployeesCollection != null && this._EmployeesCollection.Count > 0)
-				return true;
-            else
-				return false;
+			return _EmployeesCollectionByReportsTo is { Count: > 0 };
 		}	
 		
 
-		[DataMember(Name="EmployeesCollection", EmitDefaultValue = false)]
-		public EmployeesCollection EmployeesCollection
+		[DataMember(Name="EmployeesCollectionByReportsTo", EmitDefaultValue = false)]
+		public EmployeesCollection EmployeesCollectionByReportsTo
 		{
 			get
 			{
-				if(this._EmployeesCollection == null)
-				{
-					this._EmployeesCollection = new EmployeesCollection();
-					this._EmployeesCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("EmployeesCollection", this._EmployeesCollection);
+				if (_EmployeesCollectionByReportsTo != null) return _EmployeesCollectionByReportsTo;
 				
-					if (this.EmployeeID != null)
+				_EmployeesCollectionByReportsTo = new EmployeesCollection();
+				_EmployeesCollectionByReportsTo.es.Connection.Name = es.Connection.Name;
+				SetPostSave("EmployeesCollectionByReportsTo", _EmployeesCollectionByReportsTo);
+				
+				// ReSharper disable once InvertIf
+				if (EmployeeID != null)
+				{
+					if (!es.IsLazyLoadDisabled)
 					{
-						if (!this.es.IsLazyLoadDisabled)
-						{
-							this._EmployeesCollection.Query.Where(this._EmployeesCollection.Query.ReportsTo == this.EmployeeID);
-							this._EmployeesCollection.Query.Load();
-						}
-
-						// Auto-hookup Foreign Keys
-						this._EmployeesCollection.fks.Add(EmployeesMetadata.ColumnNames.ReportsTo, this.EmployeeID);
+						_EmployeesCollectionByReportsTo.Query.Where(_EmployeesCollectionByReportsTo.Query.ReportsTo == EmployeeID);
+						_EmployeesCollectionByReportsTo.Query.Load();
 					}
+
+					// Auto-hookup Foreign Keys
+					_EmployeesCollectionByReportsTo.fks.Add(EmployeesMetadata.ColumnNames.ReportsTo, this.EmployeeID);
 				}
 
-				return this._EmployeesCollection;
+				return _EmployeesCollectionByReportsTo;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
-			 
-				if (this._EmployeesCollection != null) 
-				{ 
-					this.RemovePostSave("EmployeesCollection"); 
-					this._EmployeesCollection = null;
-					
-				} 
+				if (_EmployeesCollectionByReportsTo == null) return;
+				RemovePostSave("EmployeesCollectionByReportsTo"); 
+				_EmployeesCollectionByReportsTo = null;
+				OnPropertyChanged("EmployeesCollectionByReportsTo");
 			} 			
 		}
 		
-
-		
 			
 		
-		private EmployeesCollection _EmployeesCollection;
+		private EmployeesCollection _EmployeesCollectionByReportsTo;
 		#endregion
 
-		
-		#region Supervisor - Many To One (FK_Employees_Employees)
-		
-	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeSupervisor()
+				
+				
+		#region UpToEmployeesByReportsTo - Many To One
+		/// <summary>
+		/// Many to One
+		/// Foreign Key Name - FK_Employees_Employees
+		/// </summary>
+			[EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToEmployeesByReportsTo()
 		{
-		    return this._Supervisor != null ? true : false;
+				return _UpToEmployeesByReportsTo != null;
 		}
 		
 
-		[DataMember(Name="Supervisor", EmitDefaultValue = false)]
+		[DataMember(Name="UpToEmployeesByReportsTo", EmitDefaultValue = false)]
 					
-		public Employees Supervisor
+		public Employees UpToEmployeesByReportsTo
 		{
 			get
 			{
-                if (this._Supervisor == null)
-                {
-                    this._Supervisor = new Employees();
-                    this._Supervisor.es.Connection.Name = this.es.Connection.Name;
-                    this.SetPreSave("Supervisor", this._Supervisor);
+				if (_UpToEmployeesByReportsTo != null) return _UpToEmployeesByReportsTo;
+				
+				_UpToEmployeesByReportsTo = new Employees();
+				_UpToEmployeesByReportsTo.es.Connection.Name = es.Connection.Name;
+				SetPreSave("UpToEmployeesByReportsTo", _UpToEmployeesByReportsTo);
 
-					if(this._Supervisor == null && ReportsTo != null)
-                    {
-                        if (!this.es.IsLazyLoadDisabled)
-                        {
-							this._Supervisor.Query.Where(this._Supervisor.Query.EmployeeID == this.ReportsTo);
-							this._Supervisor.Query.Load();
-                        }
-                    }
-                }
-
-				return this._Supervisor;
+				if (_UpToEmployeesByReportsTo == null && ReportsTo != null)
+				{
+					if (es.IsLazyLoadDisabled) return _UpToEmployeesByReportsTo;
+					
+					_UpToEmployeesByReportsTo.Query.Where(_UpToEmployeesByReportsTo.Query.EmployeeID == ReportsTo);
+					_UpToEmployeesByReportsTo.Query.Load();
+				}
+				return _UpToEmployeesByReportsTo;
 			}
 			
 			set
 			{
-				this.RemovePreSave("Supervisor");
+				RemovePreSave("UpToEmployeesByReportsTo");
 				
+				var changed = _UpToEmployeesByReportsTo != value;
 
-				if(value == null)
+				if (value == null)
 				{
-					this.ReportsTo = null;
-					this._Supervisor = null;
+					ReportsTo = null;
+					_UpToEmployeesByReportsTo = null;
 				}
 				else
 				{
-					this.ReportsTo = value.EmployeeID;
-					this._Supervisor = value;
-					this.SetPreSave("Supervisor", this._Supervisor);
+					ReportsTo = value.EmployeeID;
+					_UpToEmployeesByReportsTo = value;
+					SetPreSave("UpToEmployeesByReportsTo", _UpToEmployeesByReportsTo);
 				}
 				
+				if (changed)
+				{
+					OnPropertyChanged("UpToEmployeesByReportsTo");
+				}
 			}
 		}
 		#endregion
 		
 
-			
-		#region TerritoriesCollection - Many To Many (FK_EmployeeTerritories_Employees)
-		
-	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeTerritoriesCollection()
+		#region UpToTerritoriesByEmployeeterritories - Many To Many
+
+		/// <summary>
+		/// Many to Many
+		/// Foreign Key Name - FK_EmployeeTerritories_Employees
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToTerritoriesByEmployeeterritories()
 		{
-		    if(this._TerritoriesCollection != null && this._TerritoriesCollection.Count > 0)
-				return true;
-            else
-				return false;
+			return _UpToTerritoriesByEmployeeterritories is { Count: > 0 };
 		}
 		
 
-		[DataMember(Name="TerritoriesCollection", EmitDefaultValue = false)]
-		public TerritoriesCollection TerritoriesCollection
+		[DataMember(Name="UpToTerritoriesByEmployeeterritories", EmitDefaultValue = false)]
+		public TerritoriesCollection UpToTerritoriesByEmployeeterritories
 		{
 			get
 			{
-				if(this._TerritoriesCollection == null)
-				{
-					this._TerritoriesCollection = new TerritoriesCollection();
-					this._TerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("TerritoriesCollection", this._TerritoriesCollection);
-					if (!this.es.IsLazyLoadDisabled && this.EmployeeID != null)
-					{
-						TerritoriesQuery m = new TerritoriesQuery("m");
-						EmployeeTerritoriesQuery j = new EmployeeTerritoriesQuery("j");
-						m.Select(m);
-						m.InnerJoin(j).On(m.TerritoryID == j.TerritoryID);
-                        m.Where(j.EmployeeID == this.EmployeeID);
+				if (_UpToTerritoriesByEmployeeterritories != null) return _UpToTerritoriesByEmployeeterritories;
 
-						this._TerritoriesCollection.Load(m);
-					}
-				}
+				_UpToTerritoriesByEmployeeterritories = new TerritoriesCollection();
+				_UpToTerritoriesByEmployeeterritories.es.Connection.Name = es.Connection.Name;
+				SetPostSave("UpToTerritoriesByEmployeeterritories", _UpToTerritoriesByEmployeeterritories);
 
-				return this._TerritoriesCollection;
+				if (es.IsLazyLoadDisabled || EmployeeID == null) return _UpToTerritoriesByEmployeeterritories;
+
+				var m = new TerritoriesQuery("m");
+				var j = new EmployeeterritoriesQuery("j");
+				m.Select(m);
+				m.InnerJoin(j).On(m.TerritoryID == j.TerritoryID);
+				m.Where(j.EmployeeID == EmployeeID);
+
+				_UpToTerritoriesByEmployeeterritories.Load(m);
+
+				return _UpToTerritoriesByEmployeeterritories;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._TerritoriesCollection != null) 
+				if (_UpToTerritoriesByEmployeeterritories != null) 
 				{ 
-					this.RemovePostSave("TerritoriesCollection"); 
-					this._TerritoriesCollection = null;
-					
+					RemovePostSave("UpToTerritoriesByEmployeeterritories"); 
+					_UpToTerritoriesByEmployeeterritories = null;
+					OnPropertyChanged("UpToTerritoriesByEmployeeterritories");
 				} 
 			}  			
 		}
@@ -1030,54 +878,54 @@ namespace BusinessObjects
 		/// Many to Many Associate
 		/// Foreign Key Name - FK_EmployeeTerritories_Employees
 		/// </summary>
-		public void ASsociateEmployeeTerritoriesCollection(Territories entity)
+		public void AssociateTerritoriesByEmployeeterritories(Territories entity)
 		{
-			if (this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection == null)
+			if (this._EmployeeterritoriesCollection == null)
 			{
-				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection = new EmployeeTerritoriesCollection();
-				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("ManyEntitySpacesMetadataEngineSqlSqlTableCollection", this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection);
+				this._EmployeeterritoriesCollection = new EmployeeterritoriesCollection();
+				this._EmployeeterritoriesCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("EmployeeterritoriesCollection", this._EmployeeterritoriesCollection);
 			}
 
-			EmployeeTerritories obj = this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.AddNew();
+			Employeeterritories obj = this._EmployeeterritoriesCollection.AddNew();
 			obj.EmployeeID = this.EmployeeID;
 			obj.TerritoryID = entity.TerritoryID;
 		}
-
+		
 		/// <summary>
 		/// Many to Many Dissociate
 		/// Foreign Key Name - FK_EmployeeTerritories_Employees
 		/// </summary>
-		public void DiSsociateEmployeeTerritoriesCollection(Territories entity)
+		public void DissociateTerritoriesByEmployeeterritories(Territories entity)
 		{
-			if (this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection == null)
+			if (this._EmployeeterritoriesCollection == null)
 			{
-				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection = new EmployeeTerritoriesCollection();
-				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("ManyEntitySpacesMetadataEngineSqlSqlTableCollection", this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection);
+				this._EmployeeterritoriesCollection = new EmployeeterritoriesCollection();
+				this._EmployeeterritoriesCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("EmployeeterritoriesCollection", this._EmployeeterritoriesCollection);
 			}
 
-			EmployeeTerritories obj = this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.AddNew();
+			Employeeterritories obj = this._EmployeeterritoriesCollection.AddNew();
 			obj.EmployeeID = this.EmployeeID;
-            obj.TerritoryID = entity.TerritoryID;
+						obj.TerritoryID = entity.TerritoryID;
 			obj.AcceptChanges();
 			obj.MarkAsDeleted();
 		}
 
-		private TerritoriesCollection _TerritoriesCollection;
-		private EmployeeTerritoriesCollection _ManyEntitySpacesMetadataEngineSqlSqlTableCollection;
+		private TerritoriesCollection _UpToTerritoriesByEmployeeterritories;
+		private EmployeeterritoriesCollection _EmployeeterritoriesCollection;
 		#endregion
 
-		#region EmployeeTerritoriesCollection - Zero To Many (FK_EmployeeTerritories_Employees)
+		#region EmployeeterritoriesByEmployeeID - Zero To Many
 		
-		static public esPrefetchMap Prefetch_EmployeeTerritoriesCollection
+		public static esPrefetchMap Prefetch_EmployeeterritoriesByEmployeeID
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap
+				var map = new esPrefetchMap
 				{
-					PrefetchDelegate = BusinessObjects.Employees.EmployeeTerritoriesCollection_Delegate,
-					PropertyName = "EmployeeTerritoriesCollection",
+					PrefetchDelegate = EmployeeterritoriesByEmployeeID_Delegate,
+					PropertyName = "EmployeeterritoriesByEmployeeID",
 					MyColumnName = "EmployeeID",
 					ParentColumnName = "EmployeeID",
 					IsMultiPartKey = false
@@ -1086,18 +934,13 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void EmployeeTerritoriesCollection_Delegate(esPrefetchParameters data)
+		private static void EmployeeterritoriesByEmployeeID_Delegate(esPrefetchParameters data)
 		{
-			EmployeesQuery parent = new EmployeesQuery(data.NextAlias());
+			var parent = new EmployeesQuery(data.NextAlias());
+			var me = data.You != null ? data.You as EmployeeterritoriesQuery : new EmployeeterritoriesQuery(data.NextAlias());
 
-			EmployeeTerritoriesQuery me = data.You != null ? data.You as EmployeeTerritoriesQuery : new EmployeeTerritoriesQuery(data.NextAlias());
-
-			if (data.Root == null)
-			{
-				data.Root = me;
-			}
-			
-			data.Root.InnerJoin(parent).On(parent.EmployeeID == me.EmployeeID);
+			data.Root ??= me;
+			data.Root?.InnerJoin(parent).On(parent.EmployeeID == me?.EmployeeID);
 
 			data.You = parent;
 		}	
@@ -1107,72 +950,64 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_EmployeeTerritories_Employees
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeEmployeeTerritoriesCollection()
+		public bool ShouldSerializeEmployeeterritoriesByEmployeeID()
 		{
-		    if(this._EmployeeTerritoriesCollection != null && this._EmployeeTerritoriesCollection.Count > 0)
-				return true;
-            else
-				return false;
+			return _EmployeeterritoriesByEmployeeID is { Count: > 0 };
 		}	
 		
 
-		[DataMember(Name="EmployeeTerritoriesCollection", EmitDefaultValue = false)]
-		public EmployeeTerritoriesCollection EmployeeTerritoriesCollection
+		[DataMember(Name="EmployeeterritoriesByEmployeeID", EmitDefaultValue = false)]
+		public EmployeeterritoriesCollection EmployeeterritoriesByEmployeeID
 		{
 			get
 			{
-				if(this._EmployeeTerritoriesCollection == null)
-				{
-					this._EmployeeTerritoriesCollection = new EmployeeTerritoriesCollection();
-					this._EmployeeTerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("EmployeeTerritoriesCollection", this._EmployeeTerritoriesCollection);
+				if (_EmployeeterritoriesByEmployeeID != null) return _EmployeeterritoriesByEmployeeID;
 				
-					if (this.EmployeeID != null)
+				_EmployeeterritoriesByEmployeeID = new EmployeeterritoriesCollection();
+				_EmployeeterritoriesByEmployeeID.es.Connection.Name = es.Connection.Name;
+				SetPostSave("EmployeeterritoriesByEmployeeID", _EmployeeterritoriesByEmployeeID);
+				
+				// ReSharper disable once InvertIf
+				if (EmployeeID != null)
+				{
+					if (!es.IsLazyLoadDisabled)
 					{
-						if (!this.es.IsLazyLoadDisabled)
-						{
-							this._EmployeeTerritoriesCollection.Query.Where(this._EmployeeTerritoriesCollection.Query.EmployeeID == this.EmployeeID);
-							this._EmployeeTerritoriesCollection.Query.Load();
-						}
-
-						// Auto-hookup Foreign Keys
-						this._EmployeeTerritoriesCollection.fks.Add(EmployeeTerritoriesMetadata.ColumnNames.EmployeeID, this.EmployeeID);
+						_EmployeeterritoriesByEmployeeID.Query.Where(_EmployeeterritoriesByEmployeeID.Query.EmployeeID == EmployeeID);
+						_EmployeeterritoriesByEmployeeID.Query.Load();
 					}
+
+					// Auto-hookup Foreign Keys
+					_EmployeeterritoriesByEmployeeID.fks.Add(EmployeeterritoriesMetadata.ColumnNames.EmployeeID, this.EmployeeID);
 				}
 
-				return this._EmployeeTerritoriesCollection;
+				return _EmployeeterritoriesByEmployeeID;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
-			 
-				if (this._EmployeeTerritoriesCollection != null) 
-				{ 
-					this.RemovePostSave("EmployeeTerritoriesCollection"); 
-					this._EmployeeTerritoriesCollection = null;
-					
-				} 
+				if (_EmployeeterritoriesByEmployeeID == null) return;
+				RemovePostSave("EmployeeterritoriesByEmployeeID"); 
+				_EmployeeterritoriesByEmployeeID = null;
+				OnPropertyChanged("EmployeeterritoriesByEmployeeID");
 			} 			
 		}
 		
-
-		
 			
 		
-		private EmployeeTerritoriesCollection _EmployeeTerritoriesCollection;
+		private EmployeeterritoriesCollection _EmployeeterritoriesByEmployeeID;
 		#endregion
 
-		#region OrdersCollection - Zero To Many (FK_Orders_Employees)
+		#region OrdersByEmployeeID - Zero To Many
 		
-		static public esPrefetchMap Prefetch_OrdersCollection
+		public static esPrefetchMap Prefetch_OrdersByEmployeeID
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap
+				var map = new esPrefetchMap
 				{
-					PrefetchDelegate = BusinessObjects.Employees.OrdersCollection_Delegate,
-					PropertyName = "OrdersCollection",
+					PrefetchDelegate = OrdersByEmployeeID_Delegate,
+					PropertyName = "OrdersByEmployeeID",
 					MyColumnName = "EmployeeID",
 					ParentColumnName = "EmployeeID",
 					IsMultiPartKey = false
@@ -1181,18 +1016,13 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void OrdersCollection_Delegate(esPrefetchParameters data)
+		private static void OrdersByEmployeeID_Delegate(esPrefetchParameters data)
 		{
-			EmployeesQuery parent = new EmployeesQuery(data.NextAlias());
+			var parent = new EmployeesQuery(data.NextAlias());
+			var me = data.You != null ? data.You as OrdersQuery : new OrdersQuery(data.NextAlias());
 
-			OrdersQuery me = data.You != null ? data.You as OrdersQuery : new OrdersQuery(data.NextAlias());
-
-			if (data.Root == null)
-			{
-				data.Root = me;
-			}
-			
-			data.Root.InnerJoin(parent).On(parent.EmployeeID == me.EmployeeID);
+			data.Root ??= me;
+			data.Root?.InnerJoin(parent).On(parent.EmployeeID == me?.EmployeeID);
 
 			data.You = parent;
 		}	
@@ -1202,60 +1032,52 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_Orders_Employees
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeOrdersCollection()
+		public bool ShouldSerializeOrdersByEmployeeID()
 		{
-		    if(this._OrdersCollection != null && this._OrdersCollection.Count > 0)
-				return true;
-            else
-				return false;
+			return _OrdersByEmployeeID is { Count: > 0 };
 		}	
 		
 
-		[DataMember(Name="OrdersCollection", EmitDefaultValue = false)]
-		public OrdersCollection OrdersCollection
+		[DataMember(Name="OrdersByEmployeeID", EmitDefaultValue = false)]
+		public OrdersCollection OrdersByEmployeeID
 		{
 			get
 			{
-				if(this._OrdersCollection == null)
-				{
-					this._OrdersCollection = new OrdersCollection();
-					this._OrdersCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("OrdersCollection", this._OrdersCollection);
+				if (_OrdersByEmployeeID != null) return _OrdersByEmployeeID;
 				
-					if (this.EmployeeID != null)
+				_OrdersByEmployeeID = new OrdersCollection();
+				_OrdersByEmployeeID.es.Connection.Name = es.Connection.Name;
+				SetPostSave("OrdersByEmployeeID", _OrdersByEmployeeID);
+				
+				// ReSharper disable once InvertIf
+				if (EmployeeID != null)
+				{
+					if (!es.IsLazyLoadDisabled)
 					{
-						if (!this.es.IsLazyLoadDisabled)
-						{
-							this._OrdersCollection.Query.Where(this._OrdersCollection.Query.EmployeeID == this.EmployeeID);
-							this._OrdersCollection.Query.Load();
-						}
-
-						// Auto-hookup Foreign Keys
-						this._OrdersCollection.fks.Add(OrdersMetadata.ColumnNames.EmployeeID, this.EmployeeID);
+						_OrdersByEmployeeID.Query.Where(_OrdersByEmployeeID.Query.EmployeeID == EmployeeID);
+						_OrdersByEmployeeID.Query.Load();
 					}
+
+					// Auto-hookup Foreign Keys
+					_OrdersByEmployeeID.fks.Add(OrdersMetadata.ColumnNames.EmployeeID, this.EmployeeID);
 				}
 
-				return this._OrdersCollection;
+				return _OrdersByEmployeeID;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
-			 
-				if (this._OrdersCollection != null) 
-				{ 
-					this.RemovePostSave("OrdersCollection"); 
-					this._OrdersCollection = null;
-					
-				} 
+				if (_OrdersByEmployeeID == null) return;
+				RemovePostSave("OrdersByEmployeeID"); 
+				_OrdersByEmployeeID = null;
+				OnPropertyChanged("OrdersByEmployeeID");
 			} 			
 		}
 		
-
-		
 			
 		
-		private OrdersCollection _OrdersCollection;
+		private OrdersCollection _OrdersByEmployeeID;
 		#endregion
 
 		
@@ -1265,14 +1087,14 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "EmployeesCollection":
-					coll = this.EmployeesCollection;
+				case "EmployeesCollectionByReportsTo":
+					coll = this.EmployeesCollectionByReportsTo;
 					break;
-				case "EmployeeTerritoriesCollection":
-					coll = this.EmployeeTerritoriesCollection;
+				case "EmployeeterritoriesByEmployeeID":
+					coll = this.EmployeeterritoriesByEmployeeID;
 					break;
-				case "OrdersCollection":
-					coll = this.OrdersCollection;
+				case "OrdersByEmployeeID":
+					coll = this.OrdersByEmployeeID;
 					break;	
 			}
 
@@ -1283,12 +1105,10 @@ namespace BusinessObjects
 		/// </summary>
 		protected override List<esPropertyDescriptor> GetHierarchicalProperties()
 		{
-			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
-			
-			props.Add(new esPropertyDescriptor(this, "EmployeesCollection", typeof(EmployeesCollection), new Employees()));
-			props.Add(new esPropertyDescriptor(this, "EmployeeTerritoriesCollection", typeof(EmployeeTerritoriesCollection), new EmployeeTerritories()));
-			props.Add(new esPropertyDescriptor(this, "OrdersCollection", typeof(OrdersCollection), new Orders()));
-		
+			var props = new List<esPropertyDescriptor>();
+			props.Add(new esPropertyDescriptor(this, "EmployeesCollectionByReportsTo", typeof(EmployeesCollection), new Employees()));
+			props.Add(new esPropertyDescriptor(this, "EmployeeterritoriesByEmployeeID", typeof(EmployeeterritoriesCollection), new Employeeterritories()));
+			props.Add(new esPropertyDescriptor(this, "OrdersByEmployeeID", typeof(OrdersCollection), new Orders()));
 			return props;
 		}
 		/// <summary>
@@ -1297,9 +1117,9 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPreSaveKeys()
 		{
-			if(!this.es.IsDeleted && this._Supervisor != null)
+			if(!es.IsDeleted && _UpToEmployeesByReportsTo != null)
 			{
-				this.ReportsTo = this._Supervisor.EmployeeID;
+				ReportsTo = _UpToEmployeesByReportsTo.EmployeeID;
 			}
 		}
 		
@@ -1326,21 +1146,21 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPostSaveKeys()
 		{
-			if(this._EmployeesCollection != null)
+			if(this._EmployeesCollectionByReportsTo != null)
 			{
-				Apply(this._EmployeesCollection, "ReportsTo", this.EmployeeID);
+				Apply(this._EmployeesCollectionByReportsTo, "ReportsTo", this.EmployeeID);
 			}
-			if(this._EmployeeTerritoriesCollection != null)
+			if(this._EmployeeterritoriesCollection != null)
 			{
-				Apply(this._EmployeeTerritoriesCollection, "EmployeeID", this.EmployeeID);
+				Apply(this._EmployeeterritoriesCollection, "EmployeeID", this.EmployeeID);
 			}
-			if(this._EmployeeTerritoriesCollection != null)
+			if(this._EmployeeterritoriesByEmployeeID != null)
 			{
-				Apply(this._EmployeeTerritoriesCollection, "EmployeeID", this.EmployeeID);
+				Apply(this._EmployeeterritoriesByEmployeeID, "EmployeeID", this.EmployeeID);
 			}
-			if(this._OrdersCollection != null)
+			if(this._OrdersByEmployeeID != null)
 			{
-				Apply(this._OrdersCollection, "EmployeeID", this.EmployeeID);
+				Apply(this._OrdersByEmployeeID, "EmployeeID", this.EmployeeID);
 			}
 		}
 		
@@ -1358,133 +1178,127 @@ namespace BusinessObjects
 			m_columns = new esColumnMetadataCollection();
 			esColumnMetadata c;
 
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.EmployeeID, 0, typeof(System.Int32), esSystemType.Int32);
-			c.PropertyName = EmployeesMetadata.PropertyNames.EmployeeID;
+			c = new esColumnMetadata(ColumnNames.EmployeeID, 0, typeof(System.Int32), esSystemType.Int32);
+			c.PropertyName = PropertyNames.EmployeeID;
 			c.IsInPrimaryKey = true;
 			c.IsAutoIncrement = true;
-			c.NumericPrecision = 10;
+			c.NumericPrecision = 11;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.LastName, 1, typeof(System.String), esSystemType.String);
-			c.PropertyName = EmployeesMetadata.PropertyNames.LastName;
+			c = new esColumnMetadata(ColumnNames.LastName, 1, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.LastName;
 			c.CharacterMaxLength = 20;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.FirstName, 2, typeof(System.String), esSystemType.String);
-			c.PropertyName = EmployeesMetadata.PropertyNames.FirstName;
+			c = new esColumnMetadata(ColumnNames.FirstName, 2, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.FirstName;
 			c.CharacterMaxLength = 10;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.Title, 3, typeof(System.String), esSystemType.String);
-			c.PropertyName = EmployeesMetadata.PropertyNames.Title;
+			c = new esColumnMetadata(ColumnNames.Title, 3, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.Title;
 			c.CharacterMaxLength = 30;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.TitleOfCourtesy, 4, typeof(System.String), esSystemType.String);
-			c.PropertyName = EmployeesMetadata.PropertyNames.TitleOfCourtesy;
+			c = new esColumnMetadata(ColumnNames.TitleOfCourtesy, 4, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.TitleOfCourtesy;
 			c.CharacterMaxLength = 25;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.BirthDate, 5, typeof(System.DateTime), esSystemType.DateTime);
-			c.PropertyName = EmployeesMetadata.PropertyNames.BirthDate;
+			c = new esColumnMetadata(ColumnNames.BirthDate, 5, typeof(System.DateTime), esSystemType.DateTime);
+			c.PropertyName = PropertyNames.BirthDate;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.HireDate, 6, typeof(System.DateTime), esSystemType.DateTime);
-			c.PropertyName = EmployeesMetadata.PropertyNames.HireDate;
+			c = new esColumnMetadata(ColumnNames.HireDate, 6, typeof(System.DateTime), esSystemType.DateTime);
+			c.PropertyName = PropertyNames.HireDate;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.Address, 7, typeof(System.String), esSystemType.String);
-			c.PropertyName = EmployeesMetadata.PropertyNames.Address;
+			c = new esColumnMetadata(ColumnNames.Address, 7, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.Address;
 			c.CharacterMaxLength = 60;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.City, 8, typeof(System.String), esSystemType.String);
-			c.PropertyName = EmployeesMetadata.PropertyNames.City;
+			c = new esColumnMetadata(ColumnNames.City, 8, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.City;
 			c.CharacterMaxLength = 15;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.Region, 9, typeof(System.String), esSystemType.String);
-			c.PropertyName = EmployeesMetadata.PropertyNames.Region;
+			c = new esColumnMetadata(ColumnNames.Region, 9, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.Region;
 			c.CharacterMaxLength = 15;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.PostalCode, 10, typeof(System.String), esSystemType.String);
-			c.PropertyName = EmployeesMetadata.PropertyNames.PostalCode;
+			c = new esColumnMetadata(ColumnNames.PostalCode, 10, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.PostalCode;
 			c.CharacterMaxLength = 10;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.Country, 11, typeof(System.String), esSystemType.String);
-			c.PropertyName = EmployeesMetadata.PropertyNames.Country;
+			c = new esColumnMetadata(ColumnNames.Country, 11, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.Country;
 			c.CharacterMaxLength = 15;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.HomePhone, 12, typeof(System.String), esSystemType.String);
-			c.PropertyName = EmployeesMetadata.PropertyNames.HomePhone;
+			c = new esColumnMetadata(ColumnNames.HomePhone, 12, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.HomePhone;
 			c.CharacterMaxLength = 24;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.Extension, 13, typeof(System.String), esSystemType.String);
-			c.PropertyName = EmployeesMetadata.PropertyNames.Extension;
+			c = new esColumnMetadata(ColumnNames.Extension, 13, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.Extension;
 			c.CharacterMaxLength = 4;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.Photo, 14, typeof(System.Byte[]), esSystemType.ByteArray);
-			c.PropertyName = EmployeesMetadata.PropertyNames.Photo;
-			c.CharacterMaxLength = 2147483647;
+			c = new esColumnMetadata(ColumnNames.Photo, 14, typeof(System.Byte[]), esSystemType.ByteArray);
+			c.PropertyName = PropertyNames.Photo;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.Notes, 15, typeof(System.String), esSystemType.String);
-			c.PropertyName = EmployeesMetadata.PropertyNames.Notes;
-			c.CharacterMaxLength = 1073741823;
+			c = new esColumnMetadata(ColumnNames.Notes, 15, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.Notes;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.ReportsTo, 16, typeof(System.Int32), esSystemType.Int32);
-			c.PropertyName = EmployeesMetadata.PropertyNames.ReportsTo;
-			c.NumericPrecision = 10;
+			c = new esColumnMetadata(ColumnNames.ReportsTo, 16, typeof(System.Int32), esSystemType.Int32);
+			c.PropertyName = PropertyNames.ReportsTo;
+			c.NumericPrecision = 11;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(EmployeesMetadata.ColumnNames.PhotoPath, 17, typeof(System.String), esSystemType.String);
-			c.PropertyName = EmployeesMetadata.PropertyNames.PhotoPath;
+			c = new esColumnMetadata(ColumnNames.PhotoPath, 17, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.PhotoPath;
 			c.CharacterMaxLength = 255;
+			c.IsNullable = true;
+			m_columns.Add(c);
+				
+			c = new esColumnMetadata(ColumnNames.Salary, 18, typeof(System.Single), esSystemType.Single);
+			c.PropertyName = PropertyNames.Salary;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
 		}
 		#endregion	
 	
-		static public EmployeesMetadata Meta()
+		public static EmployeesMetadata Meta()
 		{
 			return meta;
 		}	
 		
-		public Guid DataID
-		{
-			get { return base.m_dataID; }
-		}	
-		
-		public bool MultiProviderMode
-		{
-			get { return false; }
-		}		
+		public Guid DataID => m_dataID;
 
-		public esColumnMetadataCollection Columns
-		{
-			get	{ return base.m_columns; }
-		}
+		public bool MultiProviderMode => false;
+
+		public esColumnMetadataCollection Columns => m_columns;
 		
 		#region ColumnNames
 		public class ColumnNames
@@ -1507,6 +1321,7 @@ namespace BusinessObjects
 			 public const string Notes = "Notes";
 			 public const string ReportsTo = "ReportsTo";
 			 public const string PhotoPath = "PhotoPath";
+			 public const string Salary = "Salary";
 		}
 		#endregion	
 		
@@ -1531,37 +1346,26 @@ namespace BusinessObjects
 			 public const string Notes = "Notes";
 			 public const string ReportsTo = "ReportsTo";
 			 public const string PhotoPath = "PhotoPath";
+			 public const string Salary = "Salary";
 		}
 		#endregion	
 
 		public esProviderSpecificMetadata GetProviderMetadata(string mapName)
 		{
-			MapToMeta mapMethod = mapDelegates[mapName];
-
-			if (mapMethod != null)
-				return mapMethod(mapName);
-			else
-				return null;
+			var mapMethod = mapDelegates[mapName];
+      return mapMethod?.Invoke(mapName);
 		}
 		
 		#region MAP esDefault
 		
-		static private int RegisterDelegateesDefault()
+		private static int RegisterDelegateesDefault()
 		{
 			// This is only executed once per the life of the application
 			lock (typeof(EmployeesMetadata))
 			{
-				if(EmployeesMetadata.mapDelegates == null)
-				{
-					EmployeesMetadata.mapDelegates = new Dictionary<string,MapToMeta>();
-				}
-				
-				if (EmployeesMetadata.meta == null)
-				{
-					EmployeesMetadata.meta = new EmployeesMetadata();
-				}
-				
-				MapToMeta mapMethod = new MapToMeta(meta.esDefault);
+				mapDelegates ??= new Dictionary<string, MapToMeta>();
+				meta ??= new EmployeesMetadata();
+				var mapMethod = new MapToMeta(meta.esDefault);
 				mapDelegates.Add("esDefault", mapMethod);
 				mapMethod("esDefault");
 			}
@@ -1570,51 +1374,53 @@ namespace BusinessObjects
 
 		private esProviderSpecificMetadata esDefault(string mapName)
 		{
+			// ReSharper disable once InvertIf
 			if(!m_providerMetadataMaps.ContainsKey(mapName))
 			{
-				esProviderSpecificMetadata meta = new esProviderSpecificMetadata();			
+				var specMeta = new esProviderSpecificMetadata();			
 
 
-				meta.AddTypeMap("EmployeeID", new esTypeMap("int", "System.Int32"));
-				meta.AddTypeMap("LastName", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("FirstName", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("Title", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("TitleOfCourtesy", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("BirthDate", new esTypeMap("datetime", "System.DateTime"));
-				meta.AddTypeMap("HireDate", new esTypeMap("datetime", "System.DateTime"));
-				meta.AddTypeMap("Address", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("City", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("Region", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("PostalCode", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("Country", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("HomePhone", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("Extension", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("Photo", new esTypeMap("image", "System.Byte[]"));
-				meta.AddTypeMap("Notes", new esTypeMap("ntext", "System.String"));
-				meta.AddTypeMap("ReportsTo", new esTypeMap("int", "System.Int32"));
-				meta.AddTypeMap("PhotoPath", new esTypeMap("nvarchar", "System.String"));			
+				specMeta.AddTypeMap("EmployeeID", new esTypeMap("INT", "System.Int32"));
+				specMeta.AddTypeMap("LastName", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("FirstName", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("Title", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("TitleOfCourtesy", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("BirthDate", new esTypeMap("DATETIME", "System.DateTime"));
+				specMeta.AddTypeMap("HireDate", new esTypeMap("DATETIME", "System.DateTime"));
+				specMeta.AddTypeMap("Address", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("City", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("Region", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("PostalCode", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("Country", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("HomePhone", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("Extension", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("Photo", new esTypeMap("LONGBLOB", "System.Byte[]"));
+				specMeta.AddTypeMap("Notes", new esTypeMap("MEDIUMTEXT", "System.String"));
+				specMeta.AddTypeMap("ReportsTo", new esTypeMap("INT", "System.Int32"));
+				specMeta.AddTypeMap("PhotoPath", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("Salary", new esTypeMap("FLOAT", "System.Single"));			
 				
 				
 				
-				meta.Source = "Employees";
-				meta.Destination = "Employees";
+				specMeta.Source = "employees";
+				specMeta.Destination = "employees";
 				
-				meta.spInsert = "proc_EmployeesInsert";				
-				meta.spUpdate = "proc_EmployeesUpdate";		
-				meta.spDelete = "proc_EmployeesDelete";
-				meta.spLoadAll = "proc_EmployeesLoadAll";
-				meta.spLoadByPrimaryKey = "proc_EmployeesLoadByPrimaryKey";
+				specMeta.spInsert = "proc_employeesInsert";				
+				specMeta.spUpdate = "proc_employeesUpdate";		
+				specMeta.spDelete = "proc_employeesDelete";
+				specMeta.spLoadAll = "proc_employeesLoadAll";
+				specMeta.spLoadByPrimaryKey = "proc_employeesLoadByPrimaryKey";
 				
-				this.m_providerMetadataMaps["esDefault"] = meta;
+				m_providerMetadataMaps["esDefault"] = specMeta;
 			}
 			
-			return this.m_providerMetadataMaps["esDefault"];
+			return m_providerMetadataMaps["esDefault"];
 		}
 
 		#endregion
 
-		static private EmployeesMetadata meta;
-		static protected Dictionary<string, MapToMeta> mapDelegates;
-		static private int _esDefault = RegisterDelegateesDefault();
+		private static EmployeesMetadata meta;
+		protected static Dictionary<string, MapToMeta> mapDelegates;
+		private static int _esDefault = RegisterDelegateesDefault();
 	}
 }

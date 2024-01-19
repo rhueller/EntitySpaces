@@ -1,139 +1,67 @@
 using System;
 using System.ComponentModel;
 using System.Xml;
-using System.Data;
-using System.Data.OleDb;
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace EntitySpaces.MetadataEngine
 {
 	public class Column : Single, IColumn, INameValueItem
 	{
-		public Column()
+        protected Column()
 		{
 
 		}
 
-		virtual internal Column Clone()
+		internal virtual Column Clone()
 		{
-			Column c = (Column)this.dbRoot.ClassFactory.CreateColumn();
+			var c = (Column)dbRoot.ClassFactory.CreateColumn();
 
-			c.dbRoot	= this.dbRoot;
-			c.Columns	= this.Columns;
-			c._row		= this._row;
+			c.dbRoot	= dbRoot;
+			c.Columns	= Columns;
+			c._row		= _row;
 
-			c._foreignKeys	= Column._emptyForeignKeys;
+			c._foreignKeys	= _emptyForeignKeys;
 
 			return c;
         }
 
         #region Code Generation Properties
-        [Category("Code Generation")]
-        virtual public string PropertyName
-        {
-            get
-            {
-                return this.dbRoot.esPlugIn.PropertyName(this);
-            }
-        }
 
         [Category("Code Generation")]
-        virtual public string CSharpToSystemType
-        {
-            get
-            {
-                return esPlugIn.CSharpToSystemType(this);
-            }
-        }
+        public virtual string PropertyName => dbRoot.esPlugIn.PropertyName(this);
 
         [Category("Code Generation")]
-        virtual public string VBToSystemType
-        {
-            get
-            {
-                return this.dbRoot.esPlugIn.VBToSystemType(this);
-            }
-        }
+        public virtual string CSharpToSystemType => esPlugIn.CSharpToSystemType(this);
 
         [Category("Code Generation")]
-        virtual public string esSystemType
-        {
-            get
-            {
-                return this.dbRoot.esPlugIn.esSystemType(this);
-            }
-        }
+        public virtual string VBToSystemType => dbRoot.esPlugIn.VBToSystemType(this);
 
         [Category("Code Generation")]
-        virtual public string ParameterName
-        {
-            get
-            {
-                return this.dbRoot.esPlugIn.ParameterName(this);
-            }
-        }
+        public virtual string esSystemType => dbRoot.esPlugIn.esSystemType(this);
 
         [Category("Code Generation")]
-        virtual public System.Boolean IsArrayType
-        {
-            get
-            {
-                return this.dbRoot.esPlugIn.IsArrayType(this);
-            }
-        }
-        
-        [Category("Code Generation")]
-        virtual public System.Boolean IsObjectType
-        {
-            get
-            {
-                return this.dbRoot.esPlugIn.IsObjectType(this);
-            }
-        }
+        public virtual string ParameterName => dbRoot.esPlugIn.ParameterName(this);
 
         [Category("Code Generation")]
-        virtual public System.Boolean IsNullableType
-        {
-            get
-            {
-                return this.dbRoot.esPlugIn.IsNullableType(this);
-            }
-        }
-        
-        [Category("Code Generation")]
-        virtual public string NullableType
-        {
-            get
-            {
-                return this.dbRoot.esPlugIn.NullableType(this);
-            }
-        }
+        public virtual bool IsArrayType => dbRoot.esPlugIn.IsArrayType(this);
 
         [Category("Code Generation")]
-        virtual public string NullableTypeVB
-        {
-            get
-            {
-                return this.dbRoot.esPlugIn.NullableTypeVB(this);
-            }
-        }
-        
+        public virtual bool IsObjectType => dbRoot.esPlugIn.IsObjectType(this);
+
         [Category("Code Generation")]
-        virtual public string SetRowAccessor
-        {
-            get
-            {
-                return this.dbRoot.esPlugIn.SetRowAccessor(this);
-            }
-        }
-        
+        public virtual bool IsNullableType => dbRoot.esPlugIn.IsNullableType(this);
+
         [Category("Code Generation")]
-        virtual public string GetRowAccessor
-        {
-            get
-            {
-                return this.dbRoot.esPlugIn.GetRowAccessor(this);
-            }
-        }
+        public virtual string NullableType => dbRoot.esPlugIn.NullableType(this);
+
+        [Category("Code Generation")]
+        public virtual string NullableTypeVB => dbRoot.esPlugIn.NullableTypeVB(this);
+
+        [Category("Code Generation")]
+        public virtual string SetRowAccessor => dbRoot.esPlugIn.SetRowAccessor(this);
+
+        [Category("Code Generation")]
+        public virtual string GetRowAccessor => dbRoot.esPlugIn.GetRowAccessor(this);
 
         #endregion
 
@@ -186,9 +114,9 @@ namespace EntitySpaces.MetadataEngine
 			{
 				IDomain theDomain = null;
 
-				if(this.HasDomain)
+				if(HasDomain)
 				{
-					theDomain = this.Columns.GetDatabase().Domains[this.DomainName];
+					theDomain = Columns.GetDatabase().Domains[DomainName];
 				}
 
 				return theDomain;
@@ -200,117 +128,61 @@ namespace EntitySpaces.MetadataEngine
 		#region Properties
 
         [Category("Name")]
-		override public string Name
-		{
-			get
-			{
-				return this.GetString(Columns.f_Name);
-			}
-		}
+		public override string Name => GetString(Columns.f_Name);
 
         [Browsable(false)]
-		virtual public Guid Guid
-		{
-			get
-			{
-				return this.GetGuid(Columns.f_Guid);
-			}
-		}
+		public virtual Guid Guid => GetGuid(Columns.f_Guid);
 
         [Browsable(false)]
-		virtual public System.Int32 PropID
-		{
-			get
-			{
-				return this.GetInt32(Columns.f_PropID);
-			}
-		}
+		public virtual int PropID => GetInt32(Columns.f_PropID);
 
         [Browsable(false)]
-		virtual public System.Int32 Ordinal
-		{
-			get
-			{
-				return this.GetInt32(Columns.f_Ordinal);
-			}
-		}
+		public virtual int Ordinal => GetInt32(Columns.f_Ordinal);
 
         [Category("Default Value")]
-		virtual public System.Boolean HasDefault
-		{
-			get
-			{
-				return this.GetBool(Columns.f_HasDefault);
-			}
-		}
+		public virtual bool HasDefault => GetBool(Columns.f_HasDefault);
 
         [Category("Default Value")]
-		virtual public string Default
-		{
-			get
-			{
-				return this.GetString(Columns.f_Default);
-			}
-		}
+		public virtual string Default => GetString(Columns.f_Default);
 
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-		virtual public System.Int32 Flags
-		{
-			get
-			{
-				return this.GetInt32(Columns.f_Flags);
-			}
-		}
+		public virtual int Flags => GetInt32(Columns.f_Flags);
 
         [Category("Flags")]
-		virtual public System.Boolean IsNullable
-		{
-			get
-			{
-				return this.GetBool(Columns.f_IsNullable);
-			}
-		}
+		public virtual bool IsNullable => GetBool(Columns.f_IsNullable);
 
         [Browsable(false)]
-		virtual public System.Int32 DataType
-		{
-			get
-			{
-				return this.GetInt32(Columns.f_DataType);
-			}
-		}
+		public virtual int DataType => GetInt32(Columns.f_DataType);
 
         [Category("Data Type")]
-        virtual public System.Boolean IsNonSystemType
+        public virtual bool IsNonSystemType
         {
             get
             {
-                if (dbRoot.LanguageNode != null)
+                if (dbRoot.LanguageNode == null) return false;
+                
+                // First Let's try the 'DataTypeNameComplete' or char(1)
+                var xPath = "./Type[@From='" + DataTypeNameComplete + "']";
+                var node = dbRoot.LanguageNode.SelectSingleNode(xPath, null);
+
+                if (node != null)
                 {
-                    // First Let's try the 'DataTypeNameComplete' or char(1)
-                    string xPath = @"./Type[@From='" + this.DataTypeNameComplete + "']";
-                    XmlNode node = dbRoot.LanguageNode.SelectSingleNode(xPath, null);
-
-                    if (node != null)
+                    if (GetUserData(node, "NonSystemType", out var flag))
                     {
-                        string flag = "";
-                        if (this.GetUserData(node, "NonSystemType", out flag))
-                        {
-                            return flag == "true" ? true : false;
-                        }
+                        return flag == "true";
                     }
+                }
 
-                    // No match, so lets just try the 'DataTypeName' or char
-                    xPath = @"./Type[@From='" + this.DataTypeName + "']";
-                    node = dbRoot.LanguageNode.SelectSingleNode(xPath, null);
+                // No match, so lets just try the 'DataTypeName' or char
+                xPath = @"./Type[@From='" + DataTypeName + "']";
+                node = dbRoot.LanguageNode.SelectSingleNode(xPath, null);
 
-                    if (node != null)
+                if (node == null) return false;
+                
+                {
+                    if (GetUserData(node, "NonSystemType", out var flag))
                     {
-                        string flag = "";
-                        if (this.GetUserData(node, "NonSystemType", out flag))
-                        {
-                            return flag == "true" ? true : false;
-                        }
+                        return flag == "true";
                     }
                 }
 
@@ -319,173 +191,71 @@ namespace EntitySpaces.MetadataEngine
         }
 
         [Browsable(false)]
-		virtual public Guid TypeGuid
-		{
-			get
-			{
-				return this.GetGuid(Columns.f_TypeGuid);
-			}
-		}
+		public virtual Guid TypeGuid => GetGuid(Columns.f_TypeGuid);
 
         [Category("Character")]
-		virtual public System.Int32 CharacterMaxLength
-		{
-			get
-			{
-				return this.GetInt32(Columns.f_MaxLength);
-			}
-		}
+		public virtual int CharacterMaxLength => GetInt32(Columns.f_MaxLength);
 
         [Browsable(false)]
-		virtual public System.Int32 CharacterOctetLength
-		{
-			get
-			{
-				return this.GetInt32(Columns.f_OctetLength);
-			}
-		}
+		public virtual int CharacterOctetLength => GetInt32(Columns.f_OctetLength);
 
         [Category("Numeric")]
-		virtual public System.Int32 NumericPrecision
-		{
-			get
-			{
-				return this.GetInt32(Columns.f_NumericPrecision);
-			}
-		}
+		public virtual int NumericPrecision => GetInt32(Columns.f_NumericPrecision);
 
         [Category("Numeric")]
-		virtual public System.Int32 NumericScale
-		{
-			get
-			{
-				return this.GetInt32(Columns.f_NumericScale);
-			}
-		}
+		public virtual int NumericScale => GetInt32(Columns.f_NumericScale);
 
         [Browsable(false)]
-		virtual public System.Int32 DateTimePrecision
-		{
-			get
-			{
-				return this.GetInt32(Columns.f_DatetimePrecision);
-			}
-		}
+		public virtual int DateTimePrecision => GetInt32(Columns.f_DatetimePrecision);
 
         [Browsable(false)]
-		virtual public string CharacterSetCatalog
-		{
-			get
-			{
-				return this.GetString(Columns.f_CharSetCatalog);
-			}
-		}
+		public virtual string CharacterSetCatalog => GetString(Columns.f_CharSetCatalog);
 
         [Browsable(false)]
-		virtual public string CharacterSetSchema
-		{
-			get
-			{
-				return this.GetString(Columns.f_CharSetSchema);
-			}
-		}
+		public virtual string CharacterSetSchema => GetString(Columns.f_CharSetSchema);
 
         [Browsable(false)]
-		virtual public string CharacterSetName
-		{
-			get
-			{
-				return this.GetString(Columns.f_CharSetName);
-			}
-		}
+		public virtual string CharacterSetName => GetString(Columns.f_CharSetName);
 
         [Category("Domain")]
-		virtual public string DomainCatalog
-		{
-			get
-			{
-				return this.GetString(Columns.f_DomainCatalog);
-			}
-		}
+		public virtual string DomainCatalog => GetString(Columns.f_DomainCatalog);
 
         [Category("Domain")]
-		virtual public string DomainSchema
-		{
-			get
-			{
-				return this.GetString(Columns.f_DomainSchema);
-			}
-		}
+		public virtual string DomainSchema => GetString(Columns.f_DomainSchema);
 
         [Category("Domain")]
-		virtual public string DomainName
-		{
-			get
-			{
-				return this.GetString(Columns.f_DomainName);
-			}
-		}
+		public virtual string DomainName => GetString(Columns.f_DomainName);
 
-		virtual public string Description
-		{
-			get
-			{
-				return this.GetString(Columns.f_Description);
-			}
-		}
+        public virtual string Description => GetString(Columns.f_Description);
 
         [Browsable(false)]
-		virtual public System.Int32 LCID
-		{
-			get
-			{
-				return this.GetInt32(Columns.f_LCID);
-			}
-		}
+		public virtual int LCID => GetInt32(Columns.f_LCID);
 
         [Browsable(false)]
-		virtual public System.Int32 CompFlags
-		{
-			get
-			{
-				return this.GetInt32(Columns.f_CompFlags);
-			}
-		}
+		public virtual int CompFlags => GetInt32(Columns.f_CompFlags);
 
         [Browsable(false)]
-		virtual public System.Int32 SortID
-		{
-			get
-			{
-				return this.GetInt32(Columns.f_SortID);
-			}
-		}
+		public virtual int SortID => GetInt32(Columns.f_SortID);
 
         [Browsable(false)]
-		virtual public System.Byte[] TDSCollation
-		{
-			get
-			{
-				return this.GetByteArray(Columns.f_TDSCollation);
-			}
-		}
+		public virtual byte[] TDSCollation => GetByteArray(Columns.f_TDSCollation);
 
         [Category("Flags")]
-		virtual public System.Boolean IsComputed
+		public virtual bool IsComputed
 		{
 			get
 			{
                 XmlNode node = null;
-                if (this.GetXmlNode(out node, false))
+                if (GetXmlNode(out node, false))
                 {
-                    string theOut = "";
-                    if (this.GetUserData(node, "IsComputed", out theOut))
+                    var theOut = "";
+                    if (GetUserData(node, "IsComputed", out theOut))
                     {
                         return Convert.ToBoolean(theOut);
                     }
                 }
 
-				return this.GetBool(Columns.f_IsComputed);
+				return GetBool(Columns.f_IsComputed);
 			}
 
             //set
@@ -499,25 +269,25 @@ namespace EntitySpaces.MetadataEngine
 		}
 
         [Category("Flags")]
-		virtual public System.Boolean IsInPrimaryKey
+		public virtual bool IsInPrimaryKey
 		{
 			get
 			{
                 XmlNode node = null;
-                if (this.GetXmlNode(out node, false))
+                if (GetXmlNode(out node, false))
                 {
-                    string theOut = "";
-                    if (this.GetUserData(node, "IsInPrimaryKey", out theOut))
+                    var theOut = "";
+                    if (GetUserData(node, "IsInPrimaryKey", out theOut))
                     {
                         return Convert.ToBoolean(theOut);
                     }
                 }
 
-				System.Boolean isPrimaryKey = false;
+				var isPrimaryKey = false;
 
 				if(null != Columns.Table)
 				{
-					IColumn c = Columns.Table.PrimaryKeys[this.Name];
+					var c = Columns.Table.PrimaryKeys[Name];
 
 					if(null != c)
 					{
@@ -539,65 +309,65 @@ namespace EntitySpaces.MetadataEngine
 		}
 
         [Category("Auto Key")]
-		virtual public System.Boolean IsAutoKey
+		public virtual bool IsAutoKey
 		{
 			get
 			{
                 XmlNode node = null;
-                if (this.GetXmlNode(out node, false))
+                if (GetXmlNode(out node, false))
                 {
-                    string theOut = "";
-                    if (this.GetUserData(node, "IsAutoKey", out theOut))
+                    var theOut = "";
+                    if (GetUserData(node, "IsAutoKey", out theOut))
                     {
                         return Convert.ToBoolean(theOut);
                     }
                 }
 
-				return this.GetBool(Columns.f_IsAutoKey);
+				return GetBool(Columns.f_IsAutoKey);
 			}
 
             set
             {
                 XmlNode node = null;
-                if (this.GetXmlNode(out node, true))
+                if (GetXmlNode(out node, true))
                 {
-                    this.SetUserData(node, "IsAutoKey", value.ToString());
+                    SetUserData(node, "IsAutoKey", value.ToString());
                 }
             }
 		}
 
         [Category("Data Type")]
-		virtual public string DataTypeName
+		public virtual string DataTypeName
 		{
 			get
 			{
-				if(this.dbRoot.DomainOverride)
+				if(dbRoot.DomainOverride)
 				{
-					if(this.HasDomain)
+					if(HasDomain)
 					{
-						if(this.Domain != null)
+						if(Domain != null)
 						{
-							return this.Domain.DataTypeName;
+							return Domain.DataTypeName;
 						}
 					}
 				}
 
-				return this.GetString(null);
+				return GetString(null);
 			}
 		}
 
         [Category("Data Type")]
-		virtual public string LanguageType
+		public virtual string LanguageType
 		{
 			get
 			{
-				if(this.dbRoot.DomainOverride)
+				if(dbRoot.DomainOverride)
 				{
-					if(this.HasDomain)
+					if(HasDomain)
 					{
-						if(this.Domain != null)
+						if(Domain != null)
 						{
-							return this.Domain.LanguageType;
+							return Domain.LanguageType;
 						}
 					}
 				}
@@ -605,7 +375,7 @@ namespace EntitySpaces.MetadataEngine
                 if (dbRoot.LanguageNode != null)
                 {
                     // First Let's try the 'DataTypeNameComplete' or char(1)
-                    string xPath = @"./Type[@From='" + this.DataTypeNameComplete + "']";
+                    var xPath = @"./Type[@From='" + DataTypeNameComplete + "']";
 
                     XmlNode node = null;
 
@@ -617,21 +387,21 @@ namespace EntitySpaces.MetadataEngine
 
                     if (node != null)
                     {
-                        string languageType = "";
-                        if (this.GetUserData(node, "To", out languageType))
+                        var languageType = "";
+                        if (GetUserData(node, "To", out languageType))
                         {
                             return languageType;
                         }
                     }
 
                     // No match, so lets just try the 'DataTypeName' or char
-					xPath = @"./Type[@From='" + this.DataTypeName + "']";
+					xPath = @"./Type[@From='" + DataTypeName + "']";
 					node = dbRoot.LanguageNode.SelectSingleNode(xPath, null);
 
 					if(node != null)
 					{
-						string languageType = "";
-						if(this.GetUserData(node, "To", out languageType))
+						var languageType = "";
+						if(GetUserData(node, "To", out languageType))
 						{
 							return languageType;
 						}
@@ -643,17 +413,17 @@ namespace EntitySpaces.MetadataEngine
 		}
 
         [Category("Data Type")]
-		virtual public string DataTypeNameComplete
+		public virtual string DataTypeNameComplete
 		{
 			get
 			{
-				if(this.dbRoot.DomainOverride)
+				if(dbRoot.DomainOverride)
 				{
-					if(this.HasDomain)
+					if(HasDomain)
 					{
-						if(this.Domain != null)
+						if(Domain != null)
 						{
-                            return this.Domain.DataTypeNameComplete.Replace("\'", string.Empty);
+                            return Domain.DataTypeNameComplete.Replace("\'", string.Empty);
 						}
 					}
 				}
@@ -663,39 +433,33 @@ namespace EntitySpaces.MetadataEngine
 		}
 
         [Category("Flags")]
-		virtual public System.Boolean IsInForeignKey
+		public virtual bool IsInForeignKey
 		{
 			get
 			{
-				if(this.ForeignKeys == Column._emptyForeignKeys)
+				if(ForeignKeys == _emptyForeignKeys)
 					return true;
 				else
-					return this.ForeignKeys.Count > 0 ? true : false;
+					return ForeignKeys.Count > 0 ? true : false;
 			}
 		}
 
         [Category("Auto Key")]
-		virtual public System.Int32 AutoKeySeed
-		{
-			get
-			{
-				return this.GetInt32(Columns.f_AutoKeySeed);
-			}
-		}
+		public virtual int AutoKeySeed => GetInt32(Columns.f_AutoKeySeed);
 
         [Category("Auto Key")]
         [Description("Typically the name of a sequence")]
-        virtual public string AutoKeyText
+        public virtual string AutoKeyText
         {
             get
             {
-                string customAutoKeyText = "";
+                var customAutoKeyText = "";
 
                 XmlNode node = null;
-                if (this.GetXmlNode(out node, false))
+                if (GetXmlNode(out node, false))
                 {
-                    string theOut = "";
-                    if (this.GetUserData(node, "AutoKeyText", out theOut))
+                    var theOut = "";
+                    if (GetUserData(node, "AutoKeyText", out theOut))
                     {
                         customAutoKeyText = theOut;
                     }
@@ -708,30 +472,24 @@ namespace EntitySpaces.MetadataEngine
             set
             {
                 XmlNode node = null;
-                if (this.GetXmlNode(out node, true))
+                if (GetXmlNode(out node, true))
                 {
-                    this.SetUserData(node, "AutoKeyText", value.ToString());
+                    SetUserData(node, "AutoKeyText", value.ToString());
                 }
             }
         }
 
         [Category("Auto Key")]
-		virtual public System.Int32 AutoKeyIncrement
-		{
-			get
-			{
-				return this.GetInt32(Columns.f_AutoKeyIncrement);
-			}
-		}
+		public virtual int AutoKeyIncrement => GetInt32(Columns.f_AutoKeyIncrement);
 
         [Category("Domain")]
-		virtual public System.Boolean HasDomain
+		public virtual bool HasDomain
 		{
 			get
 			{
-				if(this._row.Table.Columns.Contains("DOMAIN_NAME"))
+				if(_row.Table.Columns.Contains("DOMAIN_NAME"))
 				{
-					object o = this._row["DOMAIN_NAME"];
+					var o = _row["DOMAIN_NAME"];
 
 					if(o != null && o != DBNull.Value)
 					{
@@ -745,12 +503,12 @@ namespace EntitySpaces.MetadataEngine
         #region DateAdded Properties
 
         [Category("DateAdded")]
-        virtual public System.Boolean IsDateAddedColumn
+        public virtual bool IsDateAddedColumn
         {
             get
             {
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
-                if (driverInfo.DateAdded.IsEnabled && driverInfo.DateAdded.ColumnName == this.Name)
+                var driverInfo = dbRoot.SettingsDriverInfo;
+                if (driverInfo.DateAdded.IsEnabled && driverInfo.DateAdded.ColumnName == Name)
                 {
                     return true;
                 }
@@ -762,12 +520,12 @@ namespace EntitySpaces.MetadataEngine
         }
 
         [Category("DateAdded")]
-        virtual public esSettingsDriverInfo.DateType DateAddedType
+        public virtual esSettingsDriverInfo.DateType DateAddedType
         {
             get
             {
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
-                if (driverInfo.DateAdded.IsEnabled && driverInfo.DateAdded.ColumnName == this.Name)
+                var driverInfo = dbRoot.SettingsDriverInfo;
+                if (driverInfo.DateAdded.IsEnabled && driverInfo.DateAdded.ColumnName == Name)
                 {
                     return driverInfo.DateAdded.Type;
                 }
@@ -779,12 +537,12 @@ namespace EntitySpaces.MetadataEngine
         }
 
         [Category("DateAdded")]
-        virtual public string DateAddedServerSideText
+        public virtual string DateAddedServerSideText
         {
             get
             {
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
-                if (driverInfo.DateAdded.IsEnabled && driverInfo.DateAdded.ColumnName == this.Name && 
+                var driverInfo = dbRoot.SettingsDriverInfo;
+                if (driverInfo.DateAdded.IsEnabled && driverInfo.DateAdded.ColumnName == Name && 
                     driverInfo.DateAdded.Type == esSettingsDriverInfo.DateType.ServerSide)
                 {
                     return driverInfo.DateAdded.ServerSideText;
@@ -797,12 +555,12 @@ namespace EntitySpaces.MetadataEngine
         }
 
         [Category("DateAdded")]
-        virtual public esSettingsDriverInfo.ClientType DateAddedClientType
+        public virtual esSettingsDriverInfo.ClientType DateAddedClientType
         {
             get
             {
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
-                if (driverInfo.DateAdded.IsEnabled && driverInfo.DateAdded.ColumnName == this.Name &&
+                var driverInfo = dbRoot.SettingsDriverInfo;
+                if (driverInfo.DateAdded.IsEnabled && driverInfo.DateAdded.ColumnName == Name &&
                     driverInfo.DateAdded.Type == esSettingsDriverInfo.DateType.ClientSide)
                 {
                     return driverInfo.DateAdded.ClientType;
@@ -819,12 +577,12 @@ namespace EntitySpaces.MetadataEngine
         #region DateModified Properties
 
         [Category("DateModified")]
-        virtual public System.Boolean IsDateModifiedColumn
+        public virtual bool IsDateModifiedColumn
         {
             get
             {
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
-                if (driverInfo.DateModified.IsEnabled && driverInfo.DateModified.ColumnName == this.Name)
+                var driverInfo = dbRoot.SettingsDriverInfo;
+                if (driverInfo.DateModified.IsEnabled && driverInfo.DateModified.ColumnName == Name)
                 {
                     return true;
                 }
@@ -836,12 +594,12 @@ namespace EntitySpaces.MetadataEngine
         }
 
         [Category("DateModified")]
-        virtual public esSettingsDriverInfo.DateType DateModifiedType
+        public virtual esSettingsDriverInfo.DateType DateModifiedType
         {
             get
             {
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
-                if (driverInfo.DateModified.IsEnabled && driverInfo.DateModified.ColumnName == this.Name)
+                var driverInfo = dbRoot.SettingsDriverInfo;
+                if (driverInfo.DateModified.IsEnabled && driverInfo.DateModified.ColumnName == Name)
                 {
                     return driverInfo.DateModified.Type;
                 }
@@ -853,12 +611,12 @@ namespace EntitySpaces.MetadataEngine
         }
 
         [Category("DateModified")]
-        virtual public string DateModifiedServerSideText
+        public virtual string DateModifiedServerSideText
         {
             get
             {
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
-                if (driverInfo.DateModified.IsEnabled && driverInfo.DateModified.ColumnName == this.Name &&
+                var driverInfo = dbRoot.SettingsDriverInfo;
+                if (driverInfo.DateModified.IsEnabled && driverInfo.DateModified.ColumnName == Name &&
                     driverInfo.DateModified.Type == esSettingsDriverInfo.DateType.ServerSide)
                 {
                     return driverInfo.DateModified.ServerSideText;
@@ -871,12 +629,12 @@ namespace EntitySpaces.MetadataEngine
         }
 
         [Category("DateModified")]
-        virtual public esSettingsDriverInfo.ClientType DateModifiedClientType
+        public virtual esSettingsDriverInfo.ClientType DateModifiedClientType
         {
             get
             {
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
-                if (driverInfo.DateModified.IsEnabled && driverInfo.DateModified.ColumnName == this.Name &&
+                var driverInfo = dbRoot.SettingsDriverInfo;
+                if (driverInfo.DateModified.IsEnabled && driverInfo.DateModified.ColumnName == Name &&
                     driverInfo.DateModified.Type == esSettingsDriverInfo.DateType.ClientSide)
                 {
                     return driverInfo.DateModified.ClientType;
@@ -893,12 +651,12 @@ namespace EntitySpaces.MetadataEngine
         #region AddedBy Properties
 
         [Category("AddedBy")]
-        virtual public System.Boolean IsAddedByColumn
+        public virtual bool IsAddedByColumn
         {
             get
             {
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
-                if (driverInfo.AddedBy.IsEnabled && driverInfo.AddedBy.ColumnName == this.Name)
+                var driverInfo = dbRoot.SettingsDriverInfo;
+                if (driverInfo.AddedBy.IsEnabled && driverInfo.AddedBy.ColumnName == Name)
                 {
                     return true;
                 }
@@ -910,11 +668,11 @@ namespace EntitySpaces.MetadataEngine
         }
 
         [Category("AddedBy")]
-        virtual public System.Boolean UseAddedByEventHandler
+        public virtual bool UseAddedByEventHandler
         {
             get
             {
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
+                var driverInfo = dbRoot.SettingsDriverInfo;
                 if (driverInfo.AddedBy.IsEnabled && driverInfo.AddedBy.UseEventHandler == true)
                 {
                     return true;
@@ -927,12 +685,12 @@ namespace EntitySpaces.MetadataEngine
         }
 
         [Category("AddedBy")]
-        virtual public string AddedByServerSideText
+        public virtual string AddedByServerSideText
         {
             get
             {
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
-                if (driverInfo.AddedBy.IsEnabled && driverInfo.AddedBy.ColumnName == this.Name)
+                var driverInfo = dbRoot.SettingsDriverInfo;
+                if (driverInfo.AddedBy.IsEnabled && driverInfo.AddedBy.ColumnName == Name)
                 {
                     return driverInfo.AddedBy.ServerSideText;
                 }
@@ -948,12 +706,12 @@ namespace EntitySpaces.MetadataEngine
         #region ModifiedBy Properties
 
         [Category("ModifiedBy")]
-        virtual public System.Boolean IsModifiedByColumn
+        public virtual bool IsModifiedByColumn
         {
             get
             {
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
-                if (driverInfo.ModifiedBy.IsEnabled && driverInfo.ModifiedBy.ColumnName == this.Name)
+                var driverInfo = dbRoot.SettingsDriverInfo;
+                if (driverInfo.ModifiedBy.IsEnabled && driverInfo.ModifiedBy.ColumnName == Name)
                 {
                     return true;
                 }
@@ -965,11 +723,11 @@ namespace EntitySpaces.MetadataEngine
         }
 
         [Category("ModifiedBy")]
-        virtual public System.Boolean UseModifiedByEventHandler
+        public virtual bool UseModifiedByEventHandler
         {
             get
             {
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
+                var driverInfo = dbRoot.SettingsDriverInfo;
                 if (driverInfo.ModifiedBy.IsEnabled && driverInfo.ModifiedBy.UseEventHandler == true)
                 {
                     return true;
@@ -982,12 +740,12 @@ namespace EntitySpaces.MetadataEngine
         }
 
         [Category("ModifiedBy")]
-        virtual public string ModifiedByServerSideText
+        public virtual string ModifiedByServerSideText
         {
             get
             {
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
-                if (driverInfo.ModifiedBy.IsEnabled && driverInfo.ModifiedBy.ColumnName == this.Name)
+                var driverInfo = dbRoot.SettingsDriverInfo;
+                if (driverInfo.ModifiedBy.IsEnabled && driverInfo.ModifiedBy.ColumnName == Name)
                 {
                     return driverInfo.ModifiedBy.ServerSideText;
                 }
@@ -1006,16 +764,16 @@ namespace EntitySpaces.MetadataEngine
 
         [Category("Name")]
         [Description("Provide your Column with an Alias")]
-        override public string Alias
+        public override string Alias
         {
             get
             {
                 XmlNode node = null;
-                if (this.GetXmlNode(out node, false))
+                if (GetXmlNode(out node, false))
                 {
                     string niceName = null;
 
-                    if (this.GetUserData(node, "Alias", out niceName))
+                    if (GetUserData(node, "Alias", out niceName))
                     {
                         if (string.Empty != niceName)
                             return niceName;
@@ -1023,15 +781,15 @@ namespace EntitySpaces.MetadataEngine
                 }
 
                 // There was no nice name
-                return this.Name;
+                return Name;
             }
 
             set
             {
                 XmlNode node = null;
-                if (this.GetXmlNode(out node, true))
+                if (GetXmlNode(out node, true))
                 {
-                    this.SetUserData(node, "Alias", value);
+                    SetUserData(node, "Alias", value);
                 }
             }
         }
@@ -1042,13 +800,13 @@ namespace EntitySpaces.MetadataEngine
         {
             get
             {
-                string exclude = "False";
+                var exclude = "False";
 
                 XmlNode node = null;
-                if (this.GetXmlNode(out node, false))
+                if (GetXmlNode(out node, false))
                 {
-                    string theOut = "";
-                    if(this.GetUserData(node, "Exclude", out theOut))
+                    var theOut = "";
+                    if(GetUserData(node, "Exclude", out theOut))
                     {
                         exclude = theOut;
                     }
@@ -1070,24 +828,24 @@ namespace EntitySpaces.MetadataEngine
 
         [Category("Concurrency")]
         [Description("Use this integer field for Concurrency management")]
-        virtual public bool IsEntitySpacesConcurrency
+        public virtual bool IsEntitySpacesConcurrency
         {
             get
             {
-                string isEntitySpacesConcurrency = "False";
+                var isEntitySpacesConcurrency = "False";
 
-                esSettingsDriverInfo driverInfo = this.dbRoot.SettingsDriverInfo;
+                var driverInfo = dbRoot.SettingsDriverInfo;
 
-                if (driverInfo.ConcurrencyColumnEnabled && driverInfo.ConcurrencyColumn != null && driverInfo.ConcurrencyColumn == this.Name)
+                if (driverInfo.ConcurrencyColumnEnabled && driverInfo.ConcurrencyColumn != null && driverInfo.ConcurrencyColumn == Name)
                 {
                     isEntitySpacesConcurrency = "True";
                 }
 
                 XmlNode node = null;
-                if (this.GetXmlNode(out node, false))
+                if (GetXmlNode(out node, false))
                 {
-                    string theOut = "";
-                    if (this.GetUserData(node, "IsEntitySpacesConcurrency", out theOut))
+                    var theOut = "";
+                    if (GetUserData(node, "IsEntitySpacesConcurrency", out theOut))
                     {
                         isEntitySpacesConcurrency = theOut;
                     }
@@ -1100,22 +858,16 @@ namespace EntitySpaces.MetadataEngine
             set
             {
                 XmlNode node = null;
-                if (this.GetXmlNode(out node, true))
+                if (GetXmlNode(out node, true))
                 {
-                    this.SetUserData(node, "IsEntitySpacesConcurrency", value.ToString());
+                    SetUserData(node, "IsEntitySpacesConcurrency", value.ToString());
                 }
             }
         }
 
         [Category("Concurrency")]
         [Description("True if this is the Native type for a Database's concurrency handling")]
-        virtual public bool IsConcurrency
-        {
-            get
-            {
-                return this.GetBool(Columns.f_IsConcurrency);
-            }
-        }
+        public virtual bool IsConcurrency => GetBool(Columns.f_IsConcurrency);
 
         #endregion
 
@@ -1128,12 +880,12 @@ namespace EntitySpaces.MetadataEngine
 			{
 				if(null == _foreignKeys)
 				{
-					_foreignKeys = (ForeignKeys)this.dbRoot.ClassFactory.CreateForeignKeys();
-					_foreignKeys.dbRoot = this.dbRoot;
+					_foreignKeys = (ForeignKeys)dbRoot.ClassFactory.CreateForeignKeys();
+					_foreignKeys.dbRoot = dbRoot;
 
-					if(this.Columns.Table != null)
+					if(Columns.Table != null)
 					{
-						IForeignKeys fk = this.Columns.Table.ForeignKeys;
+						var fk = Columns.Table.ForeignKeys;
 					}
 				}
 				return _foreignKeys;
@@ -1144,11 +896,11 @@ namespace EntitySpaces.MetadataEngine
 		{
 			if(null == _foreignKeys)
 			{
-				_foreignKeys = (ForeignKeys)this.dbRoot.ClassFactory.CreateForeignKeys();
-				_foreignKeys.dbRoot = this.dbRoot;
+				_foreignKeys = (ForeignKeys)dbRoot.ClassFactory.CreateForeignKeys();
+				_foreignKeys.dbRoot = dbRoot;
 			}
 
-			this._foreignKeys.AddForeignKey(fk);
+			_foreignKeys.AddForeignKey(fk);
 		}
 
 		internal PropertyCollectionAll _allProperties = null;
@@ -1158,31 +910,25 @@ namespace EntitySpaces.MetadataEngine
 		#region XML User Data
 
         [Browsable(false)]
-		override public string UserDataXPath
-		{ 
-			get
-			{
-				return Columns.UserDataXPath + @"/Column[@Name='" + this.Name + "']";
-			} 
-		}
+		public override string UserDataXPath => Columns.UserDataXPath + @"/Column[@Name='" + Name + "']";
 
-		override internal bool GetXmlNode(out XmlNode node, bool forceCreate)
+        internal override bool GetXmlNode(out XmlNode node, bool forceCreate)
 		{
 			node = null;
-			bool success = false;
+			var success = false;
 
 			if(null == _xmlNode)
 			{
 				// Get the parent node
 				XmlNode parentNode = null;
-				if(this.Columns.GetXmlNode(out parentNode, forceCreate))
+				if(Columns.GetXmlNode(out parentNode, forceCreate))
 				{
 					// See if our user data already exists
-					string xPath = @"./Column[@Name='" + this.Name + "']";
+					var xPath = @"./Column[@Name='" + Name + "']";
 					if(!GetUserData(xPath, parentNode, out _xmlNode) && forceCreate)
 					{
 						// Create it, and try again
-						this.CreateUserMetaData(parentNode);
+						CreateUserMetaData(parentNode);
 						GetUserData(xPath, parentNode, out _xmlNode);
 					}
 				}
@@ -1197,15 +943,15 @@ namespace EntitySpaces.MetadataEngine
 			return success;
 		}
 
-		override public void CreateUserMetaData(XmlNode parentNode)
+		public override void CreateUserMetaData(XmlNode parentNode)
 		{
-			XmlNode myNode = parentNode.OwnerDocument.CreateNode(XmlNodeType.Element, "Column", null);
+			var myNode = parentNode.OwnerDocument.CreateNode(XmlNodeType.Element, "Column", null);
 			parentNode.AppendChild(myNode);
 
 			XmlAttribute attr;
 
 			attr = parentNode.OwnerDocument.CreateAttribute("Name");
-			attr.Value = this.Name;
+			attr.Value = Name;
 			myNode.Attributes.Append(attr);
 		}
 
@@ -1214,27 +960,15 @@ namespace EntitySpaces.MetadataEngine
 		#region INameValueCollection Members
 
         [Browsable(false)]
-		public string ItemName
-		{
-			get
-			{
-				return this.Name;
-			}
-		}
+		public string ItemName => Name;
 
         [Browsable(false)]
-		public string ItemValue
-		{
-			get
-			{
-				return this.Name;
-			}
-		}
+		public string ItemValue => Name;
 
-		#endregion
+        #endregion
 
 		internal Columns Columns = null;
 		protected ForeignKeys _foreignKeys = null;
-		static private ForeignKeys _emptyForeignKeys = new ForeignKeys();
+		private static ForeignKeys _emptyForeignKeys = new ForeignKeys();
 	}
 }

@@ -4,12 +4,15 @@
     <RecordedTemplate Name="Custom - Classes Master (C#)">
       <Template Name="Custom - Classes Master (C#)" Path="{fixup}EntitySpaces\C#\Custom - Classes Master (C#).est" Version="2019.0.0.0" />
       <Input>
+        <Item Type="EntitySpaces.MetadataEngine.MySql.MySqlTable" Key="Table" Value="EntitySpaces.MetadataEngine.MySql.MySqlTable" />
         <Item Type="System.String" Key="Namespace" Value="BusinessObjects" />
         <Item Type="System.String" Key="EntityType" Value="Tables" />
+        <Item Type="EntitySpaces.MetadataEngine.esPluginSource" Key="Source" Value="EntitySpaces.MetadataEngine.esPluginSource" />
         <Item Type="System.String" Key="Database" Value="Northwind" />
         <Item Type="System.String" Key="OutputPath" Value="{fixup\custom\}" />
-        <Item Type="System.Collections.ArrayList" Key="Entities" Value="categories,customers,employees,orderdetails,orders,products,shippers,suppliers" />
+        <Item Type="System.Collections.ArrayList" Key="Entities" Value="categories,customercustomerdemo,customerdemographics,customers,employees,employeeterritories,order details,orders,products,region,shippers,suppliers,territories" />
         <Item Type="(null)" Key="View" />
+        <Item Type="EntitySpaces.MetadataEngine.MySql.MySqlColumns" Key="Columns" Value="EntitySpaces.MetadataEngine.MySql.MySqlColumns" />
       </Input>
       <esSettings>
         <Driver>MySql</Driver>
@@ -94,37 +97,41 @@
     <RecordedTemplate Name="Generated - Classes Master (C#)">
       <Template Name="Generated - Classes Master (C#)" Path="{fixup}EntitySpaces\C#\Generated - Classes Master (C#).est" Version="2019.0.0.0" />
       <Input>
-        <Item Type="System.Boolean" Key="UseCustomBaseClass" Value="False" />
-        <Item Type="System.Boolean" Key="WcfOrder" Value="True" />
-        <Item Type="System.Boolean" Key="IncludeRowStateInXml" Value="True" />
-        <Item Type="System.Boolean" Key="MetadataClassShouldIgnoreCatalog" Value="True" />
-        <Item Type="System.Boolean" Key="SupportINotifyChanged" Value="False" />
-        <Item Type="System.Boolean" Key="MetadataClassShouldIgnoreSchema" Value="True" />
-        <Item Type="System.Boolean" Key="UseDnnObjectQualifier" Value="True" />
-        <Item Type="System.String" Key="OutputPath" Value="{fixup\generated\}" />
-        <Item Type="System.Boolean" Key="GenerateHierarchicalDataContracts" Value="False" />
-        <Item Type="System.Boolean" Key="CompactXML" Value="False" />
         <Item Type="System.String" Key="Database" Value="Northwind" />
+        <Item Type="System.Boolean" Key="GenerateProxyStub" Value="False" />
+        <Item Type="System.Boolean" Key="GenerateHierarchicalRiaServicesSupport" Value="False" />
+        <Item Type="System.Boolean" Key="MetadataClassShouldIgnoreCatalog" Value="True" />
+        <Item Type="System.Boolean" Key="UseDnnObjectQualifier" Value="False" />
         <Item Type="System.Boolean" Key="LINQtoSQL" Value="False" />
-        <Item Type="System.Boolean" Key="TargetMultipleDatabases" Value="False" />
-        <Item Type="System.Boolean" Key="GenerateHierarchicalModel" Value="True" />
+        <Item Type="System.String" Key="EntityType" Value="Tables" />
+        <Item Type="System.Boolean" Key="UseCustomBaseClass" Value="False" />
+        <Item Type="System.Boolean" Key="GenerateHierarchicalDataContracts" Value="False" />
         <Item Type="System.Boolean" Key="WcfEmitDefaultValue" Value="True" />
-        <Item Type="System.Boolean" Key="GenerateStrProperties" Value="False" />
-        <Item Type="System.Collections.ArrayList" Key="Entities" Value="categories,customers,employees,orderdetails,orders,products,shippers,suppliers" />
-        <Item Type="System.Boolean" Key="DebugVisualizer" Value="False" />
-        <Item Type="System.Boolean" Key="TargetTheCompactFramework" Value="False" />
+        <Item Type="System.Boolean" Key="WcfIsRequired" Value="False" />
+        <Item Type="System.Boolean" Key="TargetMultipleDatabases" Value="False" />
+        <Item Type="System.Boolean" Key="SupportINotifyChanged" Value="True" />
+        <Item Type="System.String" Key="WcfDataContract" Value="http://tempuri.org/" />
+        <Item Type="System.Collections.ArrayList" Key="Entities" Value="categories,customercustomerdemo,customerdemographics,customers,employees,employeeterritories,order details,orders,products,region,shippers,suppliers,territories" />
         <Item Type="System.Boolean" Key="SerializableQueries" Value="False" />
+        <Item Type="EntitySpaces.MetadataEngine.MySql.MySqlColumns" Key="Columns" Value="EntitySpaces.MetadataEngine.MySql.MySqlColumns" />
+        <Item Type="System.Boolean" Key="TargetTheCompactFramework" Value="False" />
+        <Item Type="System.Boolean" Key="MetadataClassShouldIgnoreSchema" Value="True" />
+        <Item Type="System.Boolean" Key="WcfOrder" Value="True" />
+        <Item Type="System.Boolean" Key="GenerateStrProperties" Value="False" />
+        <Item Type="System.Boolean" Key="GenerateHierarchicalModelSelectedTablesOnly" Value="False" />
+        <Item Type="System.Boolean" Key="GenerateHierarchicalModel" Value="True" />
+        <Item Type="System.Boolean" Key="GenerateSingleFile" Value="True" />
+        <Item Type="System.Boolean" Key="DebugVisualizer" Value="False" />
+        <Item Type="System.Boolean" Key="CompactXML" Value="False" />
         <Item Type="System.String" Key="ConnectionName" Value="" />
         <Item Type="System.Boolean" Key="DebuggerDisplay" Value="False" />
+        <Item Type="System.Boolean" Key="IncludeRowStateInXml" Value="True" />
+        <Item Type="System.String" Key="OutputPath" Value="{fixup\generated\}" />
+        <Item Type="EntitySpaces.MetadataEngine.esPluginSource" Key="Source" Value="EntitySpaces.MetadataEngine.esPluginSource" />
         <Item Type="System.Boolean" Key="WcfSupport" Value="False" />
-        <Item Type="System.Boolean" Key="GenerateHierarchicalRiaServicesSupport" Value="False" />
-        <Item Type="System.Boolean" Key="GenerateSingleFile" Value="True" />
-        <Item Type="System.Boolean" Key="GenerateHierarchicalModelSelectedTablesOnly" Value="False" />
-        <Item Type="System.String" Key="EntityType" Value="Tables" />
+        <Item Type="(null)" Key="View" />
+        <Item Type="EntitySpaces.MetadataEngine.MySql.MySqlTable" Key="Table" Value="EntitySpaces.MetadataEngine.MySql.MySqlTable" />
         <Item Type="System.String" Key="Namespace" Value="BusinessObjects" />
-        <Item Type="System.Boolean" Key="WcfIsRequired" Value="False" />
-        <Item Type="System.Boolean" Key="GenerateProxyStub" Value="False" />
-        <Item Type="System.String" Key="WcfDataContract" Value="http://tempuri.org/" />
       </Input>
       <esSettings>
         <Driver>MySql</Driver>

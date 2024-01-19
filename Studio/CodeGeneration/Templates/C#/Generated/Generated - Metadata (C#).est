@@ -98,8 +98,8 @@ namespace <%=Namespace%>
 			int i = 0;
 			foreach(IColumn col in cols)
 			{%>
-			c = new esColumnMetadata(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>, <%=i.ToString()%>, typeof(<%=col.CSharpToSystemType%>), <%=col.esSystemType%>);
-			c.PropertyName = <%=source.Metadata%>.PropertyNames.<%=col.PropertyName%>;<%
+			c = new esColumnMetadata(ColumnNames.<%=col.PropertyName%>, <%=i.ToString()%>, typeof(<%=col.CSharpToSystemType%>), <%=col.esSystemType%>);
+			c.PropertyName = PropertyNames.<%=col.PropertyName%>;<%
 				if(col.IsInPrimaryKey) %><%="\r\n\t\t\tc.IsInPrimaryKey = true;"%><%
 				if(col.IsAutoKey) %><%="\r\n\t\t\tc.IsAutoIncrement = true;"%><%
 				if(col.AutoKeyText != null && col.AutoKeyText != String.Empty) %><%="\r\n\t\t\tc.AutoKeyText = \"" + col.AutoKeyText + "\";"%><%				
@@ -197,20 +197,11 @@ namespace <%=Namespace%>
 			return meta;
 		}	
 		
-		public Guid DataID
-		{
-			get { return base.m_dataID; }
-		}	
-		
-		public bool MultiProviderMode
-		{
-			get { return <%=TargetMultipleDatabases%>; }
-		}		
+		public Guid DataID => m_dataID;
 
-		public esColumnMetadataCollection Columns
-		{
-			get	{ return base.m_columns; }
-		}
+		public bool MultiProviderMode => <%=TargetMultipleDatabases%>;
+
+		public esColumnMetadataCollection Columns => m_columns;
 		
 		#region ColumnNames
 		public class ColumnNames
@@ -234,12 +225,8 @@ namespace <%=Namespace%>
 
 		public esProviderSpecificMetadata GetProviderMetadata(string mapName)
 		{
-			MapToMeta mapMethod = mapDelegates[mapName];
-
-			if (mapMethod != null)
-				return mapMethod(mapName);
-			else
-				return null;
+			var mapMethod = mapDelegates[mapName];
+      return mapMethod?.Invoke(mapName);
 		}
 		
 		#region MAP esDefault
@@ -249,17 +236,9 @@ namespace <%=Namespace%>
 			// This is only executed once per the life of the application
 			lock (typeof(<%=source.Metadata%>))
 			{
-				if(<%=source.Metadata%>.mapDelegates == null)
-				{
-					<%=source.Metadata%>.mapDelegates = new Dictionary<string,MapToMeta>();
-				}
-				
-				if (<%=source.Metadata%>.meta == null)
-				{
-					<%=source.Metadata%>.meta = new <%=source.Metadata%>();
-				}
-				
-				MapToMeta mapMethod = new MapToMeta(meta.esDefault);
+				mapDelegates ??= new Dictionary<string, MapToMeta>();
+				meta ??= new <%=source.Metadata%>();
+				var mapMethod = new MapToMeta(meta.esDefault);
 				mapDelegates.Add("esDefault", mapMethod);
 				mapMethod("esDefault");
 			}
@@ -268,9 +247,10 @@ namespace <%=Namespace%>
 
 		private esProviderSpecificMetadata esDefault(string mapName)
 		{
+			// ReSharper disable once InvertIf
 			if(!m_providerMetadataMaps.ContainsKey(mapName))
 			{
-				esProviderSpecificMetadata meta = new esProviderSpecificMetadata();			
+				var specMeta = new esProviderSpecificMetadata();			
 <% 
 		foreach(IColumn col in cols)
 		{
@@ -318,11 +298,11 @@ namespace <%=Namespace%>
 <%		
 		foreach(IColumn col in cols)
 		{ 
-			%><%="\r\n\t\t\t\tmeta.AddTypeMap(\"" + col.PropertyName + "\", new esTypeMap(\"" + col.DataTypeName + "\", \"" + col.CSharpToSystemType + "\"));"%><%
+			%><%="\r\n\t\t\t\tspecMeta.AddTypeMap(\"" + col.PropertyName + "\", new esTypeMap(\"" + col.DataTypeName + "\", \"" + col.CSharpToSystemType + "\"));"%><%
 		}
 %>			
-				<%if(!MetadataClassShouldIgnoreCatalog && source.Catalog.Length > 0){%>meta.Catalog = "<%=source.Catalog%>";<%}%>
-				<%if(!MetadataClassShouldIgnoreSchema && source.Schema.Length > 0) { %>meta.Schema = "<%=source.Schema%>";<%}%>
+				<%if(!MetadataClassShouldIgnoreCatalog && source.Catalog.Length > 0){%>specMeta.Catalog = "<%=source.Catalog%>";<%}%>
+				<%if(!MetadataClassShouldIgnoreSchema && source.Schema.Length > 0) { %>specMeta.Schema = "<%=source.Schema%>";<%}%>
 				<%
 				
 				if(UseDnnObjectQualifier){%>
@@ -338,43 +318,43 @@ namespace <%=Namespace%>
 
 				if (objectQualifier != string.Empty)
 				{
-					meta.Source = objectQualifier + "<%=source.PhysicalName%>";
-					meta.Destination = objectQualifier + "<%=source.PhysicalName%>";
+					specMeta.Source = objectQualifier + "<%=source.PhysicalName%>";
+					specMeta.Destination = objectQualifier + "<%=source.PhysicalName%>";
 					
-					meta.spInsert = objectQualifier + "<%=esMeta.esPlugIn.ProcInsert(source)%>";				
-					meta.spUpdate = objectQualifier + "<%=esMeta.esPlugIn.ProcUpdate(source)%>";		
-					meta.spDelete = objectQualifier + "<%=esMeta.esPlugIn.ProcDelete(source)%>";
-					meta.spLoadAll = objectQualifier + "<%=esMeta.esPlugIn.ProcLoadAll(source)%>";
-					meta.spLoadByPrimaryKey = objectQualifier + "<%=esMeta.esPlugIn.ProcLoadByPK(source)%>";
+					specMeta.spInsert = objectQualifier + "<%=esMeta.esPlugIn.ProcInsert(source)%>";				
+					specMeta.spUpdate = objectQualifier + "<%=esMeta.esPlugIn.ProcUpdate(source)%>";		
+					specMeta.spDelete = objectQualifier + "<%=esMeta.esPlugIn.ProcDelete(source)%>";
+					specMeta.spLoadAll = objectQualifier + "<%=esMeta.esPlugIn.ProcLoadAll(source)%>";
+					specMeta.spLoadByPrimaryKey = objectQualifier + "<%=esMeta.esPlugIn.ProcLoadByPK(source)%>";
 				}
 				else
 				{
-					meta.Source = "<%=source.PhysicalName%>";
-					meta.Destination = "<%=source.PhysicalName%>";
+					specMeta.Source = "<%=source.PhysicalName%>";
+					specMeta.Destination = "<%=source.PhysicalName%>";
 									
-					meta.spInsert = "<%=esMeta.esPlugIn.ProcInsert(source)%>";				
-					meta.spUpdate = "<%=esMeta.esPlugIn.ProcUpdate(source)%>";		
-					meta.spDelete = "<%=esMeta.esPlugIn.ProcDelete(source)%>";
-					meta.spLoadAll = "<%=esMeta.esPlugIn.ProcLoadAll(source)%>";
-					meta.spLoadByPrimaryKey = "<%=esMeta.esPlugIn.ProcLoadByPK(source)%>";
+					specMeta.spInsert = "<%=esMeta.esPlugIn.ProcInsert(source)%>";				
+					specMeta.spUpdate = "<%=esMeta.esPlugIn.ProcUpdate(source)%>";		
+					specMeta.spDelete = "<%=esMeta.esPlugIn.ProcDelete(source)%>";
+					specMeta.spLoadAll = "<%=esMeta.esPlugIn.ProcLoadAll(source)%>";
+					specMeta.spLoadByPrimaryKey = "<%=esMeta.esPlugIn.ProcLoadByPK(source)%>";
 				}
 				<%}
 				else
 				{%>
-				meta.Source = "<%=source.PhysicalName%>";
-				meta.Destination = "<%=source.PhysicalName%>";
+				specMeta.Source = "<%=source.PhysicalName%>";
+				specMeta.Destination = "<%=source.PhysicalName%>";
 				<%if(esMeta.DriverString != "SQLCE")
 				{%>
-				meta.spInsert = "<%=esMeta.esPlugIn.ProcInsert(source)%>";				
-				meta.spUpdate = "<%=esMeta.esPlugIn.ProcUpdate(source)%>";		
-				meta.spDelete = "<%=esMeta.esPlugIn.ProcDelete(source)%>";
-				meta.spLoadAll = "<%=esMeta.esPlugIn.ProcLoadAll(source)%>";
-				meta.spLoadByPrimaryKey = "<%=esMeta.esPlugIn.ProcLoadByPK(source)%>";<%}%><%}%>
+				specMeta.spInsert = "<%=esMeta.esPlugIn.ProcInsert(source)%>";				
+				specMeta.spUpdate = "<%=esMeta.esPlugIn.ProcUpdate(source)%>";		
+				specMeta.spDelete = "<%=esMeta.esPlugIn.ProcDelete(source)%>";
+				specMeta.spLoadAll = "<%=esMeta.esPlugIn.ProcLoadAll(source)%>";
+				specMeta.spLoadByPrimaryKey = "<%=esMeta.esPlugIn.ProcLoadByPK(source)%>";<%}%><%}%>
 				
-				this.m_providerMetadataMaps["esDefault"] = meta;
+				m_providerMetadataMaps["esDefault"] = specMeta;
 			}
 			
-			return this.m_providerMetadataMaps["esDefault"];
+			return m_providerMetadataMaps["esDefault"];
 		}
 
 		#endregion

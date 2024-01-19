@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.1214.0
-EntitySpaces Driver  : SQL
-Date Generated       : 12/14/2019 5:29:52 PM
+EntitySpaces Version : 2024.1.4.0
+EntitySpaces Driver  : MySql
+Date Generated       : 19.01.2024 22:09:28
 ===============================================================================
 */
 
@@ -29,32 +29,30 @@ using EntitySpaces.DynamicQuery;
 
 
 
+// ReSharper disable InconsistentNaming
+
 namespace BusinessObjects
 {
 	/// <summary>
-	/// Encapsulates the 'Region' table
+	/// Encapsulates the 'region' table
 	/// </summary>
 
-    [DebuggerDisplay("Data = {Debug}")]
 	[Serializable]
 	[DataContract]
 	[KnownType(typeof(Region))]	
 	[XmlType("Region")]
 	public partial class Region : esRegion
 	{	
-		[DebuggerBrowsable(DebuggerBrowsableState.RootHidden | DebuggerBrowsableState.Never)]
-		protected override esEntityDebuggerView[] Debug
-		{
-			get { return base.Debug; }
-		}
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		protected override esEntityDebuggerView[] Debug => base.Debug;
 
-		override public esEntity CreateInstance()
+		public override esEntity CreateInstance()
 		{
 			return new Region();
 		}
 		
 		#region Static Quick Access Methods
-		static public void Delete(System.Int32 regionID)
+		public static void Delete(System.Int32 regionID)
 		{
 			var obj = new Region();
 			obj.RegionID = regionID;
@@ -63,7 +61,7 @@ namespace BusinessObjects
 			obj.Save();
 		}
 
-	    static public void Delete(System.Int32 regionID, esSqlAccessType sqlAccessType)
+	    public static void Delete(System.Int32 regionID, esSqlAccessType sqlAccessType)
 		{
 			var obj = new Region();
 			obj.RegionID = regionID;
@@ -81,7 +79,6 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Count = {Count}")]
 	[Serializable]
 	[CollectionDataContract]
 	[XmlType("RegionCollection")]
@@ -98,22 +95,21 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Query = {Parse()}")]
 	[Serializable]	
 	public partial class RegionQuery : esRegionQuery
 	{
 		public RegionQuery(string joinAlias)
 		{
-			this.es.JoinAlias = joinAlias;
+			es.JoinAlias = joinAlias;
 		}	
 
-		public RegionQuery(string joinAlias, out RegionQuery query)
+    public RegionQuery(string joinAlias, out RegionQuery query)
 		{
-			query = this;
-			this.es.JoinAlias = joinAlias;
-		}
+      query = this;
+			es.JoinAlias = joinAlias;
+		}	
 
-		override protected string GetQueryName()
+		protected override string GetQueryName()
 		{
 			return "RegionQuery";
 		}
@@ -137,7 +133,7 @@ namespace BusinessObjects
 
 	[DataContract]
 	[Serializable]
-	abstract public partial class esRegion : esEntity
+	public abstract partial class esRegion : esEntity
 	{
 		public esRegion()
 		{
@@ -181,56 +177,42 @@ namespace BusinessObjects
 		
 		
 		/// <summary>
-		/// Maps to Region.RegionID
+		/// Maps to region.RegionID
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int32? RegionID
+		public virtual System.Int32? RegionID
 		{
-			get
-			{
-				return base.GetSystemInt32(RegionMetadata.ColumnNames.RegionID);
-			}
+			get => GetSystemInt32(RegionMetadata.ColumnNames.RegionID);
 			
 			set
 			{
-				if(base.SetSystemInt32(RegionMetadata.ColumnNames.RegionID, value))
-				{
-					OnPropertyChanged(RegionMetadata.PropertyNames.RegionID);
-				}
+				if (!SetSystemInt32(RegionMetadata.ColumnNames.RegionID, value)) return;
+				
+				OnPropertyChanged(RegionMetadata.PropertyNames.RegionID);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Region.RegionDescription
+		/// Maps to region.RegionDescription
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String RegionDescription
+		public virtual System.String RegionDescription
 		{
-			get
-			{
-				return base.GetSystemString(RegionMetadata.ColumnNames.RegionDescription);
-			}
+			get => GetSystemString(RegionMetadata.ColumnNames.RegionDescription);
 			
 			set
 			{
-				if(base.SetSystemString(RegionMetadata.ColumnNames.RegionDescription, value))
-				{
-					OnPropertyChanged(RegionMetadata.PropertyNames.RegionDescription);
-				}
+				if (!SetSystemString(RegionMetadata.ColumnNames.RegionDescription, value)) return;
+				
+				OnPropertyChanged(RegionMetadata.PropertyNames.RegionDescription);
 			}
-		}
+		}		
 		
 		#endregion
 		
 		#region Housekeeping methods
 
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return RegionMetadata.Meta();
-			}
-		}
+		protected override IMetadata Meta => RegionMetadata.Meta();
 
 		#endregion		
 		
@@ -240,36 +222,28 @@ namespace BusinessObjects
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new RegionQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new RegionQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(RegionQuery query)
+		public bool Load(RegionQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
-			return this.Query.Load();
+			query = paraQuery;
+			InitQuery(query);
+			return Query.Load();
 		}
-
-		protected void InitQuery(RegionQuery query)
+		
+		protected void InitQuery(RegionQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntity)this).Connection;
+				paraQuery.es2.Connection = ((IEntity)this).Connection;
 			}			
-		}
-
-		protected override void HookupQuery(esDynamicQuery query)
-		{
-			this.InitQuery((RegionQuery)query);
 		}
 
 		#endregion
@@ -281,73 +255,60 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esRegionCollection : esEntityCollection<Region>
+	public abstract class esRegionCollection : esEntityCollection<Region>
 	{
 		#region Housekeeping methods
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return RegionMetadata.Meta();
-			}
-		}
-
+		protected override IMetadata Meta => RegionMetadata.Meta();
 		protected override string GetCollectionName()
 		{
 			return "RegionCollection";
 		}
-
 		#endregion		
 		
 		#region Query Logic
 
 	#if (!WindowsCE)
-		[BrowsableAttribute(false)]
+		[Browsable(false)]
 	#endif
 		public RegionQuery Query
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new RegionQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new RegionQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(RegionQuery query)
+		public bool Load(RegionQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
+			query = paraQuery;
+			InitQuery(query);
 			return Query.Load();
 		}
 
-		override protected esDynamicQuery GetDynamicQuery()
+		protected override esDynamicQuery GetDynamicQuery()
 		{
-			if (this.query == null)
-			{
-				this.query = new RegionQuery();
-				this.InitQuery(query);
-			}
-			return this.query;
+			if (query != null) return query;
+			query = new RegionQuery();
+			InitQuery(query);
+			return query;
 		}
 
-		protected void InitQuery(RegionQuery query)
+		protected void InitQuery(RegionQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntityCollection)this).Connection;
+				paraQuery.es2.Connection = ((IEntityCollection)this).Connection;
 			}			
 		}
 
-		protected override void HookupQuery(esDynamicQuery query)
+		protected override void HookupQuery(esDynamicQuery paraQuery)
 		{
-			this.InitQuery((RegionQuery)query);
+			InitQuery((RegionQuery)paraQuery);
 		}
 
 		#endregion
@@ -358,42 +319,29 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esRegionQuery : esDynamicQuery
+	public abstract class esRegionQuery : esDynamicQuery
 	{
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return RegionMetadata.Meta();
-			}
-		}	
+		protected override IMetadata Meta => RegionMetadata.Meta();
 		
 		#region QueryItemFromName
 		
         protected override esQueryItem QueryItemFromName(string name)
         {
-            switch (name)
+            return name switch
             {
-				case "RegionID": return this.RegionID;
-				case "RegionDescription": return this.RegionDescription;
-
-                default: return null;
-            }
+              "RegionID" => RegionID,
+              "RegionDescription" => RegionDescription,
+              _ => null
+            };
         }		
 		
 		#endregion
 		
 		#region esQueryItems
 
-		public esQueryItem RegionID
-		{
-			get { return new esQueryItem(this, RegionMetadata.ColumnNames.RegionID, esSystemType.Int32); }
-		} 
+		public esQueryItem RegionID => new (this, RegionMetadata.ColumnNames.RegionID, esSystemType.Int32);
 		
-		public esQueryItem RegionDescription
-		{
-			get { return new esQueryItem(this, RegionMetadata.ColumnNames.RegionDescription, esSystemType.String); }
-		} 
+		public esQueryItem RegionDescription => new (this, RegionMetadata.ColumnNames.RegionDescription, esSystemType.String);
 		
 		#endregion
 		
@@ -404,16 +352,16 @@ namespace BusinessObjects
 	public partial class Region : esRegion
 	{
 
-		#region TerritoriesCollection - Zero To Many (FK_Territories_Region)
+		#region TerritoriesByRegionID - Zero To Many
 		
-		static public esPrefetchMap Prefetch_TerritoriesCollection
+		public static esPrefetchMap Prefetch_TerritoriesByRegionID
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap
+				var map = new esPrefetchMap
 				{
-					PrefetchDelegate = BusinessObjects.Region.TerritoriesCollection_Delegate,
-					PropertyName = "TerritoriesCollection",
+					PrefetchDelegate = TerritoriesByRegionID_Delegate,
+					PropertyName = "TerritoriesByRegionID",
 					MyColumnName = "RegionID",
 					ParentColumnName = "RegionID",
 					IsMultiPartKey = false
@@ -422,18 +370,13 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void TerritoriesCollection_Delegate(esPrefetchParameters data)
+		private static void TerritoriesByRegionID_Delegate(esPrefetchParameters data)
 		{
-			RegionQuery parent = new RegionQuery(data.NextAlias());
+			var parent = new RegionQuery(data.NextAlias());
+			var me = data.You != null ? data.You as TerritoriesQuery : new TerritoriesQuery(data.NextAlias());
 
-			TerritoriesQuery me = data.You != null ? data.You as TerritoriesQuery : new TerritoriesQuery(data.NextAlias());
-
-			if (data.Root == null)
-			{
-				data.Root = me;
-			}
-			
-			data.Root.InnerJoin(parent).On(parent.RegionID == me.RegionID);
+			data.Root ??= me;
+			data.Root?.InnerJoin(parent).On(parent.RegionID == me?.RegionID);
 
 			data.You = parent;
 		}	
@@ -443,60 +386,52 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_Territories_Region
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeTerritoriesCollection()
+		public bool ShouldSerializeTerritoriesByRegionID()
 		{
-		    if(this._TerritoriesCollection != null && this._TerritoriesCollection.Count > 0)
-				return true;
-            else
-				return false;
+			return _TerritoriesByRegionID is { Count: > 0 };
 		}	
 		
 
-		[DataMember(Name="TerritoriesCollection", EmitDefaultValue = false)]
-		public TerritoriesCollection TerritoriesCollection
+		[DataMember(Name="TerritoriesByRegionID", EmitDefaultValue = false)]
+		public TerritoriesCollection TerritoriesByRegionID
 		{
 			get
 			{
-				if(this._TerritoriesCollection == null)
-				{
-					this._TerritoriesCollection = new TerritoriesCollection();
-					this._TerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("TerritoriesCollection", this._TerritoriesCollection);
+				if (_TerritoriesByRegionID != null) return _TerritoriesByRegionID;
 				
-					if (this.RegionID != null)
+				_TerritoriesByRegionID = new TerritoriesCollection();
+				_TerritoriesByRegionID.es.Connection.Name = es.Connection.Name;
+				SetPostSave("TerritoriesByRegionID", _TerritoriesByRegionID);
+				
+				// ReSharper disable once InvertIf
+				if (RegionID != null)
+				{
+					if (!es.IsLazyLoadDisabled)
 					{
-						if (!this.es.IsLazyLoadDisabled)
-						{
-							this._TerritoriesCollection.Query.Where(this._TerritoriesCollection.Query.RegionID == this.RegionID);
-							this._TerritoriesCollection.Query.Load();
-						}
-
-						// Auto-hookup Foreign Keys
-						this._TerritoriesCollection.fks.Add(TerritoriesMetadata.ColumnNames.RegionID, this.RegionID);
+						_TerritoriesByRegionID.Query.Where(_TerritoriesByRegionID.Query.RegionID == RegionID);
+						_TerritoriesByRegionID.Query.Load();
 					}
+
+					// Auto-hookup Foreign Keys
+					_TerritoriesByRegionID.fks.Add(TerritoriesMetadata.ColumnNames.RegionID, this.RegionID);
 				}
 
-				return this._TerritoriesCollection;
+				return _TerritoriesByRegionID;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
-			 
-				if (this._TerritoriesCollection != null) 
-				{ 
-					this.RemovePostSave("TerritoriesCollection"); 
-					this._TerritoriesCollection = null;
-					
-				} 
+				if (_TerritoriesByRegionID == null) return;
+				RemovePostSave("TerritoriesByRegionID"); 
+				_TerritoriesByRegionID = null;
+				OnPropertyChanged("TerritoriesByRegionID");
 			} 			
 		}
 		
-
-		
 			
 		
-		private TerritoriesCollection _TerritoriesCollection;
+		private TerritoriesCollection _TerritoriesByRegionID;
 		#endregion
 
 		
@@ -506,8 +441,8 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "TerritoriesCollection":
-					coll = this.TerritoriesCollection;
+				case "TerritoriesByRegionID":
+					coll = this.TerritoriesByRegionID;
 					break;	
 			}
 
@@ -518,10 +453,8 @@ namespace BusinessObjects
 		/// </summary>
 		protected override List<esPropertyDescriptor> GetHierarchicalProperties()
 		{
-			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
-			
-			props.Add(new esPropertyDescriptor(this, "TerritoriesCollection", typeof(TerritoriesCollection), new Territories()));
-		
+			var props = new List<esPropertyDescriptor>();
+			props.Add(new esPropertyDescriptor(this, "TerritoriesByRegionID", typeof(TerritoriesCollection), new Territories()));
 			return props;
 		}
 		
@@ -539,39 +472,30 @@ namespace BusinessObjects
 			m_columns = new esColumnMetadataCollection();
 			esColumnMetadata c;
 
-			c = new esColumnMetadata(RegionMetadata.ColumnNames.RegionID, 0, typeof(System.Int32), esSystemType.Int32);
-			c.PropertyName = RegionMetadata.PropertyNames.RegionID;
+			c = new esColumnMetadata(ColumnNames.RegionID, 0, typeof(System.Int32), esSystemType.Int32);
+			c.PropertyName = PropertyNames.RegionID;
 			c.IsInPrimaryKey = true;
-			c.NumericPrecision = 10;
+			c.NumericPrecision = 11;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(RegionMetadata.ColumnNames.RegionDescription, 1, typeof(System.String), esSystemType.String);
-			c.PropertyName = RegionMetadata.PropertyNames.RegionDescription;
+			c = new esColumnMetadata(ColumnNames.RegionDescription, 1, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.RegionDescription;
 			c.CharacterMaxLength = 50;
 			m_columns.Add(c);
 				
 		}
 		#endregion	
 	
-		static public RegionMetadata Meta()
+		public static RegionMetadata Meta()
 		{
 			return meta;
 		}	
 		
-		public Guid DataID
-		{
-			get { return base.m_dataID; }
-		}	
-		
-		public bool MultiProviderMode
-		{
-			get { return false; }
-		}		
+		public Guid DataID => m_dataID;
 
-		public esColumnMetadataCollection Columns
-		{
-			get	{ return base.m_columns; }
-		}
+		public bool MultiProviderMode => false;
+
+		public esColumnMetadataCollection Columns => m_columns;
 		
 		#region ColumnNames
 		public class ColumnNames
@@ -591,32 +515,20 @@ namespace BusinessObjects
 
 		public esProviderSpecificMetadata GetProviderMetadata(string mapName)
 		{
-			MapToMeta mapMethod = mapDelegates[mapName];
-
-			if (mapMethod != null)
-				return mapMethod(mapName);
-			else
-				return null;
+			var mapMethod = mapDelegates[mapName];
+      return mapMethod?.Invoke(mapName);
 		}
 		
 		#region MAP esDefault
 		
-		static private int RegisterDelegateesDefault()
+		private static int RegisterDelegateesDefault()
 		{
 			// This is only executed once per the life of the application
 			lock (typeof(RegionMetadata))
 			{
-				if(RegionMetadata.mapDelegates == null)
-				{
-					RegionMetadata.mapDelegates = new Dictionary<string,MapToMeta>();
-				}
-				
-				if (RegionMetadata.meta == null)
-				{
-					RegionMetadata.meta = new RegionMetadata();
-				}
-				
-				MapToMeta mapMethod = new MapToMeta(meta.esDefault);
+				mapDelegates ??= new Dictionary<string, MapToMeta>();
+				meta ??= new RegionMetadata();
+				var mapMethod = new MapToMeta(meta.esDefault);
 				mapDelegates.Add("esDefault", mapMethod);
 				mapMethod("esDefault");
 			}
@@ -625,35 +537,36 @@ namespace BusinessObjects
 
 		private esProviderSpecificMetadata esDefault(string mapName)
 		{
+			// ReSharper disable once InvertIf
 			if(!m_providerMetadataMaps.ContainsKey(mapName))
 			{
-				esProviderSpecificMetadata meta = new esProviderSpecificMetadata();			
+				var specMeta = new esProviderSpecificMetadata();			
 
 
-				meta.AddTypeMap("RegionID", new esTypeMap("int", "System.Int32"));
-				meta.AddTypeMap("RegionDescription", new esTypeMap("nchar", "System.String"));			
+				specMeta.AddTypeMap("RegionID", new esTypeMap("INT", "System.Int32"));
+				specMeta.AddTypeMap("RegionDescription", new esTypeMap("VARCHAR", "System.String"));			
 				
 				
 				
-				meta.Source = "Region";
-				meta.Destination = "Region";
+				specMeta.Source = "region";
+				specMeta.Destination = "region";
 				
-				meta.spInsert = "proc_RegionInsert";				
-				meta.spUpdate = "proc_RegionUpdate";		
-				meta.spDelete = "proc_RegionDelete";
-				meta.spLoadAll = "proc_RegionLoadAll";
-				meta.spLoadByPrimaryKey = "proc_RegionLoadByPrimaryKey";
+				specMeta.spInsert = "proc_regionInsert";				
+				specMeta.spUpdate = "proc_regionUpdate";		
+				specMeta.spDelete = "proc_regionDelete";
+				specMeta.spLoadAll = "proc_regionLoadAll";
+				specMeta.spLoadByPrimaryKey = "proc_regionLoadByPrimaryKey";
 				
-				this.m_providerMetadataMaps["esDefault"] = meta;
+				m_providerMetadataMaps["esDefault"] = specMeta;
 			}
 			
-			return this.m_providerMetadataMaps["esDefault"];
+			return m_providerMetadataMaps["esDefault"];
 		}
 
 		#endregion
 
-		static private RegionMetadata meta;
-		static protected Dictionary<string, MapToMeta> mapDelegates;
-		static private int _esDefault = RegisterDelegateesDefault();
+		private static RegionMetadata meta;
+		protected static Dictionary<string, MapToMeta> mapDelegates;
+		private static int _esDefault = RegisterDelegateesDefault();
 	}
 }

@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.1214.0
-EntitySpaces Driver  : SQL
-Date Generated       : 12/14/2019 5:29:52 PM
+EntitySpaces Version : 2024.1.4.0
+EntitySpaces Driver  : MySql
+Date Generated       : 19.01.2024 22:09:28
 ===============================================================================
 */
 
@@ -29,32 +29,30 @@ using EntitySpaces.DynamicQuery;
 
 
 
+// ReSharper disable InconsistentNaming
+
 namespace BusinessObjects
 {
 	/// <summary>
-	/// Encapsulates the 'Shippers' table
+	/// Encapsulates the 'shippers' table
 	/// </summary>
 
-    [DebuggerDisplay("Data = {Debug}")]
 	[Serializable]
 	[DataContract]
 	[KnownType(typeof(Shippers))]	
 	[XmlType("Shippers")]
 	public partial class Shippers : esShippers
 	{	
-		[DebuggerBrowsable(DebuggerBrowsableState.RootHidden | DebuggerBrowsableState.Never)]
-		protected override esEntityDebuggerView[] Debug
-		{
-			get { return base.Debug; }
-		}
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		protected override esEntityDebuggerView[] Debug => base.Debug;
 
-		override public esEntity CreateInstance()
+		public override esEntity CreateInstance()
 		{
 			return new Shippers();
 		}
 		
 		#region Static Quick Access Methods
-		static public void Delete(System.Int32 shipperID)
+		public static void Delete(System.Int32 shipperID)
 		{
 			var obj = new Shippers();
 			obj.ShipperID = shipperID;
@@ -63,7 +61,7 @@ namespace BusinessObjects
 			obj.Save();
 		}
 
-	    static public void Delete(System.Int32 shipperID, esSqlAccessType sqlAccessType)
+	    public static void Delete(System.Int32 shipperID, esSqlAccessType sqlAccessType)
 		{
 			var obj = new Shippers();
 			obj.ShipperID = shipperID;
@@ -81,7 +79,6 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Count = {Count}")]
 	[Serializable]
 	[CollectionDataContract]
 	[XmlType("ShippersCollection")]
@@ -98,22 +95,21 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Query = {Parse()}")]
 	[Serializable]	
 	public partial class ShippersQuery : esShippersQuery
 	{
 		public ShippersQuery(string joinAlias)
 		{
-			this.es.JoinAlias = joinAlias;
+			es.JoinAlias = joinAlias;
 		}	
 
-		public ShippersQuery(string joinAlias, out ShippersQuery query)
+    public ShippersQuery(string joinAlias, out ShippersQuery query)
 		{
-			query = this;
-			this.es.JoinAlias = joinAlias;
-		}
+      query = this;
+			es.JoinAlias = joinAlias;
+		}	
 
-		override protected string GetQueryName()
+		protected override string GetQueryName()
 		{
 			return "ShippersQuery";
 		}
@@ -137,7 +133,7 @@ namespace BusinessObjects
 
 	[DataContract]
 	[Serializable]
-	abstract public partial class esShippers : esEntity
+	public abstract partial class esShippers : esEntity
 	{
 		public esShippers()
 		{
@@ -181,76 +177,58 @@ namespace BusinessObjects
 		
 		
 		/// <summary>
-		/// Maps to Shippers.ShipperID
+		/// Maps to shippers.ShipperID
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int32? ShipperID
+		public virtual System.Int32? ShipperID
 		{
-			get
-			{
-				return base.GetSystemInt32(ShippersMetadata.ColumnNames.ShipperID);
-			}
+			get => GetSystemInt32(ShippersMetadata.ColumnNames.ShipperID);
 			
 			set
 			{
-				if(base.SetSystemInt32(ShippersMetadata.ColumnNames.ShipperID, value))
-				{
-					OnPropertyChanged(ShippersMetadata.PropertyNames.ShipperID);
-				}
+				if (!SetSystemInt32(ShippersMetadata.ColumnNames.ShipperID, value)) return;
+				
+				OnPropertyChanged(ShippersMetadata.PropertyNames.ShipperID);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Shippers.CompanyName
+		/// Maps to shippers.CompanyName
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String CompanyName
+		public virtual System.String CompanyName
 		{
-			get
-			{
-				return base.GetSystemString(ShippersMetadata.ColumnNames.CompanyName);
-			}
+			get => GetSystemString(ShippersMetadata.ColumnNames.CompanyName);
 			
 			set
 			{
-				if(base.SetSystemString(ShippersMetadata.ColumnNames.CompanyName, value))
-				{
-					OnPropertyChanged(ShippersMetadata.PropertyNames.CompanyName);
-				}
+				if (!SetSystemString(ShippersMetadata.ColumnNames.CompanyName, value)) return;
+				
+				OnPropertyChanged(ShippersMetadata.PropertyNames.CompanyName);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Shippers.Phone
+		/// Maps to shippers.Phone
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String Phone
+		public virtual System.String Phone
 		{
-			get
-			{
-				return base.GetSystemString(ShippersMetadata.ColumnNames.Phone);
-			}
+			get => GetSystemString(ShippersMetadata.ColumnNames.Phone);
 			
 			set
 			{
-				if(base.SetSystemString(ShippersMetadata.ColumnNames.Phone, value))
-				{
-					OnPropertyChanged(ShippersMetadata.PropertyNames.Phone);
-				}
+				if (!SetSystemString(ShippersMetadata.ColumnNames.Phone, value)) return;
+				
+				OnPropertyChanged(ShippersMetadata.PropertyNames.Phone);
 			}
-		}
+		}		
 		
 		#endregion
 		
 		#region Housekeeping methods
 
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return ShippersMetadata.Meta();
-			}
-		}
+		protected override IMetadata Meta => ShippersMetadata.Meta();
 
 		#endregion		
 		
@@ -260,36 +238,28 @@ namespace BusinessObjects
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new ShippersQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new ShippersQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(ShippersQuery query)
+		public bool Load(ShippersQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
-			return this.Query.Load();
+			query = paraQuery;
+			InitQuery(query);
+			return Query.Load();
 		}
-
-		protected void InitQuery(ShippersQuery query)
+		
+		protected void InitQuery(ShippersQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntity)this).Connection;
+				paraQuery.es2.Connection = ((IEntity)this).Connection;
 			}			
-		}
-
-		protected override void HookupQuery(esDynamicQuery query)
-		{
-			this.InitQuery((ShippersQuery)query);
 		}
 
 		#endregion
@@ -301,73 +271,60 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esShippersCollection : esEntityCollection<Shippers>
+	public abstract class esShippersCollection : esEntityCollection<Shippers>
 	{
 		#region Housekeeping methods
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return ShippersMetadata.Meta();
-			}
-		}
-
+		protected override IMetadata Meta => ShippersMetadata.Meta();
 		protected override string GetCollectionName()
 		{
 			return "ShippersCollection";
 		}
-
 		#endregion		
 		
 		#region Query Logic
 
 	#if (!WindowsCE)
-		[BrowsableAttribute(false)]
+		[Browsable(false)]
 	#endif
 		public ShippersQuery Query
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new ShippersQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new ShippersQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(ShippersQuery query)
+		public bool Load(ShippersQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
+			query = paraQuery;
+			InitQuery(query);
 			return Query.Load();
 		}
 
-		override protected esDynamicQuery GetDynamicQuery()
+		protected override esDynamicQuery GetDynamicQuery()
 		{
-			if (this.query == null)
-			{
-				this.query = new ShippersQuery();
-				this.InitQuery(query);
-			}
-			return this.query;
+			if (query != null) return query;
+			query = new ShippersQuery();
+			InitQuery(query);
+			return query;
 		}
 
-		protected void InitQuery(ShippersQuery query)
+		protected void InitQuery(ShippersQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntityCollection)this).Connection;
+				paraQuery.es2.Connection = ((IEntityCollection)this).Connection;
 			}			
 		}
 
-		protected override void HookupQuery(esDynamicQuery query)
+		protected override void HookupQuery(esDynamicQuery paraQuery)
 		{
-			this.InitQuery((ShippersQuery)query);
+			InitQuery((ShippersQuery)paraQuery);
 		}
 
 		#endregion
@@ -378,48 +335,32 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esShippersQuery : esDynamicQuery
+	public abstract class esShippersQuery : esDynamicQuery
 	{
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return ShippersMetadata.Meta();
-			}
-		}	
+		protected override IMetadata Meta => ShippersMetadata.Meta();
 		
 		#region QueryItemFromName
 		
         protected override esQueryItem QueryItemFromName(string name)
         {
-            switch (name)
+            return name switch
             {
-				case "ShipperID": return this.ShipperID;
-				case "CompanyName": return this.CompanyName;
-				case "Phone": return this.Phone;
-
-                default: return null;
-            }
+              "ShipperID" => ShipperID,
+              "CompanyName" => CompanyName,
+              "Phone" => Phone,
+              _ => null
+            };
         }		
 		
 		#endregion
 		
 		#region esQueryItems
 
-		public esQueryItem ShipperID
-		{
-			get { return new esQueryItem(this, ShippersMetadata.ColumnNames.ShipperID, esSystemType.Int32); }
-		} 
+		public esQueryItem ShipperID => new (this, ShippersMetadata.ColumnNames.ShipperID, esSystemType.Int32);
 		
-		public esQueryItem CompanyName
-		{
-			get { return new esQueryItem(this, ShippersMetadata.ColumnNames.CompanyName, esSystemType.String); }
-		} 
+		public esQueryItem CompanyName => new (this, ShippersMetadata.ColumnNames.CompanyName, esSystemType.String);
 		
-		public esQueryItem Phone
-		{
-			get { return new esQueryItem(this, ShippersMetadata.ColumnNames.Phone, esSystemType.String); }
-		} 
+		public esQueryItem Phone => new (this, ShippersMetadata.ColumnNames.Phone, esSystemType.String);
 		
 		#endregion
 		
@@ -430,16 +371,16 @@ namespace BusinessObjects
 	public partial class Shippers : esShippers
 	{
 
-		#region OrdersCollection - Zero To Many (FK_Orders_Shippers)
+		#region OrdersByShipVia - Zero To Many
 		
-		static public esPrefetchMap Prefetch_OrdersCollection
+		public static esPrefetchMap Prefetch_OrdersByShipVia
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap
+				var map = new esPrefetchMap
 				{
-					PrefetchDelegate = BusinessObjects.Shippers.OrdersCollection_Delegate,
-					PropertyName = "OrdersCollection",
+					PrefetchDelegate = OrdersByShipVia_Delegate,
+					PropertyName = "OrdersByShipVia",
 					MyColumnName = "ShipVia",
 					ParentColumnName = "ShipperID",
 					IsMultiPartKey = false
@@ -448,18 +389,13 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void OrdersCollection_Delegate(esPrefetchParameters data)
+		private static void OrdersByShipVia_Delegate(esPrefetchParameters data)
 		{
-			ShippersQuery parent = new ShippersQuery(data.NextAlias());
+			var parent = new ShippersQuery(data.NextAlias());
+			var me = data.You != null ? data.You as OrdersQuery : new OrdersQuery(data.NextAlias());
 
-			OrdersQuery me = data.You != null ? data.You as OrdersQuery : new OrdersQuery(data.NextAlias());
-
-			if (data.Root == null)
-			{
-				data.Root = me;
-			}
-			
-			data.Root.InnerJoin(parent).On(parent.ShipperID == me.ShipVia);
+			data.Root ??= me;
+			data.Root?.InnerJoin(parent).On(parent.ShipperID == me?.ShipVia);
 
 			data.You = parent;
 		}	
@@ -469,60 +405,52 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_Orders_Shippers
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeOrdersCollection()
+		public bool ShouldSerializeOrdersByShipVia()
 		{
-		    if(this._OrdersCollection != null && this._OrdersCollection.Count > 0)
-				return true;
-            else
-				return false;
+			return _OrdersByShipVia is { Count: > 0 };
 		}	
 		
 
-		[DataMember(Name="OrdersCollection", EmitDefaultValue = false)]
-		public OrdersCollection OrdersCollection
+		[DataMember(Name="OrdersByShipVia", EmitDefaultValue = false)]
+		public OrdersCollection OrdersByShipVia
 		{
 			get
 			{
-				if(this._OrdersCollection == null)
-				{
-					this._OrdersCollection = new OrdersCollection();
-					this._OrdersCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("OrdersCollection", this._OrdersCollection);
+				if (_OrdersByShipVia != null) return _OrdersByShipVia;
 				
-					if (this.ShipperID != null)
+				_OrdersByShipVia = new OrdersCollection();
+				_OrdersByShipVia.es.Connection.Name = es.Connection.Name;
+				SetPostSave("OrdersByShipVia", _OrdersByShipVia);
+				
+				// ReSharper disable once InvertIf
+				if (ShipperID != null)
+				{
+					if (!es.IsLazyLoadDisabled)
 					{
-						if (!this.es.IsLazyLoadDisabled)
-						{
-							this._OrdersCollection.Query.Where(this._OrdersCollection.Query.ShipVia == this.ShipperID);
-							this._OrdersCollection.Query.Load();
-						}
-
-						// Auto-hookup Foreign Keys
-						this._OrdersCollection.fks.Add(OrdersMetadata.ColumnNames.ShipVia, this.ShipperID);
+						_OrdersByShipVia.Query.Where(_OrdersByShipVia.Query.ShipVia == ShipperID);
+						_OrdersByShipVia.Query.Load();
 					}
+
+					// Auto-hookup Foreign Keys
+					_OrdersByShipVia.fks.Add(OrdersMetadata.ColumnNames.ShipVia, this.ShipperID);
 				}
 
-				return this._OrdersCollection;
+				return _OrdersByShipVia;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
-			 
-				if (this._OrdersCollection != null) 
-				{ 
-					this.RemovePostSave("OrdersCollection"); 
-					this._OrdersCollection = null;
-					
-				} 
+				if (_OrdersByShipVia == null) return;
+				RemovePostSave("OrdersByShipVia"); 
+				_OrdersByShipVia = null;
+				OnPropertyChanged("OrdersByShipVia");
 			} 			
 		}
 		
-
-		
 			
 		
-		private OrdersCollection _OrdersCollection;
+		private OrdersCollection _OrdersByShipVia;
 		#endregion
 
 		
@@ -532,8 +460,8 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "OrdersCollection":
-					coll = this.OrdersCollection;
+				case "OrdersByShipVia":
+					coll = this.OrdersByShipVia;
 					break;	
 			}
 
@@ -544,10 +472,8 @@ namespace BusinessObjects
 		/// </summary>
 		protected override List<esPropertyDescriptor> GetHierarchicalProperties()
 		{
-			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
-			
-			props.Add(new esPropertyDescriptor(this, "OrdersCollection", typeof(OrdersCollection), new Orders()));
-		
+			var props = new List<esPropertyDescriptor>();
+			props.Add(new esPropertyDescriptor(this, "OrdersByShipVia", typeof(OrdersCollection), new Orders()));
 			return props;
 		}
 		
@@ -574,9 +500,9 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPostSaveKeys()
 		{
-			if(this._OrdersCollection != null)
+			if(this._OrdersByShipVia != null)
 			{
-				Apply(this._OrdersCollection, "ShipVia", this.ShipperID);
+				Apply(this._OrdersByShipVia, "ShipVia", this.ShipperID);
 			}
 		}
 		
@@ -594,20 +520,20 @@ namespace BusinessObjects
 			m_columns = new esColumnMetadataCollection();
 			esColumnMetadata c;
 
-			c = new esColumnMetadata(ShippersMetadata.ColumnNames.ShipperID, 0, typeof(System.Int32), esSystemType.Int32);
-			c.PropertyName = ShippersMetadata.PropertyNames.ShipperID;
+			c = new esColumnMetadata(ColumnNames.ShipperID, 0, typeof(System.Int32), esSystemType.Int32);
+			c.PropertyName = PropertyNames.ShipperID;
 			c.IsInPrimaryKey = true;
 			c.IsAutoIncrement = true;
-			c.NumericPrecision = 10;
+			c.NumericPrecision = 11;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(ShippersMetadata.ColumnNames.CompanyName, 1, typeof(System.String), esSystemType.String);
-			c.PropertyName = ShippersMetadata.PropertyNames.CompanyName;
+			c = new esColumnMetadata(ColumnNames.CompanyName, 1, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.CompanyName;
 			c.CharacterMaxLength = 40;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(ShippersMetadata.ColumnNames.Phone, 2, typeof(System.String), esSystemType.String);
-			c.PropertyName = ShippersMetadata.PropertyNames.Phone;
+			c = new esColumnMetadata(ColumnNames.Phone, 2, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.Phone;
 			c.CharacterMaxLength = 24;
 			c.IsNullable = true;
 			m_columns.Add(c);
@@ -615,25 +541,16 @@ namespace BusinessObjects
 		}
 		#endregion	
 	
-		static public ShippersMetadata Meta()
+		public static ShippersMetadata Meta()
 		{
 			return meta;
 		}	
 		
-		public Guid DataID
-		{
-			get { return base.m_dataID; }
-		}	
-		
-		public bool MultiProviderMode
-		{
-			get { return false; }
-		}		
+		public Guid DataID => m_dataID;
 
-		public esColumnMetadataCollection Columns
-		{
-			get	{ return base.m_columns; }
-		}
+		public bool MultiProviderMode => false;
+
+		public esColumnMetadataCollection Columns => m_columns;
 		
 		#region ColumnNames
 		public class ColumnNames
@@ -655,32 +572,20 @@ namespace BusinessObjects
 
 		public esProviderSpecificMetadata GetProviderMetadata(string mapName)
 		{
-			MapToMeta mapMethod = mapDelegates[mapName];
-
-			if (mapMethod != null)
-				return mapMethod(mapName);
-			else
-				return null;
+			var mapMethod = mapDelegates[mapName];
+      return mapMethod?.Invoke(mapName);
 		}
 		
 		#region MAP esDefault
 		
-		static private int RegisterDelegateesDefault()
+		private static int RegisterDelegateesDefault()
 		{
 			// This is only executed once per the life of the application
 			lock (typeof(ShippersMetadata))
 			{
-				if(ShippersMetadata.mapDelegates == null)
-				{
-					ShippersMetadata.mapDelegates = new Dictionary<string,MapToMeta>();
-				}
-				
-				if (ShippersMetadata.meta == null)
-				{
-					ShippersMetadata.meta = new ShippersMetadata();
-				}
-				
-				MapToMeta mapMethod = new MapToMeta(meta.esDefault);
+				mapDelegates ??= new Dictionary<string, MapToMeta>();
+				meta ??= new ShippersMetadata();
+				var mapMethod = new MapToMeta(meta.esDefault);
 				mapDelegates.Add("esDefault", mapMethod);
 				mapMethod("esDefault");
 			}
@@ -689,36 +594,37 @@ namespace BusinessObjects
 
 		private esProviderSpecificMetadata esDefault(string mapName)
 		{
+			// ReSharper disable once InvertIf
 			if(!m_providerMetadataMaps.ContainsKey(mapName))
 			{
-				esProviderSpecificMetadata meta = new esProviderSpecificMetadata();			
+				var specMeta = new esProviderSpecificMetadata();			
 
 
-				meta.AddTypeMap("ShipperID", new esTypeMap("int", "System.Int32"));
-				meta.AddTypeMap("CompanyName", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("Phone", new esTypeMap("nvarchar", "System.String"));			
+				specMeta.AddTypeMap("ShipperID", new esTypeMap("INT", "System.Int32"));
+				specMeta.AddTypeMap("CompanyName", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("Phone", new esTypeMap("VARCHAR", "System.String"));			
 				
 				
 				
-				meta.Source = "Shippers";
-				meta.Destination = "Shippers";
+				specMeta.Source = "shippers";
+				specMeta.Destination = "shippers";
 				
-				meta.spInsert = "proc_ShippersInsert";				
-				meta.spUpdate = "proc_ShippersUpdate";		
-				meta.spDelete = "proc_ShippersDelete";
-				meta.spLoadAll = "proc_ShippersLoadAll";
-				meta.spLoadByPrimaryKey = "proc_ShippersLoadByPrimaryKey";
+				specMeta.spInsert = "proc_shippersInsert";				
+				specMeta.spUpdate = "proc_shippersUpdate";		
+				specMeta.spDelete = "proc_shippersDelete";
+				specMeta.spLoadAll = "proc_shippersLoadAll";
+				specMeta.spLoadByPrimaryKey = "proc_shippersLoadByPrimaryKey";
 				
-				this.m_providerMetadataMaps["esDefault"] = meta;
+				m_providerMetadataMaps["esDefault"] = specMeta;
 			}
 			
-			return this.m_providerMetadataMaps["esDefault"];
+			return m_providerMetadataMaps["esDefault"];
 		}
 
 		#endregion
 
-		static private ShippersMetadata meta;
-		static protected Dictionary<string, MapToMeta> mapDelegates;
-		static private int _esDefault = RegisterDelegateesDefault();
+		private static ShippersMetadata meta;
+		protected static Dictionary<string, MapToMeta> mapDelegates;
+		private static int _esDefault = RegisterDelegateesDefault();
 	}
 }

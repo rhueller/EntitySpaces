@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.1214.0
-EntitySpaces Driver  : SQL
-Date Generated       : 12/14/2019 5:29:52 PM
+EntitySpaces Version : 2024.1.4.0
+EntitySpaces Driver  : MySql
+Date Generated       : 19.01.2024 22:09:28
 ===============================================================================
 */
 
@@ -29,32 +29,30 @@ using EntitySpaces.DynamicQuery;
 
 
 
+// ReSharper disable InconsistentNaming
+
 namespace BusinessObjects
 {
 	/// <summary>
-	/// Encapsulates the 'Territories' table
+	/// Encapsulates the 'territories' table
 	/// </summary>
 
-    [DebuggerDisplay("Data = {Debug}")]
 	[Serializable]
 	[DataContract]
 	[KnownType(typeof(Territories))]	
 	[XmlType("Territories")]
 	public partial class Territories : esTerritories
 	{	
-		[DebuggerBrowsable(DebuggerBrowsableState.RootHidden | DebuggerBrowsableState.Never)]
-		protected override esEntityDebuggerView[] Debug
-		{
-			get { return base.Debug; }
-		}
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		protected override esEntityDebuggerView[] Debug => base.Debug;
 
-		override public esEntity CreateInstance()
+		public override esEntity CreateInstance()
 		{
 			return new Territories();
 		}
 		
 		#region Static Quick Access Methods
-		static public void Delete(System.String territoryID)
+		public static void Delete(System.String territoryID)
 		{
 			var obj = new Territories();
 			obj.TerritoryID = territoryID;
@@ -63,7 +61,7 @@ namespace BusinessObjects
 			obj.Save();
 		}
 
-	    static public void Delete(System.String territoryID, esSqlAccessType sqlAccessType)
+	    public static void Delete(System.String territoryID, esSqlAccessType sqlAccessType)
 		{
 			var obj = new Territories();
 			obj.TerritoryID = territoryID;
@@ -81,7 +79,6 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Count = {Count}")]
 	[Serializable]
 	[CollectionDataContract]
 	[XmlType("TerritoriesCollection")]
@@ -98,22 +95,21 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Query = {Parse()}")]
 	[Serializable]	
 	public partial class TerritoriesQuery : esTerritoriesQuery
 	{
 		public TerritoriesQuery(string joinAlias)
 		{
-			this.es.JoinAlias = joinAlias;
+			es.JoinAlias = joinAlias;
 		}	
 
-		public TerritoriesQuery(string joinAlias, out TerritoriesQuery query)
+    public TerritoriesQuery(string joinAlias, out TerritoriesQuery query)
 		{
-			query = this;
-			this.es.JoinAlias = joinAlias;
-		}
+      query = this;
+			es.JoinAlias = joinAlias;
+		}	
 
-		override protected string GetQueryName()
+		protected override string GetQueryName()
 		{
 			return "TerritoriesQuery";
 		}
@@ -137,7 +133,7 @@ namespace BusinessObjects
 
 	[DataContract]
 	[Serializable]
-	abstract public partial class esTerritories : esEntity
+	public abstract partial class esTerritories : esEntity
 	{
 		public esTerritories()
 		{
@@ -181,79 +177,62 @@ namespace BusinessObjects
 		
 		
 		/// <summary>
-		/// Maps to Territories.TerritoryID
+		/// Maps to territories.TerritoryID
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String TerritoryID
+		public virtual System.String TerritoryID
 		{
-			get
-			{
-				return base.GetSystemString(TerritoriesMetadata.ColumnNames.TerritoryID);
-			}
+			get => GetSystemString(TerritoriesMetadata.ColumnNames.TerritoryID);
 			
 			set
 			{
-				if(base.SetSystemString(TerritoriesMetadata.ColumnNames.TerritoryID, value))
-				{
-					OnPropertyChanged(TerritoriesMetadata.PropertyNames.TerritoryID);
-				}
+				if (!SetSystemString(TerritoriesMetadata.ColumnNames.TerritoryID, value)) return;
+				
+				OnPropertyChanged(TerritoriesMetadata.PropertyNames.TerritoryID);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Territories.TerritoryDescription
+		/// Maps to territories.TerritoryDescription
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String TerritoryDescription
+		public virtual System.String TerritoryDescription
 		{
-			get
-			{
-				return base.GetSystemString(TerritoriesMetadata.ColumnNames.TerritoryDescription);
-			}
+			get => GetSystemString(TerritoriesMetadata.ColumnNames.TerritoryDescription);
 			
 			set
 			{
-				if(base.SetSystemString(TerritoriesMetadata.ColumnNames.TerritoryDescription, value))
-				{
-					OnPropertyChanged(TerritoriesMetadata.PropertyNames.TerritoryDescription);
-				}
+				if (!SetSystemString(TerritoriesMetadata.ColumnNames.TerritoryDescription, value)) return;
+				
+				OnPropertyChanged(TerritoriesMetadata.PropertyNames.TerritoryDescription);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Territories.RegionID
+		/// Maps to territories.RegionID
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int32? RegionID
+		public virtual System.Int32? RegionID
 		{
-			get
-			{
-				return base.GetSystemInt32(TerritoriesMetadata.ColumnNames.RegionID);
-			}
+			get => GetSystemInt32(TerritoriesMetadata.ColumnNames.RegionID);
 			
 			set
 			{
-				if(base.SetSystemInt32(TerritoriesMetadata.ColumnNames.RegionID, value))
-				{
-					this._Region = null;
-					this.OnPropertyChanged("Region");
-					OnPropertyChanged(TerritoriesMetadata.PropertyNames.RegionID);
-				}
+				if (!SetSystemInt32(TerritoriesMetadata.ColumnNames.RegionID, value)) return;
+				
+				_UpToRegionByRegionID = null;
+				OnPropertyChanged("UpToRegionByRegionID");
+				OnPropertyChanged(TerritoriesMetadata.PropertyNames.RegionID);
 			}
-		}
+		}		
 		
-		internal protected Region _Region;
+		
+		protected internal Region _UpToRegionByRegionID;
 		#endregion
 		
 		#region Housekeeping methods
 
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return TerritoriesMetadata.Meta();
-			}
-		}
+		protected override IMetadata Meta => TerritoriesMetadata.Meta();
 
 		#endregion		
 		
@@ -263,36 +242,28 @@ namespace BusinessObjects
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new TerritoriesQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new TerritoriesQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(TerritoriesQuery query)
+		public bool Load(TerritoriesQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
-			return this.Query.Load();
+			query = paraQuery;
+			InitQuery(query);
+			return Query.Load();
 		}
-
-		protected void InitQuery(TerritoriesQuery query)
+		
+		protected void InitQuery(TerritoriesQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntity)this).Connection;
+				paraQuery.es2.Connection = ((IEntity)this).Connection;
 			}			
-		}
-
-		protected override void HookupQuery(esDynamicQuery query)
-		{
-			this.InitQuery((TerritoriesQuery)query);
 		}
 
 		#endregion
@@ -304,73 +275,60 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esTerritoriesCollection : esEntityCollection<Territories>
+	public abstract class esTerritoriesCollection : esEntityCollection<Territories>
 	{
 		#region Housekeeping methods
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return TerritoriesMetadata.Meta();
-			}
-		}
-
+		protected override IMetadata Meta => TerritoriesMetadata.Meta();
 		protected override string GetCollectionName()
 		{
 			return "TerritoriesCollection";
 		}
-
 		#endregion		
 		
 		#region Query Logic
 
 	#if (!WindowsCE)
-		[BrowsableAttribute(false)]
+		[Browsable(false)]
 	#endif
 		public TerritoriesQuery Query
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new TerritoriesQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new TerritoriesQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(TerritoriesQuery query)
+		public bool Load(TerritoriesQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
+			query = paraQuery;
+			InitQuery(query);
 			return Query.Load();
 		}
 
-		override protected esDynamicQuery GetDynamicQuery()
+		protected override esDynamicQuery GetDynamicQuery()
 		{
-			if (this.query == null)
-			{
-				this.query = new TerritoriesQuery();
-				this.InitQuery(query);
-			}
-			return this.query;
+			if (query != null) return query;
+			query = new TerritoriesQuery();
+			InitQuery(query);
+			return query;
 		}
 
-		protected void InitQuery(TerritoriesQuery query)
+		protected void InitQuery(TerritoriesQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntityCollection)this).Connection;
+				paraQuery.es2.Connection = ((IEntityCollection)this).Connection;
 			}			
 		}
 
-		protected override void HookupQuery(esDynamicQuery query)
+		protected override void HookupQuery(esDynamicQuery paraQuery)
 		{
-			this.InitQuery((TerritoriesQuery)query);
+			InitQuery((TerritoriesQuery)paraQuery);
 		}
 
 		#endregion
@@ -381,48 +339,32 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esTerritoriesQuery : esDynamicQuery
+	public abstract class esTerritoriesQuery : esDynamicQuery
 	{
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return TerritoriesMetadata.Meta();
-			}
-		}	
+		protected override IMetadata Meta => TerritoriesMetadata.Meta();
 		
 		#region QueryItemFromName
 		
         protected override esQueryItem QueryItemFromName(string name)
         {
-            switch (name)
+            return name switch
             {
-				case "TerritoryID": return this.TerritoryID;
-				case "TerritoryDescription": return this.TerritoryDescription;
-				case "RegionID": return this.RegionID;
-
-                default: return null;
-            }
+              "TerritoryID" => TerritoryID,
+              "TerritoryDescription" => TerritoryDescription,
+              "RegionID" => RegionID,
+              _ => null
+            };
         }		
 		
 		#endregion
 		
 		#region esQueryItems
 
-		public esQueryItem TerritoryID
-		{
-			get { return new esQueryItem(this, TerritoriesMetadata.ColumnNames.TerritoryID, esSystemType.String); }
-		} 
+		public esQueryItem TerritoryID => new (this, TerritoriesMetadata.ColumnNames.TerritoryID, esSystemType.String);
 		
-		public esQueryItem TerritoryDescription
-		{
-			get { return new esQueryItem(this, TerritoriesMetadata.ColumnNames.TerritoryDescription, esSystemType.String); }
-		} 
+		public esQueryItem TerritoryDescription => new (this, TerritoriesMetadata.ColumnNames.TerritoryDescription, esSystemType.String);
 		
-		public esQueryItem RegionID
-		{
-			get { return new esQueryItem(this, TerritoriesMetadata.ColumnNames.RegionID, esSystemType.Int32); }
-		} 
+		public esQueryItem RegionID => new (this, TerritoriesMetadata.ColumnNames.RegionID, esSystemType.Int32);
 		
 		#endregion
 		
@@ -433,53 +375,115 @@ namespace BusinessObjects
 	public partial class Territories : esTerritories
 	{
 
-			
-		#region EmployeesCollection - Many To Many (FK_EmployeeTerritories_Territories)
-		
-	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeEmployeesCollection()
+				
+				
+		#region UpToRegionByRegionID - Many To One
+		/// <summary>
+		/// Many to One
+		/// Foreign Key Name - FK_Territories_Region
+		/// </summary>
+			[EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToRegionByRegionID()
 		{
-		    if(this._EmployeesCollection != null && this._EmployeesCollection.Count > 0)
-				return true;
-            else
-				return false;
+				return _UpToRegionByRegionID != null;
 		}
 		
 
-		[DataMember(Name="EmployeesCollection", EmitDefaultValue = false)]
-		public EmployeesCollection EmployeesCollection
+		[DataMember(Name="UpToRegionByRegionID", EmitDefaultValue = false)]
+					
+		public Region UpToRegionByRegionID
 		{
 			get
 			{
-				if(this._EmployeesCollection == null)
+				if (_UpToRegionByRegionID != null) return _UpToRegionByRegionID;
+				
+				_UpToRegionByRegionID = new Region();
+				_UpToRegionByRegionID.es.Connection.Name = es.Connection.Name;
+				SetPreSave("UpToRegionByRegionID", _UpToRegionByRegionID);
+
+				if (_UpToRegionByRegionID == null && RegionID != null)
 				{
-					this._EmployeesCollection = new EmployeesCollection();
-					this._EmployeesCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("EmployeesCollection", this._EmployeesCollection);
-					if (!this.es.IsLazyLoadDisabled && this.TerritoryID != null)
-					{
-						EmployeesQuery m = new EmployeesQuery("m");
-						EmployeeTerritoriesQuery j = new EmployeeTerritoriesQuery("j");
-						m.Select(m);
-						m.InnerJoin(j).On(m.EmployeeID == j.EmployeeID);
-                        m.Where(j.TerritoryID == this.TerritoryID);
-
-						this._EmployeesCollection.Load(m);
-					}
+					if (es.IsLazyLoadDisabled) return _UpToRegionByRegionID;
+					
+					_UpToRegionByRegionID.Query.Where(_UpToRegionByRegionID.Query.RegionID == RegionID);
+					_UpToRegionByRegionID.Query.Load();
 				}
+				return _UpToRegionByRegionID;
+			}
+			
+			set
+			{
+				RemovePreSave("UpToRegionByRegionID");
+				
+				var changed = _UpToRegionByRegionID != value;
 
-				return this._EmployeesCollection;
+				if (value == null)
+				{
+					RegionID = null;
+					_UpToRegionByRegionID = null;
+				}
+				else
+				{
+					RegionID = value.RegionID;
+					_UpToRegionByRegionID = value;
+					SetPreSave("UpToRegionByRegionID", _UpToRegionByRegionID);
+				}
+				
+				if (changed)
+				{
+					OnPropertyChanged("UpToRegionByRegionID");
+				}
+			}
+		}
+		#endregion
+		
+
+		#region UpToEmployeesByEmployeeterritories - Many To Many
+
+		/// <summary>
+		/// Many to Many
+		/// Foreign Key Name - FK_EmployeeTerritories_Territories
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToEmployeesByEmployeeterritories()
+		{
+			return _UpToEmployeesByEmployeeterritories is { Count: > 0 };
+		}
+		
+
+		[DataMember(Name="UpToEmployeesByEmployeeterritories", EmitDefaultValue = false)]
+		public EmployeesCollection UpToEmployeesByEmployeeterritories
+		{
+			get
+			{
+				if (_UpToEmployeesByEmployeeterritories != null) return _UpToEmployeesByEmployeeterritories;
+
+				_UpToEmployeesByEmployeeterritories = new EmployeesCollection();
+				_UpToEmployeesByEmployeeterritories.es.Connection.Name = es.Connection.Name;
+				SetPostSave("UpToEmployeesByEmployeeterritories", _UpToEmployeesByEmployeeterritories);
+
+				if (es.IsLazyLoadDisabled || TerritoryID == null) return _UpToEmployeesByEmployeeterritories;
+
+				var m = new EmployeesQuery("m");
+				var j = new EmployeeterritoriesQuery("j");
+				m.Select(m);
+				m.InnerJoin(j).On(m.EmployeeID == j.EmployeeID);
+				m.Where(j.TerritoryID == TerritoryID);
+
+				_UpToEmployeesByEmployeeterritories.Load(m);
+
+				return _UpToEmployeesByEmployeeterritories;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._EmployeesCollection != null) 
+				if (_UpToEmployeesByEmployeeterritories != null) 
 				{ 
-					this.RemovePostSave("EmployeesCollection"); 
-					this._EmployeesCollection = null;
-					
+					RemovePostSave("UpToEmployeesByEmployeeterritories"); 
+					_UpToEmployeesByEmployeeterritories = null;
+					OnPropertyChanged("UpToEmployeesByEmployeeterritories");
 				} 
 			}  			
 		}
@@ -488,54 +492,54 @@ namespace BusinessObjects
 		/// Many to Many Associate
 		/// Foreign Key Name - FK_EmployeeTerritories_Territories
 		/// </summary>
-		public void ASsociateEmployeeTerritoriesCollection(Employees entity)
+		public void AssociateEmployeesByEmployeeterritories(Employees entity)
 		{
-			if (this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection == null)
+			if (this._EmployeeterritoriesCollection == null)
 			{
-				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection = new EmployeeTerritoriesCollection();
-				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("ManyEntitySpacesMetadataEngineSqlSqlTableCollection", this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection);
+				this._EmployeeterritoriesCollection = new EmployeeterritoriesCollection();
+				this._EmployeeterritoriesCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("EmployeeterritoriesCollection", this._EmployeeterritoriesCollection);
 			}
 
-			EmployeeTerritories obj = this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.AddNew();
+			Employeeterritories obj = this._EmployeeterritoriesCollection.AddNew();
 			obj.TerritoryID = this.TerritoryID;
 			obj.EmployeeID = entity.EmployeeID;
 		}
-
+		
 		/// <summary>
 		/// Many to Many Dissociate
 		/// Foreign Key Name - FK_EmployeeTerritories_Territories
 		/// </summary>
-		public void DiSsociateEmployeeTerritoriesCollection(Employees entity)
+		public void DissociateEmployeesByEmployeeterritories(Employees entity)
 		{
-			if (this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection == null)
+			if (this._EmployeeterritoriesCollection == null)
 			{
-				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection = new EmployeeTerritoriesCollection();
-				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("ManyEntitySpacesMetadataEngineSqlSqlTableCollection", this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection);
+				this._EmployeeterritoriesCollection = new EmployeeterritoriesCollection();
+				this._EmployeeterritoriesCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("EmployeeterritoriesCollection", this._EmployeeterritoriesCollection);
 			}
 
-			EmployeeTerritories obj = this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.AddNew();
+			Employeeterritories obj = this._EmployeeterritoriesCollection.AddNew();
 			obj.TerritoryID = this.TerritoryID;
-            obj.EmployeeID = entity.EmployeeID;
+						obj.EmployeeID = entity.EmployeeID;
 			obj.AcceptChanges();
 			obj.MarkAsDeleted();
 		}
 
-		private EmployeesCollection _EmployeesCollection;
-		private EmployeeTerritoriesCollection _ManyEntitySpacesMetadataEngineSqlSqlTableCollection;
+		private EmployeesCollection _UpToEmployeesByEmployeeterritories;
+		private EmployeeterritoriesCollection _EmployeeterritoriesCollection;
 		#endregion
 
-		#region EmployeeTerritoriesCollection - Zero To Many (FK_EmployeeTerritories_Territories)
+		#region EmployeeterritoriesByTerritoryID - Zero To Many
 		
-		static public esPrefetchMap Prefetch_EmployeeTerritoriesCollection
+		public static esPrefetchMap Prefetch_EmployeeterritoriesByTerritoryID
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap
+				var map = new esPrefetchMap
 				{
-					PrefetchDelegate = BusinessObjects.Territories.EmployeeTerritoriesCollection_Delegate,
-					PropertyName = "EmployeeTerritoriesCollection",
+					PrefetchDelegate = EmployeeterritoriesByTerritoryID_Delegate,
+					PropertyName = "EmployeeterritoriesByTerritoryID",
 					MyColumnName = "TerritoryID",
 					ParentColumnName = "TerritoryID",
 					IsMultiPartKey = false
@@ -544,18 +548,13 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void EmployeeTerritoriesCollection_Delegate(esPrefetchParameters data)
+		private static void EmployeeterritoriesByTerritoryID_Delegate(esPrefetchParameters data)
 		{
-			TerritoriesQuery parent = new TerritoriesQuery(data.NextAlias());
+			var parent = new TerritoriesQuery(data.NextAlias());
+			var me = data.You != null ? data.You as EmployeeterritoriesQuery : new EmployeeterritoriesQuery(data.NextAlias());
 
-			EmployeeTerritoriesQuery me = data.You != null ? data.You as EmployeeTerritoriesQuery : new EmployeeTerritoriesQuery(data.NextAlias());
-
-			if (data.Root == null)
-			{
-				data.Root = me;
-			}
-			
-			data.Root.InnerJoin(parent).On(parent.TerritoryID == me.TerritoryID);
+			data.Root ??= me;
+			data.Root?.InnerJoin(parent).On(parent.TerritoryID == me?.TerritoryID);
 
 			data.You = parent;
 		}	
@@ -565,118 +564,53 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_EmployeeTerritories_Territories
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeEmployeeTerritoriesCollection()
+		public bool ShouldSerializeEmployeeterritoriesByTerritoryID()
 		{
-		    if(this._EmployeeTerritoriesCollection != null && this._EmployeeTerritoriesCollection.Count > 0)
-				return true;
-            else
-				return false;
+			return _EmployeeterritoriesByTerritoryID is { Count: > 0 };
 		}	
 		
 
-		[DataMember(Name="EmployeeTerritoriesCollection", EmitDefaultValue = false)]
-		public EmployeeTerritoriesCollection EmployeeTerritoriesCollection
+		[DataMember(Name="EmployeeterritoriesByTerritoryID", EmitDefaultValue = false)]
+		public EmployeeterritoriesCollection EmployeeterritoriesByTerritoryID
 		{
 			get
 			{
-				if(this._EmployeeTerritoriesCollection == null)
-				{
-					this._EmployeeTerritoriesCollection = new EmployeeTerritoriesCollection();
-					this._EmployeeTerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("EmployeeTerritoriesCollection", this._EmployeeTerritoriesCollection);
+				if (_EmployeeterritoriesByTerritoryID != null) return _EmployeeterritoriesByTerritoryID;
 				
-					if (this.TerritoryID != null)
+				_EmployeeterritoriesByTerritoryID = new EmployeeterritoriesCollection();
+				_EmployeeterritoriesByTerritoryID.es.Connection.Name = es.Connection.Name;
+				SetPostSave("EmployeeterritoriesByTerritoryID", _EmployeeterritoriesByTerritoryID);
+				
+				// ReSharper disable once InvertIf
+				if (TerritoryID != null)
+				{
+					if (!es.IsLazyLoadDisabled)
 					{
-						if (!this.es.IsLazyLoadDisabled)
-						{
-							this._EmployeeTerritoriesCollection.Query.Where(this._EmployeeTerritoriesCollection.Query.TerritoryID == this.TerritoryID);
-							this._EmployeeTerritoriesCollection.Query.Load();
-						}
-
-						// Auto-hookup Foreign Keys
-						this._EmployeeTerritoriesCollection.fks.Add(EmployeeTerritoriesMetadata.ColumnNames.TerritoryID, this.TerritoryID);
+						_EmployeeterritoriesByTerritoryID.Query.Where(_EmployeeterritoriesByTerritoryID.Query.TerritoryID == TerritoryID);
+						_EmployeeterritoriesByTerritoryID.Query.Load();
 					}
+
+					// Auto-hookup Foreign Keys
+					_EmployeeterritoriesByTerritoryID.fks.Add(EmployeeterritoriesMetadata.ColumnNames.TerritoryID, this.TerritoryID);
 				}
 
-				return this._EmployeeTerritoriesCollection;
+				return _EmployeeterritoriesByTerritoryID;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
-			 
-				if (this._EmployeeTerritoriesCollection != null) 
-				{ 
-					this.RemovePostSave("EmployeeTerritoriesCollection"); 
-					this._EmployeeTerritoriesCollection = null;
-					
-				} 
+				if (_EmployeeterritoriesByTerritoryID == null) return;
+				RemovePostSave("EmployeeterritoriesByTerritoryID"); 
+				_EmployeeterritoriesByTerritoryID = null;
+				OnPropertyChanged("EmployeeterritoriesByTerritoryID");
 			} 			
 		}
 		
-
-		
 			
 		
-		private EmployeeTerritoriesCollection _EmployeeTerritoriesCollection;
+		private EmployeeterritoriesCollection _EmployeeterritoriesByTerritoryID;
 		#endregion
-
-		
-		#region Region - Many To One (FK_Territories_Region)
-		
-	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeRegion()
-		{
-		    return this._Region != null ? true : false;
-		}
-		
-
-		[DataMember(Name="Region", EmitDefaultValue = false)]
-					
-		public Region Region
-		{
-			get
-			{
-                if (this._Region == null)
-                {
-                    this._Region = new Region();
-                    this._Region.es.Connection.Name = this.es.Connection.Name;
-                    this.SetPreSave("Region", this._Region);
-
-					if(this._Region == null && RegionID != null)
-                    {
-                        if (!this.es.IsLazyLoadDisabled)
-                        {
-							this._Region.Query.Where(this._Region.Query.RegionID == this.RegionID);
-							this._Region.Query.Load();
-                        }
-                    }
-                }
-
-				return this._Region;
-			}
-			
-			set
-			{
-				this.RemovePreSave("Region");
-				
-
-				if(value == null)
-				{
-					this.RegionID = null;
-					this._Region = null;
-				}
-				else
-				{
-					this.RegionID = value.RegionID;
-					this._Region = value;
-					this.SetPreSave("Region", this._Region);
-				}
-				
-			}
-		}
-		#endregion
-		
 
 		
 		protected override esEntityCollectionBase CreateCollectionForPrefetch(string name)
@@ -685,8 +619,8 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "EmployeeTerritoriesCollection":
-					coll = this.EmployeeTerritoriesCollection;
+				case "EmployeeterritoriesByTerritoryID":
+					coll = this.EmployeeterritoriesByTerritoryID;
 					break;	
 			}
 
@@ -697,10 +631,8 @@ namespace BusinessObjects
 		/// </summary>
 		protected override List<esPropertyDescriptor> GetHierarchicalProperties()
 		{
-			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
-			
-			props.Add(new esPropertyDescriptor(this, "EmployeeTerritoriesCollection", typeof(EmployeeTerritoriesCollection), new EmployeeTerritories()));
-		
+			var props = new List<esPropertyDescriptor>();
+			props.Add(new esPropertyDescriptor(this, "EmployeeterritoriesByTerritoryID", typeof(EmployeeterritoriesCollection), new Employeeterritories()));
 			return props;
 		}
 		
@@ -718,44 +650,35 @@ namespace BusinessObjects
 			m_columns = new esColumnMetadataCollection();
 			esColumnMetadata c;
 
-			c = new esColumnMetadata(TerritoriesMetadata.ColumnNames.TerritoryID, 0, typeof(System.String), esSystemType.String);
-			c.PropertyName = TerritoriesMetadata.PropertyNames.TerritoryID;
+			c = new esColumnMetadata(ColumnNames.TerritoryID, 0, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.TerritoryID;
 			c.IsInPrimaryKey = true;
 			c.CharacterMaxLength = 20;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(TerritoriesMetadata.ColumnNames.TerritoryDescription, 1, typeof(System.String), esSystemType.String);
-			c.PropertyName = TerritoriesMetadata.PropertyNames.TerritoryDescription;
+			c = new esColumnMetadata(ColumnNames.TerritoryDescription, 1, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.TerritoryDescription;
 			c.CharacterMaxLength = 50;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(TerritoriesMetadata.ColumnNames.RegionID, 2, typeof(System.Int32), esSystemType.Int32);
-			c.PropertyName = TerritoriesMetadata.PropertyNames.RegionID;
-			c.NumericPrecision = 10;
+			c = new esColumnMetadata(ColumnNames.RegionID, 2, typeof(System.Int32), esSystemType.Int32);
+			c.PropertyName = PropertyNames.RegionID;
+			c.NumericPrecision = 11;
 			m_columns.Add(c);
 				
 		}
 		#endregion	
 	
-		static public TerritoriesMetadata Meta()
+		public static TerritoriesMetadata Meta()
 		{
 			return meta;
 		}	
 		
-		public Guid DataID
-		{
-			get { return base.m_dataID; }
-		}	
-		
-		public bool MultiProviderMode
-		{
-			get { return false; }
-		}		
+		public Guid DataID => m_dataID;
 
-		public esColumnMetadataCollection Columns
-		{
-			get	{ return base.m_columns; }
-		}
+		public bool MultiProviderMode => false;
+
+		public esColumnMetadataCollection Columns => m_columns;
 		
 		#region ColumnNames
 		public class ColumnNames
@@ -777,32 +700,20 @@ namespace BusinessObjects
 
 		public esProviderSpecificMetadata GetProviderMetadata(string mapName)
 		{
-			MapToMeta mapMethod = mapDelegates[mapName];
-
-			if (mapMethod != null)
-				return mapMethod(mapName);
-			else
-				return null;
+			var mapMethod = mapDelegates[mapName];
+      return mapMethod?.Invoke(mapName);
 		}
 		
 		#region MAP esDefault
 		
-		static private int RegisterDelegateesDefault()
+		private static int RegisterDelegateesDefault()
 		{
 			// This is only executed once per the life of the application
 			lock (typeof(TerritoriesMetadata))
 			{
-				if(TerritoriesMetadata.mapDelegates == null)
-				{
-					TerritoriesMetadata.mapDelegates = new Dictionary<string,MapToMeta>();
-				}
-				
-				if (TerritoriesMetadata.meta == null)
-				{
-					TerritoriesMetadata.meta = new TerritoriesMetadata();
-				}
-				
-				MapToMeta mapMethod = new MapToMeta(meta.esDefault);
+				mapDelegates ??= new Dictionary<string, MapToMeta>();
+				meta ??= new TerritoriesMetadata();
+				var mapMethod = new MapToMeta(meta.esDefault);
 				mapDelegates.Add("esDefault", mapMethod);
 				mapMethod("esDefault");
 			}
@@ -811,36 +722,37 @@ namespace BusinessObjects
 
 		private esProviderSpecificMetadata esDefault(string mapName)
 		{
+			// ReSharper disable once InvertIf
 			if(!m_providerMetadataMaps.ContainsKey(mapName))
 			{
-				esProviderSpecificMetadata meta = new esProviderSpecificMetadata();			
+				var specMeta = new esProviderSpecificMetadata();			
 
 
-				meta.AddTypeMap("TerritoryID", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("TerritoryDescription", new esTypeMap("nchar", "System.String"));
-				meta.AddTypeMap("RegionID", new esTypeMap("int", "System.Int32"));			
+				specMeta.AddTypeMap("TerritoryID", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("TerritoryDescription", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("RegionID", new esTypeMap("INT", "System.Int32"));			
 				
 				
 				
-				meta.Source = "Territories";
-				meta.Destination = "Territories";
+				specMeta.Source = "territories";
+				specMeta.Destination = "territories";
 				
-				meta.spInsert = "proc_TerritoriesInsert";				
-				meta.spUpdate = "proc_TerritoriesUpdate";		
-				meta.spDelete = "proc_TerritoriesDelete";
-				meta.spLoadAll = "proc_TerritoriesLoadAll";
-				meta.spLoadByPrimaryKey = "proc_TerritoriesLoadByPrimaryKey";
+				specMeta.spInsert = "proc_territoriesInsert";				
+				specMeta.spUpdate = "proc_territoriesUpdate";		
+				specMeta.spDelete = "proc_territoriesDelete";
+				specMeta.spLoadAll = "proc_territoriesLoadAll";
+				specMeta.spLoadByPrimaryKey = "proc_territoriesLoadByPrimaryKey";
 				
-				this.m_providerMetadataMaps["esDefault"] = meta;
+				m_providerMetadataMaps["esDefault"] = specMeta;
 			}
 			
-			return this.m_providerMetadataMaps["esDefault"];
+			return m_providerMetadataMaps["esDefault"];
 		}
 
 		#endregion
 
-		static private TerritoriesMetadata meta;
-		static protected Dictionary<string, MapToMeta> mapDelegates;
-		static private int _esDefault = RegisterDelegateesDefault();
+		private static TerritoriesMetadata meta;
+		protected static Dictionary<string, MapToMeta> mapDelegates;
+		private static int _esDefault = RegisterDelegateesDefault();
 	}
 }

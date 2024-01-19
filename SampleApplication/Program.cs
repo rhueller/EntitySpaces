@@ -14,7 +14,7 @@ namespace ConsoleApp
     class Program
     {
         // ReSharper disable once UnusedParameter.Local
-        private static void Main(string[] args)
+        private static void Maind(string[] args)
         {
             esProviderFactory.Factory = new EntitySpaces.Loader.esDataProviderFactory();
 
@@ -28,19 +28,6 @@ namespace ConsoleApp
 
             esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
-            AddLoadSaveDeleteSingleEntity();
-            StreamlinedDynamicQueryApi();
-            CollectionLoadAll();
-
-            SaveEntity();
-            UpdateEntity();
-            DeleteEntity();
-
-            CollectionSave();
-            CollectionSave_BulkInsert();
-            CollectionSaveHierarchical();
-
-            GetTheCount();
             GroupBy();
             Concatenation();
             Paging();
@@ -64,61 +51,6 @@ namespace ConsoleApp
             //OverMashup();
 
             GetEmployees(1, 2);
-        }
-
-        private static void AddLoadSaveDeleteSingleEntity()
-        {
-            // Add
-            var newEmp = new Employees
-            {
-                FirstName = "Joe",
-                LastName = "Smith"
-            };
-            newEmp.Save();
-
-            // Load
-            var employee = new Employees();
-
-            Debug.Assert(newEmp.EmployeeID != null, "newEmp.EmployeeID != null");
-            if (!employee.LoadByPrimaryKey(newEmp.EmployeeID.Value)) return;
-            
-            // Save
-            employee.FirstName = "Bob";
-            employee.Save();
-
-            // Delete
-            employee.MarkAsDeleted();
-            employee.Save();
-        }
-
-        private static void StreamlinedDynamicQueryApi()
-        {
-            // Load a single entity
-            var emp = new EmployeesQuery("e", out var q)
-                .Select(q.EmployeeID, q.FirstName, q.LastName)
-                .Where(q.EmployeeID == 5)
-                .ToEntity<Employees>();
-
-            Debug.Assert(emp != null, "emp != null");
-
-            // Load a collection
-            var coll = new EmployeesQuery("e", out var c)
-                .Select(c.EmployeeID, c.FirstName, c.LastName)
-                .ToCollection<EmployeesCollection>();
-
-            Debug.Assert(coll != null, "coll != null");
-
-        }
-
-        private static void CollectionLoadAll()
-        {
-            var coll = new EmployeesCollection();
-            if (!coll.LoadAll()) return;
-            
-            foreach (var emp in coll)
-            {
-                Debug.Assert(emp != null, "emp != null");
-            }
         }
 
         private static void GroupBy()
@@ -162,121 +94,6 @@ namespace ConsoleApp
             {
                 Debug.Assert(order != null, "order != null");
             }
-        }
-
-        private static void SaveEntity()
-        {
-            // The transaction isn't necessary here but demonstrates it's usage
-            using var scope = new esTransactionScope();
-            
-            var employee = new Employees
-            {
-                FirstName = "Mike",
-                LastName = "Griffin"
-            };
-            employee.Save();
-
-            scope.Complete(); // last line of using statement
-        }
-
-        private static void UpdateEntity()
-        {
-            var employee = new Employees
-            {
-                FirstName = "Mike",
-                LastName = "Griffin"
-            };
-            employee.Save();
-
-            var emp = new Employees();
-            Debug.Assert(employee.EmployeeID != null, "employee.EmployeeID != null");
-            if (!emp.LoadByPrimaryKey(employee.EmployeeID.Value)) return;
-            
-            emp.FirstName = "Joe";
-
-            emp.Save();
-        }
-
-        private static void DeleteEntity()
-        {
-            var employee = new Employees
-            {
-                FirstName = "Mike",
-                LastName = "Griffin"
-            };
-            employee.Save();
-
-            employee.MarkAsDeleted();
-            employee.Save();
-        }
-
-        private static void CollectionSave()
-        {
-            var coll = new EmployeesCollection();
-            var emp1 = coll.AddNew();
-            emp1.FirstName = "Cindi";
-            emp1.LastName = "Griffin";
-
-            var emp2 = new Employees
-            {
-                FirstName = "Frank",
-                LastName = "Smith",
-                HireDate = DateTime.Now
-            };
-            coll.Add(emp2);
-
-            coll.Save();
-        }
-
-        private static void CollectionSave_BulkInsert()
-        {
-            var coll = new EmployeesCollection();
-            var emp1 = coll.AddNew();
-            emp1.FirstName = "Cindi";
-            emp1.LastName = "Griffin";
-
-            var emp2 = coll.AddNew();
-            emp2.FirstName = "Frank";
-            emp2.LastName = "Smith";
-
-            coll.BulkInsert();
-        }
-
-        private static void CollectionSaveHierarchical()
-        {
-            var coll = new OrdersCollection();
-            var order = coll.AddNew();
-            order.OrderDate = DateTime.Now;
-
-            var detail1 = order.OrderDetailsCollection.AddNew();
-            detail1.UnitPrice = 55.00M;
-            detail1.Quantity = 4;
-            detail1.ProductID = 8;
-
-            var detail2 = order.OrderDetailsCollection.AddNew();
-            detail2.UnitPrice = 25.00M;
-            detail2.Quantity = 3;
-            detail2.ProductID = 4;
-
-            coll.Save();
-
-            Debug.Assert(order.OrderID != null, "order.OrderID != null");
-            var orderId = order.OrderID.Value;
-
-            Debug.Assert(detail1.OrderID != null, "detail1.OrderID != null");
-            var detail1OrderId = detail1.OrderID.Value;
-
-            Debug.Assert(detail2.OrderID != null, "detail2.OrderID != null");
-            var detail2OrderId = detail2.OrderID.Value;
-        }
-
-        private static void GetTheCount()
-        {
-            var q = new EmployeesQuery();
-            q.Select(q.Count());
-            q.Where(q.LastName.Like("%a"));
-  
-            var count = q.ExecuteScalar<int>();
         }
 
         private static void AndOr()

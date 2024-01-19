@@ -79,7 +79,13 @@ namespace <%=Namespace%>
 	{
 		public <%=source.Query%>(string joinAlias)
 		{
-			this.es.JoinAlias = joinAlias;
+			es.JoinAlias = joinAlias;
+		}	
+
+    public <%=source.Query%>(string joinAlias, out <%=source.Query%> query)
+		{
+      query = this;
+			es.JoinAlias = joinAlias;
 		}	
 
 		protected override string GetQueryName()

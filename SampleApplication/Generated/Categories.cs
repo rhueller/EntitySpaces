@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.1214.0
-EntitySpaces Driver  : SQL
-Date Generated       : 12/14/2019 5:29:44 PM
+EntitySpaces Version : 2024.1.4.0
+EntitySpaces Driver  : MySql
+Date Generated       : 19.01.2024 22:09:28
 ===============================================================================
 */
 
@@ -29,32 +29,30 @@ using EntitySpaces.DynamicQuery;
 
 
 
+// ReSharper disable InconsistentNaming
+
 namespace BusinessObjects
 {
 	/// <summary>
-	/// Encapsulates the 'Categories' table
+	/// Encapsulates the 'categories' table
 	/// </summary>
 
-    [DebuggerDisplay("Data = {Debug}")]
 	[Serializable]
 	[DataContract]
 	[KnownType(typeof(Categories))]	
 	[XmlType("Categories")]
 	public partial class Categories : esCategories
 	{	
-		[DebuggerBrowsable(DebuggerBrowsableState.RootHidden | DebuggerBrowsableState.Never)]
-		protected override esEntityDebuggerView[] Debug
-		{
-			get { return base.Debug; }
-		}
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		protected override esEntityDebuggerView[] Debug => base.Debug;
 
-		override public esEntity CreateInstance()
+		public override esEntity CreateInstance()
 		{
 			return new Categories();
 		}
 		
 		#region Static Quick Access Methods
-		static public void Delete(System.Int32 categoryID)
+		public static void Delete(System.Int32 categoryID)
 		{
 			var obj = new Categories();
 			obj.CategoryID = categoryID;
@@ -63,7 +61,7 @@ namespace BusinessObjects
 			obj.Save();
 		}
 
-	    static public void Delete(System.Int32 categoryID, esSqlAccessType sqlAccessType)
+	    public static void Delete(System.Int32 categoryID, esSqlAccessType sqlAccessType)
 		{
 			var obj = new Categories();
 			obj.CategoryID = categoryID;
@@ -81,7 +79,6 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Count = {Count}")]
 	[Serializable]
 	[CollectionDataContract]
 	[XmlType("CategoriesCollection")]
@@ -98,22 +95,21 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Query = {Parse()}")]
 	[Serializable]	
 	public partial class CategoriesQuery : esCategoriesQuery
 	{
 		public CategoriesQuery(string joinAlias)
 		{
-			this.es.JoinAlias = joinAlias;
+			es.JoinAlias = joinAlias;
 		}	
 
-		public CategoriesQuery(string joinAlias, out CategoriesQuery query)
+    public CategoriesQuery(string joinAlias, out CategoriesQuery query)
 		{
-			query = this;
-			this.es.JoinAlias = joinAlias;
-		}
+      query = this;
+			es.JoinAlias = joinAlias;
+		}	
 
-		override protected string GetQueryName()
+		protected override string GetQueryName()
 		{
 			return "CategoriesQuery";
 		}
@@ -137,7 +133,7 @@ namespace BusinessObjects
 
 	[DataContract]
 	[Serializable]
-	abstract public partial class esCategories : esEntity
+	public abstract partial class esCategories : esEntity
 	{
 		public esCategories()
 		{
@@ -181,96 +177,74 @@ namespace BusinessObjects
 		
 		
 		/// <summary>
-		/// Maps to Categories.CategoryID
+		/// Maps to categories.CategoryID
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int32? CategoryID
+		public virtual System.Int32? CategoryID
 		{
-			get
-			{
-				return base.GetSystemInt32(CategoriesMetadata.ColumnNames.CategoryID);
-			}
+			get => GetSystemInt32(CategoriesMetadata.ColumnNames.CategoryID);
 			
 			set
 			{
-				if(base.SetSystemInt32(CategoriesMetadata.ColumnNames.CategoryID, value))
-				{
-					OnPropertyChanged(CategoriesMetadata.PropertyNames.CategoryID);
-				}
+				if (!SetSystemInt32(CategoriesMetadata.ColumnNames.CategoryID, value)) return;
+				
+				OnPropertyChanged(CategoriesMetadata.PropertyNames.CategoryID);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Categories.CategoryName
+		/// Maps to categories.CategoryName
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String CategoryName
+		public virtual System.String CategoryName
 		{
-			get
-			{
-				return base.GetSystemString(CategoriesMetadata.ColumnNames.CategoryName);
-			}
+			get => GetSystemString(CategoriesMetadata.ColumnNames.CategoryName);
 			
 			set
 			{
-				if(base.SetSystemString(CategoriesMetadata.ColumnNames.CategoryName, value))
-				{
-					OnPropertyChanged(CategoriesMetadata.PropertyNames.CategoryName);
-				}
+				if (!SetSystemString(CategoriesMetadata.ColumnNames.CategoryName, value)) return;
+				
+				OnPropertyChanged(CategoriesMetadata.PropertyNames.CategoryName);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Categories.Description
+		/// Maps to categories.Description
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String Description
+		public virtual System.String Description
 		{
-			get
-			{
-				return base.GetSystemString(CategoriesMetadata.ColumnNames.Description);
-			}
+			get => GetSystemString(CategoriesMetadata.ColumnNames.Description);
 			
 			set
 			{
-				if(base.SetSystemString(CategoriesMetadata.ColumnNames.Description, value))
-				{
-					OnPropertyChanged(CategoriesMetadata.PropertyNames.Description);
-				}
+				if (!SetSystemString(CategoriesMetadata.ColumnNames.Description, value)) return;
+				
+				OnPropertyChanged(CategoriesMetadata.PropertyNames.Description);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Categories.Picture
+		/// Maps to categories.Picture
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Byte[] Picture
+		public virtual System.Byte[] Picture
 		{
-			get
-			{
-				return base.GetSystemByteArray(CategoriesMetadata.ColumnNames.Picture);
-			}
+			get => GetSystemByteArray(CategoriesMetadata.ColumnNames.Picture);
 			
 			set
 			{
-				if(base.SetSystemByteArray(CategoriesMetadata.ColumnNames.Picture, value))
-				{
-					OnPropertyChanged(CategoriesMetadata.PropertyNames.Picture);
-				}
+				if (!SetSystemByteArray(CategoriesMetadata.ColumnNames.Picture, value)) return;
+				
+				OnPropertyChanged(CategoriesMetadata.PropertyNames.Picture);
 			}
-		}
+		}		
 		
 		#endregion
 		
 		#region Housekeeping methods
 
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return CategoriesMetadata.Meta();
-			}
-		}
+		protected override IMetadata Meta => CategoriesMetadata.Meta();
 
 		#endregion		
 		
@@ -280,36 +254,28 @@ namespace BusinessObjects
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new CategoriesQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new CategoriesQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(CategoriesQuery query)
+		public bool Load(CategoriesQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
-			return this.Query.Load();
+			query = paraQuery;
+			InitQuery(query);
+			return Query.Load();
 		}
-
-		protected void InitQuery(CategoriesQuery query)
+		
+		protected void InitQuery(CategoriesQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntity)this).Connection;
+				paraQuery.es2.Connection = ((IEntity)this).Connection;
 			}			
-		}
-
-		protected override void HookupQuery(esDynamicQuery query)
-		{
-			this.InitQuery((CategoriesQuery)query);
 		}
 
 		#endregion
@@ -321,73 +287,60 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esCategoriesCollection : esEntityCollection<Categories>
+	public abstract class esCategoriesCollection : esEntityCollection<Categories>
 	{
 		#region Housekeeping methods
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return CategoriesMetadata.Meta();
-			}
-		}
-
+		protected override IMetadata Meta => CategoriesMetadata.Meta();
 		protected override string GetCollectionName()
 		{
 			return "CategoriesCollection";
 		}
-
 		#endregion		
 		
 		#region Query Logic
 
 	#if (!WindowsCE)
-		[BrowsableAttribute(false)]
+		[Browsable(false)]
 	#endif
 		public CategoriesQuery Query
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new CategoriesQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new CategoriesQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(CategoriesQuery query)
+		public bool Load(CategoriesQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
+			query = paraQuery;
+			InitQuery(query);
 			return Query.Load();
 		}
 
-		override protected esDynamicQuery GetDynamicQuery()
+		protected override esDynamicQuery GetDynamicQuery()
 		{
-			if (this.query == null)
-			{
-				this.query = new CategoriesQuery();
-				this.InitQuery(query);
-			}
-			return this.query;
+			if (query != null) return query;
+			query = new CategoriesQuery();
+			InitQuery(query);
+			return query;
 		}
 
-		protected void InitQuery(CategoriesQuery query)
+		protected void InitQuery(CategoriesQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntityCollection)this).Connection;
+				paraQuery.es2.Connection = ((IEntityCollection)this).Connection;
 			}			
 		}
 
-		protected override void HookupQuery(esDynamicQuery query)
+		protected override void HookupQuery(esDynamicQuery paraQuery)
 		{
-			this.InitQuery((CategoriesQuery)query);
+			InitQuery((CategoriesQuery)paraQuery);
 		}
 
 		#endregion
@@ -398,54 +351,35 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esCategoriesQuery : esDynamicQuery
+	public abstract class esCategoriesQuery : esDynamicQuery
 	{
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return CategoriesMetadata.Meta();
-			}
-		}	
+		protected override IMetadata Meta => CategoriesMetadata.Meta();
 		
 		#region QueryItemFromName
 		
         protected override esQueryItem QueryItemFromName(string name)
         {
-            switch (name)
+            return name switch
             {
-				case "CategoryID": return this.CategoryID;
-				case "CategoryName": return this.CategoryName;
-				case "Description": return this.Description;
-				case "Picture": return this.Picture;
-
-                default: return null;
-            }
+              "CategoryID" => CategoryID,
+              "CategoryName" => CategoryName,
+              "Description" => Description,
+              "Picture" => Picture,
+              _ => null
+            };
         }		
 		
 		#endregion
 		
 		#region esQueryItems
 
-		public esQueryItem CategoryID
-		{
-			get { return new esQueryItem(this, CategoriesMetadata.ColumnNames.CategoryID, esSystemType.Int32); }
-		} 
+		public esQueryItem CategoryID => new (this, CategoriesMetadata.ColumnNames.CategoryID, esSystemType.Int32);
 		
-		public esQueryItem CategoryName
-		{
-			get { return new esQueryItem(this, CategoriesMetadata.ColumnNames.CategoryName, esSystemType.String); }
-		} 
+		public esQueryItem CategoryName => new (this, CategoriesMetadata.ColumnNames.CategoryName, esSystemType.String);
 		
-		public esQueryItem Description
-		{
-			get { return new esQueryItem(this, CategoriesMetadata.ColumnNames.Description, esSystemType.String); }
-		} 
+		public esQueryItem Description => new (this, CategoriesMetadata.ColumnNames.Description, esSystemType.String);
 		
-		public esQueryItem Picture
-		{
-			get { return new esQueryItem(this, CategoriesMetadata.ColumnNames.Picture, esSystemType.ByteArray); }
-		} 
+		public esQueryItem Picture => new (this, CategoriesMetadata.ColumnNames.Picture, esSystemType.ByteArray);
 		
 		#endregion
 		
@@ -456,16 +390,16 @@ namespace BusinessObjects
 	public partial class Categories : esCategories
 	{
 
-		#region ProductsCollection - Zero To Many (FK_Products_Categories)
+		#region ProductsByCategoryID - Zero To Many
 		
-		static public esPrefetchMap Prefetch_ProductsCollection
+		public static esPrefetchMap Prefetch_ProductsByCategoryID
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap
+				var map = new esPrefetchMap
 				{
-					PrefetchDelegate = BusinessObjects.Categories.ProductsCollection_Delegate,
-					PropertyName = "ProductsCollection",
+					PrefetchDelegate = ProductsByCategoryID_Delegate,
+					PropertyName = "ProductsByCategoryID",
 					MyColumnName = "CategoryID",
 					ParentColumnName = "CategoryID",
 					IsMultiPartKey = false
@@ -474,18 +408,13 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void ProductsCollection_Delegate(esPrefetchParameters data)
+		private static void ProductsByCategoryID_Delegate(esPrefetchParameters data)
 		{
-			CategoriesQuery parent = new CategoriesQuery(data.NextAlias());
+			var parent = new CategoriesQuery(data.NextAlias());
+			var me = data.You != null ? data.You as ProductsQuery : new ProductsQuery(data.NextAlias());
 
-			ProductsQuery me = data.You != null ? data.You as ProductsQuery : new ProductsQuery(data.NextAlias());
-
-			if (data.Root == null)
-			{
-				data.Root = me;
-			}
-			
-			data.Root.InnerJoin(parent).On(parent.CategoryID == me.CategoryID);
+			data.Root ??= me;
+			data.Root?.InnerJoin(parent).On(parent.CategoryID == me?.CategoryID);
 
 			data.You = parent;
 		}	
@@ -495,60 +424,52 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_Products_Categories
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeProductsCollection()
+		public bool ShouldSerializeProductsByCategoryID()
 		{
-		    if(this._ProductsCollection != null && this._ProductsCollection.Count > 0)
-				return true;
-            else
-				return false;
+			return _ProductsByCategoryID is { Count: > 0 };
 		}	
 		
 
-		[DataMember(Name="ProductsCollection", EmitDefaultValue = false)]
-		public ProductsCollection ProductsCollection
+		[DataMember(Name="ProductsByCategoryID", EmitDefaultValue = false)]
+		public ProductsCollection ProductsByCategoryID
 		{
 			get
 			{
-				if(this._ProductsCollection == null)
-				{
-					this._ProductsCollection = new ProductsCollection();
-					this._ProductsCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("ProductsCollection", this._ProductsCollection);
+				if (_ProductsByCategoryID != null) return _ProductsByCategoryID;
 				
-					if (this.CategoryID != null)
+				_ProductsByCategoryID = new ProductsCollection();
+				_ProductsByCategoryID.es.Connection.Name = es.Connection.Name;
+				SetPostSave("ProductsByCategoryID", _ProductsByCategoryID);
+				
+				// ReSharper disable once InvertIf
+				if (CategoryID != null)
+				{
+					if (!es.IsLazyLoadDisabled)
 					{
-						if (!this.es.IsLazyLoadDisabled)
-						{
-							this._ProductsCollection.Query.Where(this._ProductsCollection.Query.CategoryID == this.CategoryID);
-							this._ProductsCollection.Query.Load();
-						}
-
-						// Auto-hookup Foreign Keys
-						this._ProductsCollection.fks.Add(ProductsMetadata.ColumnNames.CategoryID, this.CategoryID);
+						_ProductsByCategoryID.Query.Where(_ProductsByCategoryID.Query.CategoryID == CategoryID);
+						_ProductsByCategoryID.Query.Load();
 					}
+
+					// Auto-hookup Foreign Keys
+					_ProductsByCategoryID.fks.Add(ProductsMetadata.ColumnNames.CategoryID, this.CategoryID);
 				}
 
-				return this._ProductsCollection;
+				return _ProductsByCategoryID;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
-			 
-				if (this._ProductsCollection != null) 
-				{ 
-					this.RemovePostSave("ProductsCollection"); 
-					this._ProductsCollection = null;
-					
-				} 
+				if (_ProductsByCategoryID == null) return;
+				RemovePostSave("ProductsByCategoryID"); 
+				_ProductsByCategoryID = null;
+				OnPropertyChanged("ProductsByCategoryID");
 			} 			
 		}
 		
-
-		
 			
 		
-		private ProductsCollection _ProductsCollection;
+		private ProductsCollection _ProductsByCategoryID;
 		#endregion
 
 		
@@ -558,8 +479,8 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "ProductsCollection":
-					coll = this.ProductsCollection;
+				case "ProductsByCategoryID":
+					coll = this.ProductsByCategoryID;
 					break;	
 			}
 
@@ -570,10 +491,8 @@ namespace BusinessObjects
 		/// </summary>
 		protected override List<esPropertyDescriptor> GetHierarchicalProperties()
 		{
-			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
-			
-			props.Add(new esPropertyDescriptor(this, "ProductsCollection", typeof(ProductsCollection), new Products()));
-		
+			var props = new List<esPropertyDescriptor>();
+			props.Add(new esPropertyDescriptor(this, "ProductsByCategoryID", typeof(ProductsCollection), new Products()));
 			return props;
 		}
 		
@@ -600,9 +519,9 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPostSaveKeys()
 		{
-			if(this._ProductsCollection != null)
+			if(this._ProductsByCategoryID != null)
 			{
-				Apply(this._ProductsCollection, "CategoryID", this.CategoryID);
+				Apply(this._ProductsByCategoryID, "CategoryID", this.CategoryID);
 			}
 		}
 		
@@ -620,52 +539,41 @@ namespace BusinessObjects
 			m_columns = new esColumnMetadataCollection();
 			esColumnMetadata c;
 
-			c = new esColumnMetadata(CategoriesMetadata.ColumnNames.CategoryID, 0, typeof(System.Int32), esSystemType.Int32);
-			c.PropertyName = CategoriesMetadata.PropertyNames.CategoryID;
+			c = new esColumnMetadata(ColumnNames.CategoryID, 0, typeof(System.Int32), esSystemType.Int32);
+			c.PropertyName = PropertyNames.CategoryID;
 			c.IsInPrimaryKey = true;
 			c.IsAutoIncrement = true;
-			c.NumericPrecision = 10;
+			c.NumericPrecision = 11;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(CategoriesMetadata.ColumnNames.CategoryName, 1, typeof(System.String), esSystemType.String);
-			c.PropertyName = CategoriesMetadata.PropertyNames.CategoryName;
+			c = new esColumnMetadata(ColumnNames.CategoryName, 1, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.CategoryName;
 			c.CharacterMaxLength = 15;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(CategoriesMetadata.ColumnNames.Description, 2, typeof(System.String), esSystemType.String);
-			c.PropertyName = CategoriesMetadata.PropertyNames.Description;
-			c.CharacterMaxLength = 1073741823;
+			c = new esColumnMetadata(ColumnNames.Description, 2, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.Description;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(CategoriesMetadata.ColumnNames.Picture, 3, typeof(System.Byte[]), esSystemType.ByteArray);
-			c.PropertyName = CategoriesMetadata.PropertyNames.Picture;
-			c.CharacterMaxLength = 2147483647;
+			c = new esColumnMetadata(ColumnNames.Picture, 3, typeof(System.Byte[]), esSystemType.ByteArray);
+			c.PropertyName = PropertyNames.Picture;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
 		}
 		#endregion	
 	
-		static public CategoriesMetadata Meta()
+		public static CategoriesMetadata Meta()
 		{
 			return meta;
 		}	
 		
-		public Guid DataID
-		{
-			get { return base.m_dataID; }
-		}	
-		
-		public bool MultiProviderMode
-		{
-			get { return false; }
-		}		
+		public Guid DataID => m_dataID;
 
-		public esColumnMetadataCollection Columns
-		{
-			get	{ return base.m_columns; }
-		}
+		public bool MultiProviderMode => false;
+
+		public esColumnMetadataCollection Columns => m_columns;
 		
 		#region ColumnNames
 		public class ColumnNames
@@ -689,32 +597,20 @@ namespace BusinessObjects
 
 		public esProviderSpecificMetadata GetProviderMetadata(string mapName)
 		{
-			MapToMeta mapMethod = mapDelegates[mapName];
-
-			if (mapMethod != null)
-				return mapMethod(mapName);
-			else
-				return null;
+			var mapMethod = mapDelegates[mapName];
+      return mapMethod?.Invoke(mapName);
 		}
 		
 		#region MAP esDefault
 		
-		static private int RegisterDelegateesDefault()
+		private static int RegisterDelegateesDefault()
 		{
 			// This is only executed once per the life of the application
 			lock (typeof(CategoriesMetadata))
 			{
-				if(CategoriesMetadata.mapDelegates == null)
-				{
-					CategoriesMetadata.mapDelegates = new Dictionary<string,MapToMeta>();
-				}
-				
-				if (CategoriesMetadata.meta == null)
-				{
-					CategoriesMetadata.meta = new CategoriesMetadata();
-				}
-				
-				MapToMeta mapMethod = new MapToMeta(meta.esDefault);
+				mapDelegates ??= new Dictionary<string, MapToMeta>();
+				meta ??= new CategoriesMetadata();
+				var mapMethod = new MapToMeta(meta.esDefault);
 				mapDelegates.Add("esDefault", mapMethod);
 				mapMethod("esDefault");
 			}
@@ -723,37 +619,38 @@ namespace BusinessObjects
 
 		private esProviderSpecificMetadata esDefault(string mapName)
 		{
+			// ReSharper disable once InvertIf
 			if(!m_providerMetadataMaps.ContainsKey(mapName))
 			{
-				esProviderSpecificMetadata meta = new esProviderSpecificMetadata();			
+				var specMeta = new esProviderSpecificMetadata();			
 
 
-				meta.AddTypeMap("CategoryID", new esTypeMap("int", "System.Int32"));
-				meta.AddTypeMap("CategoryName", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("Description", new esTypeMap("ntext", "System.String"));
-				meta.AddTypeMap("Picture", new esTypeMap("image", "System.Byte[]"));			
+				specMeta.AddTypeMap("CategoryID", new esTypeMap("INT", "System.Int32"));
+				specMeta.AddTypeMap("CategoryName", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("Description", new esTypeMap("MEDIUMTEXT", "System.String"));
+				specMeta.AddTypeMap("Picture", new esTypeMap("LONGBLOB", "System.Byte[]"));			
 				
 				
 				
-				meta.Source = "Categories";
-				meta.Destination = "Categories";
+				specMeta.Source = "categories";
+				specMeta.Destination = "categories";
 				
-				meta.spInsert = "proc_CategoriesInsert";				
-				meta.spUpdate = "proc_CategoriesUpdate";		
-				meta.spDelete = "proc_CategoriesDelete";
-				meta.spLoadAll = "proc_CategoriesLoadAll";
-				meta.spLoadByPrimaryKey = "proc_CategoriesLoadByPrimaryKey";
+				specMeta.spInsert = "proc_categoriesInsert";				
+				specMeta.spUpdate = "proc_categoriesUpdate";		
+				specMeta.spDelete = "proc_categoriesDelete";
+				specMeta.spLoadAll = "proc_categoriesLoadAll";
+				specMeta.spLoadByPrimaryKey = "proc_categoriesLoadByPrimaryKey";
 				
-				this.m_providerMetadataMaps["esDefault"] = meta;
+				m_providerMetadataMaps["esDefault"] = specMeta;
 			}
 			
-			return this.m_providerMetadataMaps["esDefault"];
+			return m_providerMetadataMaps["esDefault"];
 		}
 
 		#endregion
 
-		static private CategoriesMetadata meta;
-		static protected Dictionary<string, MapToMeta> mapDelegates;
-		static private int _esDefault = RegisterDelegateesDefault();
+		private static CategoriesMetadata meta;
+		protected static Dictionary<string, MapToMeta> mapDelegates;
+		private static int _esDefault = RegisterDelegateesDefault();
 	}
 }

@@ -73,27 +73,20 @@ namespace <%=Namespace%>
 {<%}%>
 <%if(!TargetTheCompactFramework){%>
 	[Serializable]<%} if (UseCustomBaseClass) {%>
-	public abstract partial class <%=source.esQuery%> : QueryBase<%}else{%>
-	public abstract partial class <%=source.esQuery%> : esDynamicQuery<%}%>
+	public abstract class <%=source.esQuery%> : QueryBase<%}else{%>
+	public abstract class <%=source.esQuery%> : esDynamicQuery<%}%>
 	{
-		protected override IMetadata Meta
-		{
-			get
-			{
-				return <%=source.Metadata%>.Meta();
-			}
-		}	
+		protected override IMetadata Meta => <%=source.Metadata%>.Meta();
 		
 		#region QueryItemFromName
 		
         protected override esQueryItem QueryItemFromName(string name)
         {
-            switch (name)
+            return name switch
             {<%foreach(IColumn col in cols){%>
-				case "<%=col.PropertyName%>": return this.<%=col.PropertyName%>;<%}%>
-
-                default: return null;
-            }
+              "<%=col.PropertyName%>" => <%=col.PropertyName%>,<%}%>
+              _ => null
+            };
         }		
 		
 		#endregion
@@ -101,10 +94,7 @@ namespace <%=Namespace%>
 		#region esQueryItems
 <%		foreach(IColumn col in cols)
 		{%>
-		public esQueryItem <%=col.PropertyName%>
-		{
-			get { return new esQueryItem(this, <%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>, <%=col.esSystemType%>); }
-		} 
+		public esQueryItem <%=col.PropertyName%> => new (this, <%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>, <%=col.esSystemType%>);
 		<%}%>
 		#endregion
 		

@@ -89,7 +89,7 @@ namespace <%=Namespace%>
 	public abstract partial class <%=source.esEntity%> : EntityBase<%}else{%>
 	public abstract partial class <%=source.esEntity%> : esEntity<%}%>
 	{
-		public <%=source.esEntity%>()
+		protected <%=source.esEntity%>()
 		{
 
 		}
@@ -247,25 +247,21 @@ namespace <%=Namespace%>
 					%><%="/// " + col.Description.Replace("\r\n", " ").Replace("\n", " ")%>
 		/// </summary><%if(!col.IsNonSystemType){ if(!TargetTheCompactFramework) {%>
 		[DataMember(EmitDefaultValue=false)]<%}%>
-		virtual public <%=col.NullableType%> <%=col.PropertyName%>
+		public virtual <%=col.NullableType%> <%=col.PropertyName%>
 		{
-			get
-			{
-				return base.<%=col.GetRowAccessor%>(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>);
-			}
+			get => <%=col.GetRowAccessor%>(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>);
 			
 			set
 			{
-				if(base.<%=col.SetRowAccessor%>(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>, value))
-				{<%if(objName.Length > 0 && GenerateHierarchicalModel){%>
-					this._<%=objName%> = null;
-					this.OnPropertyChanged("<%=objName%>");<%}%>
-					OnPropertyChanged(<%=source.Metadata%>.PropertyNames.<%=col.PropertyName%>);
-				}
+				if (!<%=col.SetRowAccessor%>(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>, value)) return;
+				<%if(objName.Length > 0 && GenerateHierarchicalModel){%>
+				_<%=objName%> = null;
+				OnPropertyChanged("<%=objName%>");<%}%>
+				OnPropertyChanged(<%=source.Metadata%>.PropertyNames.<%=col.PropertyName%>);
 			}
 		}<% } else { if(!TargetTheCompactFramework) {%>%>
 		[DataMember(EmitDefaultValue=false)]<%}%>		
-		virtual public <%=col.LanguageType%> <%=col.PropertyName%>
+		public virtual <%=col.LanguageType%> <%=col.PropertyName%>
 		{
 			get
 			{
@@ -303,9 +299,9 @@ namespace <%=Namespace%>
 					{
 						objName = upToPrefix + esMeta.esPlugIn.EntityRelationName(tr.ForeignTable, tr.PrimaryColumns[0], tr.IsSelfReference);
 						objType = esMeta.esPlugIn.Entity(tr.ForeignTable);%>
-		[CLSCompliant(false)]<%if(DataContractSupportHierachical) {%>
+		<%if(DataContractSupportHierachical) {%>
 		[DataMember(EmitDefaultValue=false)]<%}%>
-		internal protected <%=objType%> _<%=objName%>;<%
+		protected internal <%=objType%> _<%=objName%>;<%
 					}
 				}
 			}%>
@@ -435,13 +431,7 @@ namespace <%=Namespace%>
 		
 		#region Housekeeping methods
 
-		protected override IMetadata Meta
-		{
-			get
-			{
-				return <%=source.Metadata%>.Meta();
-			}
-		}
+		protected override IMetadata Meta => <%=source.Metadata%>.Meta();
 
 		#endregion		
 		
@@ -451,30 +441,27 @@ namespace <%=Namespace%>
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new <%=source.Query%>();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new <%=source.Query%>();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(<%=source.Query%> query)
+		public bool Load(<%=source.Query%> paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
-			return this.Query.Load();
+			query = paraQuery;
+			InitQuery(query);
+			return Query.Load();
 		}
 		
-		protected void InitQuery(<%=source.Query%> query)
+		protected void InitQuery(<%=source.Query%> paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntity)this).Connection;
+				paraQuery.es2.Connection = ((IEntity)this).Connection;
 			}			
 		}
 

@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.1214.0
-EntitySpaces Driver  : SQL
-Date Generated       : 12/14/2019 5:29:51 PM
+EntitySpaces Version : 2024.1.4.0
+EntitySpaces Driver  : MySql
+Date Generated       : 19.01.2024 22:09:28
 ===============================================================================
 */
 
@@ -29,32 +29,30 @@ using EntitySpaces.DynamicQuery;
 
 
 
+// ReSharper disable InconsistentNaming
+
 namespace BusinessObjects
 {
 	/// <summary>
-	/// Encapsulates the 'Products' table
+	/// Encapsulates the 'products' table
 	/// </summary>
 
-    [DebuggerDisplay("Data = {Debug}")]
 	[Serializable]
 	[DataContract]
 	[KnownType(typeof(Products))]	
 	[XmlType("Products")]
 	public partial class Products : esProducts
 	{	
-		[DebuggerBrowsable(DebuggerBrowsableState.RootHidden | DebuggerBrowsableState.Never)]
-		protected override esEntityDebuggerView[] Debug
-		{
-			get { return base.Debug; }
-		}
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		protected override esEntityDebuggerView[] Debug => base.Debug;
 
-		override public esEntity CreateInstance()
+		public override esEntity CreateInstance()
 		{
 			return new Products();
 		}
 		
 		#region Static Quick Access Methods
-		static public void Delete(System.Int32 productID)
+		public static void Delete(System.Int32 productID)
 		{
 			var obj = new Products();
 			obj.ProductID = productID;
@@ -63,7 +61,7 @@ namespace BusinessObjects
 			obj.Save();
 		}
 
-	    static public void Delete(System.Int32 productID, esSqlAccessType sqlAccessType)
+	    public static void Delete(System.Int32 productID, esSqlAccessType sqlAccessType)
 		{
 			var obj = new Products();
 			obj.ProductID = productID;
@@ -81,7 +79,6 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Count = {Count}")]
 	[Serializable]
 	[CollectionDataContract]
 	[XmlType("ProductsCollection")]
@@ -98,22 +95,21 @@ namespace BusinessObjects
 
 
 
-    [DebuggerDisplay("Query = {Parse()}")]
 	[Serializable]	
 	public partial class ProductsQuery : esProductsQuery
 	{
 		public ProductsQuery(string joinAlias)
 		{
-			this.es.JoinAlias = joinAlias;
+			es.JoinAlias = joinAlias;
 		}	
 
-		public ProductsQuery(string joinAlias, out ProductsQuery query)
+    public ProductsQuery(string joinAlias, out ProductsQuery query)
 		{
-			query = this;
-			this.es.JoinAlias = joinAlias;
-		}
+      query = this;
+			es.JoinAlias = joinAlias;
+		}	
 
-		override protected string GetQueryName()
+		protected override string GetQueryName()
 		{
 			return "ProductsQuery";
 		}
@@ -137,7 +133,7 @@ namespace BusinessObjects
 
 	[DataContract]
 	[Serializable]
-	abstract public partial class esProducts : esEntity
+	public abstract partial class esProducts : esEntity
 	{
 		public esProducts()
 		{
@@ -181,222 +177,178 @@ namespace BusinessObjects
 		
 		
 		/// <summary>
-		/// Maps to Products.ProductID
+		/// Maps to products.ProductID
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int32? ProductID
+		public virtual System.Int32? ProductID
 		{
-			get
-			{
-				return base.GetSystemInt32(ProductsMetadata.ColumnNames.ProductID);
-			}
+			get => GetSystemInt32(ProductsMetadata.ColumnNames.ProductID);
 			
 			set
 			{
-				if(base.SetSystemInt32(ProductsMetadata.ColumnNames.ProductID, value))
-				{
-					OnPropertyChanged(ProductsMetadata.PropertyNames.ProductID);
-				}
+				if (!SetSystemInt32(ProductsMetadata.ColumnNames.ProductID, value)) return;
+				
+				OnPropertyChanged(ProductsMetadata.PropertyNames.ProductID);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Products.ProductName
+		/// Maps to products.ProductName
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String ProductName
+		public virtual System.String ProductName
 		{
-			get
-			{
-				return base.GetSystemString(ProductsMetadata.ColumnNames.ProductName);
-			}
+			get => GetSystemString(ProductsMetadata.ColumnNames.ProductName);
 			
 			set
 			{
-				if(base.SetSystemString(ProductsMetadata.ColumnNames.ProductName, value))
-				{
-					OnPropertyChanged(ProductsMetadata.PropertyNames.ProductName);
-				}
+				if (!SetSystemString(ProductsMetadata.ColumnNames.ProductName, value)) return;
+				
+				OnPropertyChanged(ProductsMetadata.PropertyNames.ProductName);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Products.SupplierID
+		/// Maps to products.SupplierID
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int32? SupplierID
+		public virtual System.Int32? SupplierID
 		{
-			get
-			{
-				return base.GetSystemInt32(ProductsMetadata.ColumnNames.SupplierID);
-			}
+			get => GetSystemInt32(ProductsMetadata.ColumnNames.SupplierID);
 			
 			set
 			{
-				if(base.SetSystemInt32(ProductsMetadata.ColumnNames.SupplierID, value))
-				{
-					this._Suppliers = null;
-					this.OnPropertyChanged("Suppliers");
-					OnPropertyChanged(ProductsMetadata.PropertyNames.SupplierID);
-				}
+				if (!SetSystemInt32(ProductsMetadata.ColumnNames.SupplierID, value)) return;
+				
+				_UpToSuppliersBySupplierID = null;
+				OnPropertyChanged("UpToSuppliersBySupplierID");
+				OnPropertyChanged(ProductsMetadata.PropertyNames.SupplierID);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Products.CategoryID
+		/// Maps to products.CategoryID
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int32? CategoryID
+		public virtual System.Int32? CategoryID
 		{
-			get
-			{
-				return base.GetSystemInt32(ProductsMetadata.ColumnNames.CategoryID);
-			}
+			get => GetSystemInt32(ProductsMetadata.ColumnNames.CategoryID);
 			
 			set
 			{
-				if(base.SetSystemInt32(ProductsMetadata.ColumnNames.CategoryID, value))
-				{
-					this._Categories = null;
-					this.OnPropertyChanged("Categories");
-					OnPropertyChanged(ProductsMetadata.PropertyNames.CategoryID);
-				}
+				if (!SetSystemInt32(ProductsMetadata.ColumnNames.CategoryID, value)) return;
+				
+				_UpToCategoriesByCategoryID = null;
+				OnPropertyChanged("UpToCategoriesByCategoryID");
+				OnPropertyChanged(ProductsMetadata.PropertyNames.CategoryID);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Products.QuantityPerUnit
+		/// Maps to products.QuantityPerUnit
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.String QuantityPerUnit
+		public virtual System.String QuantityPerUnit
 		{
-			get
-			{
-				return base.GetSystemString(ProductsMetadata.ColumnNames.QuantityPerUnit);
-			}
+			get => GetSystemString(ProductsMetadata.ColumnNames.QuantityPerUnit);
 			
 			set
 			{
-				if(base.SetSystemString(ProductsMetadata.ColumnNames.QuantityPerUnit, value))
-				{
-					OnPropertyChanged(ProductsMetadata.PropertyNames.QuantityPerUnit);
-				}
+				if (!SetSystemString(ProductsMetadata.ColumnNames.QuantityPerUnit, value)) return;
+				
+				OnPropertyChanged(ProductsMetadata.PropertyNames.QuantityPerUnit);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Products.UnitPrice
+		/// Maps to products.UnitPrice
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Decimal? UnitPrice
+		public virtual System.Decimal? UnitPrice
 		{
-			get
-			{
-				return base.GetSystemDecimal(ProductsMetadata.ColumnNames.UnitPrice);
-			}
+			get => GetSystemDecimal(ProductsMetadata.ColumnNames.UnitPrice);
 			
 			set
 			{
-				if(base.SetSystemDecimal(ProductsMetadata.ColumnNames.UnitPrice, value))
-				{
-					OnPropertyChanged(ProductsMetadata.PropertyNames.UnitPrice);
-				}
+				if (!SetSystemDecimal(ProductsMetadata.ColumnNames.UnitPrice, value)) return;
+				
+				OnPropertyChanged(ProductsMetadata.PropertyNames.UnitPrice);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Products.UnitsInStock
+		/// Maps to products.UnitsInStock
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int16? UnitsInStock
+		public virtual System.Int16? UnitsInStock
 		{
-			get
-			{
-				return base.GetSystemInt16(ProductsMetadata.ColumnNames.UnitsInStock);
-			}
+			get => GetSystemInt16(ProductsMetadata.ColumnNames.UnitsInStock);
 			
 			set
 			{
-				if(base.SetSystemInt16(ProductsMetadata.ColumnNames.UnitsInStock, value))
-				{
-					OnPropertyChanged(ProductsMetadata.PropertyNames.UnitsInStock);
-				}
+				if (!SetSystemInt16(ProductsMetadata.ColumnNames.UnitsInStock, value)) return;
+				
+				OnPropertyChanged(ProductsMetadata.PropertyNames.UnitsInStock);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Products.UnitsOnOrder
+		/// Maps to products.UnitsOnOrder
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int16? UnitsOnOrder
+		public virtual System.Int16? UnitsOnOrder
 		{
-			get
-			{
-				return base.GetSystemInt16(ProductsMetadata.ColumnNames.UnitsOnOrder);
-			}
+			get => GetSystemInt16(ProductsMetadata.ColumnNames.UnitsOnOrder);
 			
 			set
 			{
-				if(base.SetSystemInt16(ProductsMetadata.ColumnNames.UnitsOnOrder, value))
-				{
-					OnPropertyChanged(ProductsMetadata.PropertyNames.UnitsOnOrder);
-				}
+				if (!SetSystemInt16(ProductsMetadata.ColumnNames.UnitsOnOrder, value)) return;
+				
+				OnPropertyChanged(ProductsMetadata.PropertyNames.UnitsOnOrder);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Products.ReorderLevel
+		/// Maps to products.ReorderLevel
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Int16? ReorderLevel
+		public virtual System.Int16? ReorderLevel
 		{
-			get
-			{
-				return base.GetSystemInt16(ProductsMetadata.ColumnNames.ReorderLevel);
-			}
+			get => GetSystemInt16(ProductsMetadata.ColumnNames.ReorderLevel);
 			
 			set
 			{
-				if(base.SetSystemInt16(ProductsMetadata.ColumnNames.ReorderLevel, value))
-				{
-					OnPropertyChanged(ProductsMetadata.PropertyNames.ReorderLevel);
-				}
+				if (!SetSystemInt16(ProductsMetadata.ColumnNames.ReorderLevel, value)) return;
+				
+				OnPropertyChanged(ProductsMetadata.PropertyNames.ReorderLevel);
 			}
-		}
+		}		
 		
 		/// <summary>
-		/// Maps to Products.Discontinued
+		/// Maps to products.Discontinued
 		/// </summary>
 		[DataMember(EmitDefaultValue=false)]
-		virtual public System.Boolean? Discontinued
+		public virtual System.SByte? Discontinued
 		{
-			get
-			{
-				return base.GetSystemBoolean(ProductsMetadata.ColumnNames.Discontinued);
-			}
+			get => GetSystemSByte(ProductsMetadata.ColumnNames.Discontinued);
 			
 			set
 			{
-				if(base.SetSystemBoolean(ProductsMetadata.ColumnNames.Discontinued, value))
-				{
-					OnPropertyChanged(ProductsMetadata.PropertyNames.Discontinued);
-				}
+				if (!SetSystemSByte(ProductsMetadata.ColumnNames.Discontinued, value)) return;
+				
+				OnPropertyChanged(ProductsMetadata.PropertyNames.Discontinued);
 			}
-		}
+		}		
 		
-		internal protected Categories _Categories;
-		internal protected Suppliers _Suppliers;
+		
+		protected internal Categories _UpToCategoriesByCategoryID;
+		
+		protected internal Suppliers _UpToSuppliersBySupplierID;
 		#endregion
 		
 		#region Housekeeping methods
 
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return ProductsMetadata.Meta();
-			}
-		}
+		protected override IMetadata Meta => ProductsMetadata.Meta();
 
 		#endregion		
 		
@@ -406,36 +358,28 @@ namespace BusinessObjects
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new ProductsQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new ProductsQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(ProductsQuery query)
+		public bool Load(ProductsQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
-			return this.Query.Load();
+			query = paraQuery;
+			InitQuery(query);
+			return Query.Load();
 		}
-
-		protected void InitQuery(ProductsQuery query)
+		
+		protected void InitQuery(ProductsQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntity)this).Connection;
+				paraQuery.es2.Connection = ((IEntity)this).Connection;
 			}			
-		}
-
-		protected override void HookupQuery(esDynamicQuery query)
-		{
-			this.InitQuery((ProductsQuery)query);
 		}
 
 		#endregion
@@ -447,73 +391,60 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esProductsCollection : esEntityCollection<Products>
+	public abstract class esProductsCollection : esEntityCollection<Products>
 	{
 		#region Housekeeping methods
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return ProductsMetadata.Meta();
-			}
-		}
-
+		protected override IMetadata Meta => ProductsMetadata.Meta();
 		protected override string GetCollectionName()
 		{
 			return "ProductsCollection";
 		}
-
 		#endregion		
 		
 		#region Query Logic
 
 	#if (!WindowsCE)
-		[BrowsableAttribute(false)]
+		[Browsable(false)]
 	#endif
 		public ProductsQuery Query
 		{
 			get
 			{
-				if (this.query == null)
-				{
-					this.query = new ProductsQuery();
-					InitQuery(this.query);
-				}
-
-				return this.query;
+				if (query != null) return query;
+				query = new ProductsQuery();
+				InitQuery(query);
+				return query;
 			}
 		}
 
-		public bool Load(ProductsQuery query)
+		public bool Load(ProductsQuery paraQuery)
 		{
-			this.query = query;
-			InitQuery(this.query);
+			query = paraQuery;
+			InitQuery(query);
 			return Query.Load();
 		}
 
-		override protected esDynamicQuery GetDynamicQuery()
+		protected override esDynamicQuery GetDynamicQuery()
 		{
-			if (this.query == null)
-			{
-				this.query = new ProductsQuery();
-				this.InitQuery(query);
-			}
-			return this.query;
+			if (query != null) return query;
+			query = new ProductsQuery();
+			InitQuery(query);
+			return query;
 		}
 
-		protected void InitQuery(ProductsQuery query)
+		protected void InitQuery(ProductsQuery paraQuery)
 		{
-			query.OnLoadDelegate = this.OnQueryLoaded;
+			paraQuery.OnLoadDelegate = OnQueryLoaded;
 			
-			if (!query.es2.HasConnection)
+			if (!paraQuery.es2.HasConnection)
 			{
-				query.es2.Connection = ((IEntityCollection)this).Connection;
+				paraQuery.es2.Connection = ((IEntityCollection)this).Connection;
 			}			
 		}
 
-		protected override void HookupQuery(esDynamicQuery query)
+		protected override void HookupQuery(esDynamicQuery paraQuery)
 		{
-			this.InitQuery((ProductsQuery)query);
+			InitQuery((ProductsQuery)paraQuery);
 		}
 
 		#endregion
@@ -524,90 +455,53 @@ namespace BusinessObjects
 
 
 	[Serializable]
-	abstract public partial class esProductsQuery : esDynamicQuery
+	public abstract class esProductsQuery : esDynamicQuery
 	{
-		override protected IMetadata Meta
-		{
-			get
-			{
-				return ProductsMetadata.Meta();
-			}
-		}	
+		protected override IMetadata Meta => ProductsMetadata.Meta();
 		
 		#region QueryItemFromName
 		
         protected override esQueryItem QueryItemFromName(string name)
         {
-            switch (name)
+            return name switch
             {
-				case "ProductID": return this.ProductID;
-				case "ProductName": return this.ProductName;
-				case "SupplierID": return this.SupplierID;
-				case "CategoryID": return this.CategoryID;
-				case "QuantityPerUnit": return this.QuantityPerUnit;
-				case "UnitPrice": return this.UnitPrice;
-				case "UnitsInStock": return this.UnitsInStock;
-				case "UnitsOnOrder": return this.UnitsOnOrder;
-				case "ReorderLevel": return this.ReorderLevel;
-				case "Discontinued": return this.Discontinued;
-
-                default: return null;
-            }
+              "ProductID" => ProductID,
+              "ProductName" => ProductName,
+              "SupplierID" => SupplierID,
+              "CategoryID" => CategoryID,
+              "QuantityPerUnit" => QuantityPerUnit,
+              "UnitPrice" => UnitPrice,
+              "UnitsInStock" => UnitsInStock,
+              "UnitsOnOrder" => UnitsOnOrder,
+              "ReorderLevel" => ReorderLevel,
+              "Discontinued" => Discontinued,
+              _ => null
+            };
         }		
 		
 		#endregion
 		
 		#region esQueryItems
 
-		public esQueryItem ProductID
-		{
-			get { return new esQueryItem(this, ProductsMetadata.ColumnNames.ProductID, esSystemType.Int32); }
-		} 
+		public esQueryItem ProductID => new (this, ProductsMetadata.ColumnNames.ProductID, esSystemType.Int32);
 		
-		public esQueryItem ProductName
-		{
-			get { return new esQueryItem(this, ProductsMetadata.ColumnNames.ProductName, esSystemType.String); }
-		} 
+		public esQueryItem ProductName => new (this, ProductsMetadata.ColumnNames.ProductName, esSystemType.String);
 		
-		public esQueryItem SupplierID
-		{
-			get { return new esQueryItem(this, ProductsMetadata.ColumnNames.SupplierID, esSystemType.Int32); }
-		} 
+		public esQueryItem SupplierID => new (this, ProductsMetadata.ColumnNames.SupplierID, esSystemType.Int32);
 		
-		public esQueryItem CategoryID
-		{
-			get { return new esQueryItem(this, ProductsMetadata.ColumnNames.CategoryID, esSystemType.Int32); }
-		} 
+		public esQueryItem CategoryID => new (this, ProductsMetadata.ColumnNames.CategoryID, esSystemType.Int32);
 		
-		public esQueryItem QuantityPerUnit
-		{
-			get { return new esQueryItem(this, ProductsMetadata.ColumnNames.QuantityPerUnit, esSystemType.String); }
-		} 
+		public esQueryItem QuantityPerUnit => new (this, ProductsMetadata.ColumnNames.QuantityPerUnit, esSystemType.String);
 		
-		public esQueryItem UnitPrice
-		{
-			get { return new esQueryItem(this, ProductsMetadata.ColumnNames.UnitPrice, esSystemType.Decimal); }
-		} 
+		public esQueryItem UnitPrice => new (this, ProductsMetadata.ColumnNames.UnitPrice, esSystemType.Decimal);
 		
-		public esQueryItem UnitsInStock
-		{
-			get { return new esQueryItem(this, ProductsMetadata.ColumnNames.UnitsInStock, esSystemType.Int16); }
-		} 
+		public esQueryItem UnitsInStock => new (this, ProductsMetadata.ColumnNames.UnitsInStock, esSystemType.Int16);
 		
-		public esQueryItem UnitsOnOrder
-		{
-			get { return new esQueryItem(this, ProductsMetadata.ColumnNames.UnitsOnOrder, esSystemType.Int16); }
-		} 
+		public esQueryItem UnitsOnOrder => new (this, ProductsMetadata.ColumnNames.UnitsOnOrder, esSystemType.Int16);
 		
-		public esQueryItem ReorderLevel
-		{
-			get { return new esQueryItem(this, ProductsMetadata.ColumnNames.ReorderLevel, esSystemType.Int16); }
-		} 
+		public esQueryItem ReorderLevel => new (this, ProductsMetadata.ColumnNames.ReorderLevel, esSystemType.Int16);
 		
-		public esQueryItem Discontinued
-		{
-			get { return new esQueryItem(this, ProductsMetadata.ColumnNames.Discontinued, esSystemType.Boolean); }
-		} 
+		public esQueryItem Discontinued => new (this, ProductsMetadata.ColumnNames.Discontinued, esSystemType.SByte);
 		
 		#endregion
 		
@@ -618,53 +512,178 @@ namespace BusinessObjects
 	public partial class Products : esProducts
 	{
 
-			
-		#region OrdersCollection - Many To Many (FK_Order_Details_Products)
-		
-	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeOrdersCollection()
+				
+				
+		#region UpToCategoriesByCategoryID - Many To One
+		/// <summary>
+		/// Many to One
+		/// Foreign Key Name - FK_Products_Categories
+		/// </summary>
+			[EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToCategoriesByCategoryID()
 		{
-		    if(this._OrdersCollection != null && this._OrdersCollection.Count > 0)
-				return true;
-            else
-				return false;
+				return _UpToCategoriesByCategoryID != null;
 		}
 		
 
-		[DataMember(Name="OrdersCollection", EmitDefaultValue = false)]
-		public OrdersCollection OrdersCollection
+		[DataMember(Name="UpToCategoriesByCategoryID", EmitDefaultValue = false)]
+					
+		public Categories UpToCategoriesByCategoryID
 		{
 			get
 			{
-				if(this._OrdersCollection == null)
+				if (_UpToCategoriesByCategoryID != null) return _UpToCategoriesByCategoryID;
+				
+				_UpToCategoriesByCategoryID = new Categories();
+				_UpToCategoriesByCategoryID.es.Connection.Name = es.Connection.Name;
+				SetPreSave("UpToCategoriesByCategoryID", _UpToCategoriesByCategoryID);
+
+				if (_UpToCategoriesByCategoryID == null && CategoryID != null)
 				{
-					this._OrdersCollection = new OrdersCollection();
-					this._OrdersCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("OrdersCollection", this._OrdersCollection);
-					if (!this.es.IsLazyLoadDisabled && this.ProductID != null)
-					{
-						OrdersQuery m = new OrdersQuery("m");
-						OrderDetailsQuery j = new OrderDetailsQuery("j");
-						m.Select(m);
-						m.InnerJoin(j).On(m.OrderID == j.OrderID);
-                        m.Where(j.ProductID == this.ProductID);
-
-						this._OrdersCollection.Load(m);
-					}
+					if (es.IsLazyLoadDisabled) return _UpToCategoriesByCategoryID;
+					
+					_UpToCategoriesByCategoryID.Query.Where(_UpToCategoriesByCategoryID.Query.CategoryID == CategoryID);
+					_UpToCategoriesByCategoryID.Query.Load();
 				}
+				return _UpToCategoriesByCategoryID;
+			}
+			
+			set
+			{
+				RemovePreSave("UpToCategoriesByCategoryID");
+				
+				var changed = _UpToCategoriesByCategoryID != value;
 
-				return this._OrdersCollection;
+				if (value == null)
+				{
+					CategoryID = null;
+					_UpToCategoriesByCategoryID = null;
+				}
+				else
+				{
+					CategoryID = value.CategoryID;
+					_UpToCategoriesByCategoryID = value;
+					SetPreSave("UpToCategoriesByCategoryID", _UpToCategoriesByCategoryID);
+				}
+				
+				if (changed)
+				{
+					OnPropertyChanged("UpToCategoriesByCategoryID");
+				}
+			}
+		}
+		#endregion
+		
+
+				
+				
+		#region UpToSuppliersBySupplierID - Many To One
+		/// <summary>
+		/// Many to One
+		/// Foreign Key Name - FK_Products_Suppliers
+		/// </summary>
+			[EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToSuppliersBySupplierID()
+		{
+				return _UpToSuppliersBySupplierID != null;
+		}
+		
+
+		[DataMember(Name="UpToSuppliersBySupplierID", EmitDefaultValue = false)]
+					
+		public Suppliers UpToSuppliersBySupplierID
+		{
+			get
+			{
+				if (_UpToSuppliersBySupplierID != null) return _UpToSuppliersBySupplierID;
+				
+				_UpToSuppliersBySupplierID = new Suppliers();
+				_UpToSuppliersBySupplierID.es.Connection.Name = es.Connection.Name;
+				SetPreSave("UpToSuppliersBySupplierID", _UpToSuppliersBySupplierID);
+
+				if (_UpToSuppliersBySupplierID == null && SupplierID != null)
+				{
+					if (es.IsLazyLoadDisabled) return _UpToSuppliersBySupplierID;
+					
+					_UpToSuppliersBySupplierID.Query.Where(_UpToSuppliersBySupplierID.Query.SupplierID == SupplierID);
+					_UpToSuppliersBySupplierID.Query.Load();
+				}
+				return _UpToSuppliersBySupplierID;
+			}
+			
+			set
+			{
+				RemovePreSave("UpToSuppliersBySupplierID");
+				
+				var changed = _UpToSuppliersBySupplierID != value;
+
+				if (value == null)
+				{
+					SupplierID = null;
+					_UpToSuppliersBySupplierID = null;
+				}
+				else
+				{
+					SupplierID = value.SupplierID;
+					_UpToSuppliersBySupplierID = value;
+					SetPreSave("UpToSuppliersBySupplierID", _UpToSuppliersBySupplierID);
+				}
+				
+				if (changed)
+				{
+					OnPropertyChanged("UpToSuppliersBySupplierID");
+				}
+			}
+		}
+		#endregion
+		
+
+		#region UpToOrdersByOrderDetails - Many To Many
+
+		/// <summary>
+		/// Many to Many
+		/// Foreign Key Name - FK_Order_Details_Products
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToOrdersByOrderDetails()
+		{
+			return _UpToOrdersByOrderDetails is { Count: > 0 };
+		}
+		
+
+		[DataMember(Name="UpToOrdersByOrderDetails", EmitDefaultValue = false)]
+		public OrdersCollection UpToOrdersByOrderDetails
+		{
+			get
+			{
+				if (_UpToOrdersByOrderDetails != null) return _UpToOrdersByOrderDetails;
+
+				_UpToOrdersByOrderDetails = new OrdersCollection();
+				_UpToOrdersByOrderDetails.es.Connection.Name = es.Connection.Name;
+				SetPostSave("UpToOrdersByOrderDetails", _UpToOrdersByOrderDetails);
+
+				if (es.IsLazyLoadDisabled || ProductID == null) return _UpToOrdersByOrderDetails;
+
+				var m = new OrdersQuery("m");
+				var j = new OrderDetailsQuery("j");
+				m.Select(m);
+				m.InnerJoin(j).On(m.OrderID == j.OrderID);
+				m.Where(j.ProductID == ProductID);
+
+				_UpToOrdersByOrderDetails.Load(m);
+
+				return _UpToOrdersByOrderDetails;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._OrdersCollection != null) 
+				if (_UpToOrdersByOrderDetails != null) 
 				{ 
-					this.RemovePostSave("OrdersCollection"); 
-					this._OrdersCollection = null;
-					
+					RemovePostSave("UpToOrdersByOrderDetails"); 
+					_UpToOrdersByOrderDetails = null;
+					OnPropertyChanged("UpToOrdersByOrderDetails");
 				} 
 			}  			
 		}
@@ -673,54 +692,54 @@ namespace BusinessObjects
 		/// Many to Many Associate
 		/// Foreign Key Name - FK_Order_Details_Products
 		/// </summary>
-		public void ASsociateOrderDetailsCollection(Orders entity)
+		public void AssociateOrdersByOrderDetails(Orders entity)
 		{
-			if (this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection == null)
+			if (this._OrderDetailsCollection == null)
 			{
-				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection = new OrderDetailsCollection();
-				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("ManyEntitySpacesMetadataEngineSqlSqlTableCollection", this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection);
+				this._OrderDetailsCollection = new OrderDetailsCollection();
+				this._OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("OrderDetailsCollection", this._OrderDetailsCollection);
 			}
 
-			OrderDetails obj = this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.AddNew();
+			OrderDetails obj = this._OrderDetailsCollection.AddNew();
 			obj.ProductID = this.ProductID;
 			obj.OrderID = entity.OrderID;
 		}
-
+		
 		/// <summary>
 		/// Many to Many Dissociate
 		/// Foreign Key Name - FK_Order_Details_Products
 		/// </summary>
-		public void DiSsociateOrderDetailsCollection(Orders entity)
+		public void DissociateOrdersByOrderDetails(Orders entity)
 		{
-			if (this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection == null)
+			if (this._OrderDetailsCollection == null)
 			{
-				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection = new OrderDetailsCollection();
-				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("ManyEntitySpacesMetadataEngineSqlSqlTableCollection", this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection);
+				this._OrderDetailsCollection = new OrderDetailsCollection();
+				this._OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("OrderDetailsCollection", this._OrderDetailsCollection);
 			}
 
-			OrderDetails obj = this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.AddNew();
+			OrderDetails obj = this._OrderDetailsCollection.AddNew();
 			obj.ProductID = this.ProductID;
-            obj.OrderID = entity.OrderID;
+						obj.OrderID = entity.OrderID;
 			obj.AcceptChanges();
 			obj.MarkAsDeleted();
 		}
 
-		private OrdersCollection _OrdersCollection;
-		private OrderDetailsCollection _ManyEntitySpacesMetadataEngineSqlSqlTableCollection;
+		private OrdersCollection _UpToOrdersByOrderDetails;
+		private OrderDetailsCollection _OrderDetailsCollection;
 		#endregion
 
-		#region OrderDetailsCollection - Zero To Many (FK_Order_Details_Products)
+		#region OrderDetailsByProductID - Zero To Many
 		
-		static public esPrefetchMap Prefetch_OrderDetailsCollection
+		public static esPrefetchMap Prefetch_OrderDetailsByProductID
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap
+				var map = new esPrefetchMap
 				{
-					PrefetchDelegate = BusinessObjects.Products.OrderDetailsCollection_Delegate,
-					PropertyName = "OrderDetailsCollection",
+					PrefetchDelegate = OrderDetailsByProductID_Delegate,
+					PropertyName = "OrderDetailsByProductID",
 					MyColumnName = "ProductID",
 					ParentColumnName = "ProductID",
 					IsMultiPartKey = false
@@ -729,18 +748,13 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void OrderDetailsCollection_Delegate(esPrefetchParameters data)
+		private static void OrderDetailsByProductID_Delegate(esPrefetchParameters data)
 		{
-			ProductsQuery parent = new ProductsQuery(data.NextAlias());
+			var parent = new ProductsQuery(data.NextAlias());
+			var me = data.You != null ? data.You as OrderDetailsQuery : new OrderDetailsQuery(data.NextAlias());
 
-			OrderDetailsQuery me = data.You != null ? data.You as OrderDetailsQuery : new OrderDetailsQuery(data.NextAlias());
-
-			if (data.Root == null)
-			{
-				data.Root = me;
-			}
-			
-			data.Root.InnerJoin(parent).On(parent.ProductID == me.ProductID);
+			data.Root ??= me;
+			data.Root?.InnerJoin(parent).On(parent.ProductID == me?.ProductID);
 
 			data.You = parent;
 		}	
@@ -750,175 +764,53 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_Order_Details_Products
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeOrderDetailsCollection()
+		public bool ShouldSerializeOrderDetailsByProductID()
 		{
-		    if(this._OrderDetailsCollection != null && this._OrderDetailsCollection.Count > 0)
-				return true;
-            else
-				return false;
+			return _OrderDetailsByProductID is { Count: > 0 };
 		}	
 		
 
-		[DataMember(Name="OrderDetailsCollection", EmitDefaultValue = false)]
-		public OrderDetailsCollection OrderDetailsCollection
+		[DataMember(Name="OrderDetailsByProductID", EmitDefaultValue = false)]
+		public OrderDetailsCollection OrderDetailsByProductID
 		{
 			get
 			{
-				if(this._OrderDetailsCollection == null)
-				{
-					this._OrderDetailsCollection = new OrderDetailsCollection();
-					this._OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("OrderDetailsCollection", this._OrderDetailsCollection);
+				if (_OrderDetailsByProductID != null) return _OrderDetailsByProductID;
 				
-					if (this.ProductID != null)
+				_OrderDetailsByProductID = new OrderDetailsCollection();
+				_OrderDetailsByProductID.es.Connection.Name = es.Connection.Name;
+				SetPostSave("OrderDetailsByProductID", _OrderDetailsByProductID);
+				
+				// ReSharper disable once InvertIf
+				if (ProductID != null)
+				{
+					if (!es.IsLazyLoadDisabled)
 					{
-						if (!this.es.IsLazyLoadDisabled)
-						{
-							this._OrderDetailsCollection.Query.Where(this._OrderDetailsCollection.Query.ProductID == this.ProductID);
-							this._OrderDetailsCollection.Query.Load();
-						}
-
-						// Auto-hookup Foreign Keys
-						this._OrderDetailsCollection.fks.Add(OrderDetailsMetadata.ColumnNames.ProductID, this.ProductID);
+						_OrderDetailsByProductID.Query.Where(_OrderDetailsByProductID.Query.ProductID == ProductID);
+						_OrderDetailsByProductID.Query.Load();
 					}
+
+					// Auto-hookup Foreign Keys
+					_OrderDetailsByProductID.fks.Add(OrderDetailsMetadata.ColumnNames.ProductID, this.ProductID);
 				}
 
-				return this._OrderDetailsCollection;
+				return _OrderDetailsByProductID;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
-			 
-				if (this._OrderDetailsCollection != null) 
-				{ 
-					this.RemovePostSave("OrderDetailsCollection"); 
-					this._OrderDetailsCollection = null;
-					
-				} 
+				if (_OrderDetailsByProductID == null) return;
+				RemovePostSave("OrderDetailsByProductID"); 
+				_OrderDetailsByProductID = null;
+				OnPropertyChanged("OrderDetailsByProductID");
 			} 			
 		}
 		
-
-		
 			
 		
-		private OrderDetailsCollection _OrderDetailsCollection;
+		private OrderDetailsCollection _OrderDetailsByProductID;
 		#endregion
-
-		
-		#region Categories - Many To One (FK_Products_Categories)
-		
-	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeCategories()
-		{
-		    return this._Categories != null ? true : false;
-		}
-		
-
-		[DataMember(Name="Categories", EmitDefaultValue = false)]
-					
-		public Categories Categories
-		{
-			get
-			{
-                if (this._Categories == null)
-                {
-                    this._Categories = new Categories();
-                    this._Categories.es.Connection.Name = this.es.Connection.Name;
-                    this.SetPreSave("Categories", this._Categories);
-
-					if(this._Categories == null && CategoryID != null)
-                    {
-                        if (!this.es.IsLazyLoadDisabled)
-                        {
-							this._Categories.Query.Where(this._Categories.Query.CategoryID == this.CategoryID);
-							this._Categories.Query.Load();
-                        }
-                    }
-                }
-
-				return this._Categories;
-			}
-			
-			set
-			{
-				this.RemovePreSave("Categories");
-				
-
-				if(value == null)
-				{
-					this.CategoryID = null;
-					this._Categories = null;
-				}
-				else
-				{
-					this.CategoryID = value.CategoryID;
-					this._Categories = value;
-					this.SetPreSave("Categories", this._Categories);
-				}
-				
-			}
-		}
-		#endregion
-		
-
-		
-		#region Suppliers - Many To One (FK_Products_Suppliers)
-		
-	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeSuppliers()
-		{
-		    return this._Suppliers != null ? true : false;
-		}
-		
-
-		[DataMember(Name="Suppliers", EmitDefaultValue = false)]
-					
-		public Suppliers Suppliers
-		{
-			get
-			{
-                if (this._Suppliers == null)
-                {
-                    this._Suppliers = new Suppliers();
-                    this._Suppliers.es.Connection.Name = this.es.Connection.Name;
-                    this.SetPreSave("Suppliers", this._Suppliers);
-
-					if(this._Suppliers == null && SupplierID != null)
-                    {
-                        if (!this.es.IsLazyLoadDisabled)
-                        {
-							this._Suppliers.Query.Where(this._Suppliers.Query.SupplierID == this.SupplierID);
-							this._Suppliers.Query.Load();
-                        }
-                    }
-                }
-
-				return this._Suppliers;
-			}
-			
-			set
-			{
-				this.RemovePreSave("Suppliers");
-				
-
-				if(value == null)
-				{
-					this.SupplierID = null;
-					this._Suppliers = null;
-				}
-				else
-				{
-					this.SupplierID = value.SupplierID;
-					this._Suppliers = value;
-					this.SetPreSave("Suppliers", this._Suppliers);
-				}
-				
-			}
-		}
-		#endregion
-		
 
 		
 		protected override esEntityCollectionBase CreateCollectionForPrefetch(string name)
@@ -927,8 +819,8 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "OrderDetailsCollection":
-					coll = this.OrderDetailsCollection;
+				case "OrderDetailsByProductID":
+					coll = this.OrderDetailsByProductID;
 					break;	
 			}
 
@@ -939,10 +831,8 @@ namespace BusinessObjects
 		/// </summary>
 		protected override List<esPropertyDescriptor> GetHierarchicalProperties()
 		{
-			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
-			
-			props.Add(new esPropertyDescriptor(this, "OrderDetailsCollection", typeof(OrderDetailsCollection), new OrderDetails()));
-		
+			var props = new List<esPropertyDescriptor>();
+			props.Add(new esPropertyDescriptor(this, "OrderDetailsByProductID", typeof(OrderDetailsCollection), new OrderDetails()));
 			return props;
 		}
 		/// <summary>
@@ -951,13 +841,13 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPreSaveKeys()
 		{
-			if(!this.es.IsDeleted && this._Categories != null)
+			if(!es.IsDeleted && _UpToCategoriesByCategoryID != null)
 			{
-				this.CategoryID = this._Categories.CategoryID;
+				CategoryID = _UpToCategoriesByCategoryID.CategoryID;
 			}
-			if(!this.es.IsDeleted && this._Suppliers != null)
+			if(!es.IsDeleted && _UpToSuppliersBySupplierID != null)
 			{
-				this.SupplierID = this._Suppliers.SupplierID;
+				SupplierID = _UpToSuppliersBySupplierID.SupplierID;
 			}
 		}
 		
@@ -988,9 +878,9 @@ namespace BusinessObjects
 			{
 				Apply(this._OrderDetailsCollection, "ProductID", this.ProductID);
 			}
-			if(this._OrderDetailsCollection != null)
+			if(this._OrderDetailsByProductID != null)
 			{
-				Apply(this._OrderDetailsCollection, "ProductID", this.ProductID);
+				Apply(this._OrderDetailsByProductID, "ProductID", this.ProductID);
 			}
 		}
 		
@@ -1008,96 +898,89 @@ namespace BusinessObjects
 			m_columns = new esColumnMetadataCollection();
 			esColumnMetadata c;
 
-			c = new esColumnMetadata(ProductsMetadata.ColumnNames.ProductID, 0, typeof(System.Int32), esSystemType.Int32);
-			c.PropertyName = ProductsMetadata.PropertyNames.ProductID;
+			c = new esColumnMetadata(ColumnNames.ProductID, 0, typeof(System.Int32), esSystemType.Int32);
+			c.PropertyName = PropertyNames.ProductID;
 			c.IsInPrimaryKey = true;
 			c.IsAutoIncrement = true;
-			c.NumericPrecision = 10;
+			c.NumericPrecision = 11;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(ProductsMetadata.ColumnNames.ProductName, 1, typeof(System.String), esSystemType.String);
-			c.PropertyName = ProductsMetadata.PropertyNames.ProductName;
+			c = new esColumnMetadata(ColumnNames.ProductName, 1, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.ProductName;
 			c.CharacterMaxLength = 40;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(ProductsMetadata.ColumnNames.SupplierID, 2, typeof(System.Int32), esSystemType.Int32);
-			c.PropertyName = ProductsMetadata.PropertyNames.SupplierID;
-			c.NumericPrecision = 10;
+			c = new esColumnMetadata(ColumnNames.SupplierID, 2, typeof(System.Int32), esSystemType.Int32);
+			c.PropertyName = PropertyNames.SupplierID;
+			c.NumericPrecision = 11;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(ProductsMetadata.ColumnNames.CategoryID, 3, typeof(System.Int32), esSystemType.Int32);
-			c.PropertyName = ProductsMetadata.PropertyNames.CategoryID;
-			c.NumericPrecision = 10;
+			c = new esColumnMetadata(ColumnNames.CategoryID, 3, typeof(System.Int32), esSystemType.Int32);
+			c.PropertyName = PropertyNames.CategoryID;
+			c.NumericPrecision = 11;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(ProductsMetadata.ColumnNames.QuantityPerUnit, 4, typeof(System.String), esSystemType.String);
-			c.PropertyName = ProductsMetadata.PropertyNames.QuantityPerUnit;
+			c = new esColumnMetadata(ColumnNames.QuantityPerUnit, 4, typeof(System.String), esSystemType.String);
+			c.PropertyName = PropertyNames.QuantityPerUnit;
 			c.CharacterMaxLength = 20;
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(ProductsMetadata.ColumnNames.UnitPrice, 5, typeof(System.Decimal), esSystemType.Decimal);
-			c.PropertyName = ProductsMetadata.PropertyNames.UnitPrice;
-			c.NumericPrecision = 19;
+			c = new esColumnMetadata(ColumnNames.UnitPrice, 5, typeof(System.Decimal), esSystemType.Decimal);
+			c.PropertyName = PropertyNames.UnitPrice;
+			c.NumericPrecision = 10;
+			c.NumericScale = 4;
 			c.HasDefault = true;
-			c.Default = @"((0))";
+			c.Default = @"0.0000";
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(ProductsMetadata.ColumnNames.UnitsInStock, 6, typeof(System.Int16), esSystemType.Int16);
-			c.PropertyName = ProductsMetadata.PropertyNames.UnitsInStock;
-			c.NumericPrecision = 5;
+			c = new esColumnMetadata(ColumnNames.UnitsInStock, 6, typeof(System.Int16), esSystemType.Int16);
+			c.PropertyName = PropertyNames.UnitsInStock;
+			c.NumericPrecision = 2;
 			c.HasDefault = true;
-			c.Default = @"((0))";
+			c.Default = @"0";
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(ProductsMetadata.ColumnNames.UnitsOnOrder, 7, typeof(System.Int16), esSystemType.Int16);
-			c.PropertyName = ProductsMetadata.PropertyNames.UnitsOnOrder;
-			c.NumericPrecision = 5;
+			c = new esColumnMetadata(ColumnNames.UnitsOnOrder, 7, typeof(System.Int16), esSystemType.Int16);
+			c.PropertyName = PropertyNames.UnitsOnOrder;
+			c.NumericPrecision = 2;
 			c.HasDefault = true;
-			c.Default = @"((0))";
+			c.Default = @"0";
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(ProductsMetadata.ColumnNames.ReorderLevel, 8, typeof(System.Int16), esSystemType.Int16);
-			c.PropertyName = ProductsMetadata.PropertyNames.ReorderLevel;
-			c.NumericPrecision = 5;
+			c = new esColumnMetadata(ColumnNames.ReorderLevel, 8, typeof(System.Int16), esSystemType.Int16);
+			c.PropertyName = PropertyNames.ReorderLevel;
+			c.NumericPrecision = 2;
 			c.HasDefault = true;
-			c.Default = @"((0))";
+			c.Default = @"0";
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
-			c = new esColumnMetadata(ProductsMetadata.ColumnNames.Discontinued, 9, typeof(System.Boolean), esSystemType.Boolean);
-			c.PropertyName = ProductsMetadata.PropertyNames.Discontinued;
+			c = new esColumnMetadata(ColumnNames.Discontinued, 9, typeof(System.SByte), esSystemType.SByte);
+			c.PropertyName = PropertyNames.Discontinued;
+			c.NumericPrecision = 1;
 			c.HasDefault = true;
-			c.Default = @"((0))";
+			c.Default = @"b'0'";
 			m_columns.Add(c);
 				
 		}
 		#endregion	
 	
-		static public ProductsMetadata Meta()
+		public static ProductsMetadata Meta()
 		{
 			return meta;
 		}	
 		
-		public Guid DataID
-		{
-			get { return base.m_dataID; }
-		}	
-		
-		public bool MultiProviderMode
-		{
-			get { return false; }
-		}		
+		public Guid DataID => m_dataID;
 
-		public esColumnMetadataCollection Columns
-		{
-			get	{ return base.m_columns; }
-		}
+		public bool MultiProviderMode => false;
+
+		public esColumnMetadataCollection Columns => m_columns;
 		
 		#region ColumnNames
 		public class ColumnNames
@@ -1133,32 +1016,20 @@ namespace BusinessObjects
 
 		public esProviderSpecificMetadata GetProviderMetadata(string mapName)
 		{
-			MapToMeta mapMethod = mapDelegates[mapName];
-
-			if (mapMethod != null)
-				return mapMethod(mapName);
-			else
-				return null;
+			var mapMethod = mapDelegates[mapName];
+      return mapMethod?.Invoke(mapName);
 		}
 		
 		#region MAP esDefault
 		
-		static private int RegisterDelegateesDefault()
+		private static int RegisterDelegateesDefault()
 		{
 			// This is only executed once per the life of the application
 			lock (typeof(ProductsMetadata))
 			{
-				if(ProductsMetadata.mapDelegates == null)
-				{
-					ProductsMetadata.mapDelegates = new Dictionary<string,MapToMeta>();
-				}
-				
-				if (ProductsMetadata.meta == null)
-				{
-					ProductsMetadata.meta = new ProductsMetadata();
-				}
-				
-				MapToMeta mapMethod = new MapToMeta(meta.esDefault);
+				mapDelegates ??= new Dictionary<string, MapToMeta>();
+				meta ??= new ProductsMetadata();
+				var mapMethod = new MapToMeta(meta.esDefault);
 				mapDelegates.Add("esDefault", mapMethod);
 				mapMethod("esDefault");
 			}
@@ -1167,43 +1038,44 @@ namespace BusinessObjects
 
 		private esProviderSpecificMetadata esDefault(string mapName)
 		{
+			// ReSharper disable once InvertIf
 			if(!m_providerMetadataMaps.ContainsKey(mapName))
 			{
-				esProviderSpecificMetadata meta = new esProviderSpecificMetadata();			
+				var specMeta = new esProviderSpecificMetadata();			
 
 
-				meta.AddTypeMap("ProductID", new esTypeMap("int", "System.Int32"));
-				meta.AddTypeMap("ProductName", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("SupplierID", new esTypeMap("int", "System.Int32"));
-				meta.AddTypeMap("CategoryID", new esTypeMap("int", "System.Int32"));
-				meta.AddTypeMap("QuantityPerUnit", new esTypeMap("nvarchar", "System.String"));
-				meta.AddTypeMap("UnitPrice", new esTypeMap("money", "System.Decimal"));
-				meta.AddTypeMap("UnitsInStock", new esTypeMap("smallint", "System.Int16"));
-				meta.AddTypeMap("UnitsOnOrder", new esTypeMap("smallint", "System.Int16"));
-				meta.AddTypeMap("ReorderLevel", new esTypeMap("smallint", "System.Int16"));
-				meta.AddTypeMap("Discontinued", new esTypeMap("bit", "System.Boolean"));			
+				specMeta.AddTypeMap("ProductID", new esTypeMap("INT", "System.Int32"));
+				specMeta.AddTypeMap("ProductName", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("SupplierID", new esTypeMap("INT", "System.Int32"));
+				specMeta.AddTypeMap("CategoryID", new esTypeMap("INT", "System.Int32"));
+				specMeta.AddTypeMap("QuantityPerUnit", new esTypeMap("VARCHAR", "System.String"));
+				specMeta.AddTypeMap("UnitPrice", new esTypeMap("DECIMAL", "System.Decimal"));
+				specMeta.AddTypeMap("UnitsInStock", new esTypeMap("SMALLINT", "System.Int16"));
+				specMeta.AddTypeMap("UnitsOnOrder", new esTypeMap("SMALLINT", "System.Int16"));
+				specMeta.AddTypeMap("ReorderLevel", new esTypeMap("SMALLINT", "System.Int16"));
+				specMeta.AddTypeMap("Discontinued", new esTypeMap("BIT", "System.SByte"));			
 				
 				
 				
-				meta.Source = "Products";
-				meta.Destination = "Products";
+				specMeta.Source = "products";
+				specMeta.Destination = "products";
 				
-				meta.spInsert = "proc_ProductsInsert";				
-				meta.spUpdate = "proc_ProductsUpdate";		
-				meta.spDelete = "proc_ProductsDelete";
-				meta.spLoadAll = "proc_ProductsLoadAll";
-				meta.spLoadByPrimaryKey = "proc_ProductsLoadByPrimaryKey";
+				specMeta.spInsert = "proc_productsInsert";				
+				specMeta.spUpdate = "proc_productsUpdate";		
+				specMeta.spDelete = "proc_productsDelete";
+				specMeta.spLoadAll = "proc_productsLoadAll";
+				specMeta.spLoadByPrimaryKey = "proc_productsLoadByPrimaryKey";
 				
-				this.m_providerMetadataMaps["esDefault"] = meta;
+				m_providerMetadataMaps["esDefault"] = specMeta;
 			}
 			
-			return this.m_providerMetadataMaps["esDefault"];
+			return m_providerMetadataMaps["esDefault"];
 		}
 
 		#endregion
 
-		static private ProductsMetadata meta;
-		static protected Dictionary<string, MapToMeta> mapDelegates;
-		static private int _esDefault = RegisterDelegateesDefault();
+		private static ProductsMetadata meta;
+		protected static Dictionary<string, MapToMeta> mapDelegates;
+		private static int _esDefault = RegisterDelegateesDefault();
 	}
 }
