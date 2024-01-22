@@ -118,15 +118,15 @@ namespace EntitySpaces.Core
             {
                 //this.rowState = dto.rowState;
 
-                esSmartDtoMap smartMap = dto.GetMap();
-                IReadOnlyDictionary<string, string> map = smartMap.GetMap(this.GetType());
+                var smartMap = dto.GetMap();
+                var map = smartMap.GetMap(GetType());
                 if (map != null)
                 {
-                    foreach (string column in dto.m_modifiedColumns)
+                    foreach (var column in dto.m_modifiedColumns)
                     {
                         if(map.ContainsKey(column))
                         {
-                            this.SetColumn(column, dto.currentValues[column]);
+                            SetColumn(column, dto.currentValues[column]);
                         }
                     }
                 }
@@ -138,7 +138,7 @@ namespace EntitySpaces.Core
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            Dictionary<string, object> extra = GetExtraColumns();
+            var extra = GetExtraColumns();
             return extra.Keys;
         }
 
@@ -190,8 +190,8 @@ namespace EntitySpaces.Core
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            bool found = currentValues.TryGetValue(binder.Name, out result);
-            if (result is System.DBNull) result = null;
+            var found = currentValues.TryGetValue(binder.Name, out result);
+            if (result is DBNull) result = null;
             return found;
         }
 
@@ -267,25 +267,25 @@ namespace EntitySpaces.Core
                 throw new Exception("An Entity can only hold 1 record of data");
             }
 
-            bool dataFound = this.PopulateEntity(table);
+            var dataFound = PopulateEntity(table);
 
             if (query.es2.PrefetchMaps != null)
             {
-                bool firstTime = true;
+                var firstTime = true;
 
                 // Add ourself into the list with a map name of string.Empty
-                Dictionary<string, Dictionary<object, esEntityCollectionBase>> collections = new Dictionary<string, Dictionary<object, esEntityCollectionBase>>();
-                Dictionary<object, esEntityCollectionBase> me = new Dictionary<object, esEntityCollectionBase>();
+                var collections = new Dictionary<string, Dictionary<object, esEntityCollectionBase>>();
+                var me = new Dictionary<object, esEntityCollectionBase>();
                 collections[string.Empty] = me;
 
-                this.es.IsLazyLoadDisabled = true;
+                es.IsLazyLoadDisabled = true;
 
-                foreach (esPrefetchMap map in query.es2.PrefetchMaps)
+                foreach (var map in query.es2.PrefetchMaps)
                 {
-                    DataTable preFetchedTable = map.Table;
+                    var preFetchedTable = map.Table;
 
                     Dictionary<object, esEntityCollectionBase> loadedCollections = null;
-                    Dictionary<object, esEntityCollectionBase> newCollection = new Dictionary<object, esEntityCollectionBase>();
+                    var newCollection = new Dictionary<object, esEntityCollectionBase>();
 
                     if (map.Path == string.Empty)
                     {
@@ -302,7 +302,7 @@ namespace EntitySpaces.Core
                         loadedCollections = collections[map.Path];
                     }
 
-                    foreach (esEntityCollectionBase collection in loadedCollections.Values)
+                    foreach (var collection in loadedCollections.Values)
                     {
                         foreach (esEntity obj in collection)
                         {
@@ -311,11 +311,11 @@ namespace EntitySpaces.Core
                     }
 
                     Dictionary<string, int> ordinals = null;
-                    DataRowCollection rows = preFetchedTable.Rows;
-                    int count = rows.Count;
-                    for (int i = 0; i < count; i++)
+                    var rows = preFetchedTable.Rows;
+                    var count = rows.Count;
+                    for (var i = 0; i < count; i++)
                     {
-                        DataRow row = rows[i];
+                        var row = rows[i];
 
                         object key = null;
 
@@ -324,8 +324,8 @@ namespace EntitySpaces.Core
                         {
                             key = string.Empty;
 
-                            string[] columns = map.MyColumnName.Split(',');
-                            foreach (string col in columns)
+                            var columns = map.MyColumnName.Split(',');
+                            foreach (var col in columns)
                             {
                                 key += Convert.ToString(row[col]);
                             }
@@ -335,9 +335,9 @@ namespace EntitySpaces.Core
                             key = row[map.MyColumnName];
                         }
 
-                        esEntityCollectionBase c = newCollection[key];
+                        var c = newCollection[key];
 
-                        IEntityCollection iColl = c as IEntityCollection;
+                        var iColl = c as IEntityCollection;
                         ordinals = iColl.PopulateCollection(row, ordinals);
                     }
 
@@ -362,8 +362,8 @@ namespace EntitySpaces.Core
             {
                 key = string.Empty;
 
-                string[] columns = map.ParentColumnName.Split(',');
-                foreach (string col in columns)
+                var columns = map.ParentColumnName.Split(',');
+                foreach (var col in columns)
                 {
                     key += Convert.ToString(obj.GetColumn(col));
                 }
@@ -373,7 +373,7 @@ namespace EntitySpaces.Core
                 key = obj.GetColumn(map.ParentColumnName);
             }
 
-            IEntity iEntity = obj as IEntity;
+            var iEntity = obj as IEntity;
             newCollection[key] = iEntity.CreateCollection(map.PropertyName);
         }
 
@@ -387,15 +387,15 @@ namespace EntitySpaces.Core
         {
             esParameters esParams = null;
 
-            int i = 0;
-            string sIndex = String.Empty;
-            string param = String.Empty;
+            var i = 0;
+            var sIndex = string.Empty;
+            var param = string.Empty;
 
             if (parameters != null)
             {
                 esParams = new esParameters();
 
-                foreach (object o in parameters)
+                foreach (var o in parameters)
                 {
                     sIndex = i.ToString();
                     param = "p" + sIndex;
@@ -416,15 +416,15 @@ namespace EntitySpaces.Core
         /// <seealso cref="esDataRequest"/><seealso cref="esDataProvider"/><seealso cref="IDataProvider"/>
         protected esDataRequest CreateRequest()
         {
-            esDataRequest request = new esDataRequest();
+            var request = new esDataRequest();
             request.Caller = this;
 
-            esConnection conn = this.es.Connection;
+            var conn = es.Connection;
 
             request.ConnectionString = conn.ConnectionString;
             request.CommandTimeout = conn.CommandTimeout;
-            request.DataID = this.Meta.DataID;
-            request.ProviderMetadata = this.Meta.GetProviderMetadata(conn.ProviderMetadataKey);
+            request.DataID = Meta.DataID;
+            request.ProviderMetadata = Meta.GetProviderMetadata(conn.ProviderMetadataKey);
             request.SelectedColumns = selectedColumns;
 
             request.Catalog = conn.Catalog;
@@ -441,8 +441,8 @@ namespace EntitySpaces.Core
         private esProviderSpecificMetadata GetProviderMetadata()
         {
             // We're on our own, use our own esProviderSpecificMetadata
-            string key = this.es.Connection.ProviderMetadataKey;
-            return this.Meta.GetProviderMetadata(key);
+            var key = es.Connection.ProviderMetadataKey;
+            return Meta.GetProviderMetadata(key);
         }
 
         /// <summary>
@@ -453,7 +453,7 @@ namespace EntitySpaces.Core
         /// <returns>The newly cloned object</returns>
         virtual public T Clone<T>() where T : esEntity, new()
         {
-            T entity = new T();
+            var entity = new T();
 
             entity.currentValues = new esSmartDictionary(currentValues);
             entity.rowState = rowState;
@@ -482,18 +482,18 @@ namespace EntitySpaces.Core
         {
             get
             {
-                esEntityDebuggerView[] data = new esEntityDebuggerView[currentValues.Count + 1];
+                var data = new esEntityDebuggerView[currentValues.Count + 1];
 
                 data[0].Property = "(RowState)";
                 data[0].Data = rowState;
 
-                string columnName = "";
+                var columnName = "";
 
-                for(int index = 0; index < currentValues.Count; index++)
+                for(var index = 0; index < currentValues.Count; index++)
                 {
                     columnName = currentValues.IndexToColumnName(index);
 
-                    int i = index + 1;
+                    var i = index + 1;
 
                     data[i].Property = columnName;
                     data[i].Data = currentValues[columnName] == DBNull.Value ? null : currentValues[columnName];
@@ -589,7 +589,7 @@ namespace EntitySpaces.Core
             {
                 foreach(string name in values.Keys)
                 {
-                    this.SetValue(name, values[name]);
+                    SetValue(name, values[name]);
                 }
             }
         }
@@ -602,7 +602,7 @@ namespace EntitySpaces.Core
         [EditorBrowsable(EditorBrowsableState.Never)]
         virtual public void SetProperty(string name, object value)
         {
-            this.SetValue(name, value);
+            SetValue(name, value);
         }
 
         /// <summary>
@@ -629,16 +629,16 @@ namespace EntitySpaces.Core
 
         internal PropertyDescriptorCollection GetAllHierarchicalProperties(PropertyDescriptorCollection props)
         {
-            ArrayList tempColl = new ArrayList();
+            var tempColl = new ArrayList();
 
-            Type type = this.GetType();
+            var type = GetType();
             PropertyDescriptor prop = null;
             
-            for (int i = 0; i < props.Count; i++)
+            for (var i = 0; i < props.Count; i++)
             {
                 prop = props[i];
 
-                Type propType = prop.PropertyType;
+                var propType = prop.PropertyType;
 
                 if (propType.IsClass && !propType.IsAbstract)
                 {
@@ -653,7 +653,7 @@ namespace EntitySpaces.Core
                 }
             }
 
-            PropertyDescriptorCollection theProps =
+            var theProps =
                 new PropertyDescriptorCollection((PropertyDescriptor[])tempColl.ToArray(typeof(PropertyDescriptor)));
 
             return theProps;
@@ -671,7 +671,7 @@ namespace EntitySpaces.Core
         {
             get
             {
-                Dictionary<string, object> extra = this.GetExtraColumns();
+                var extra = GetExtraColumns();
                 return extra.Keys.Count == 0 ? null : extra;
             }
          }
@@ -688,20 +688,19 @@ namespace EntitySpaces.Core
         /// <returns></returns>
         public Dictionary<string, object> GetExtraColumns()
         {
-            Dictionary<string, object> extraColumns = new Dictionary<string, object>();
+            var extraColumns = new Dictionary<string, object>();
 
-            if (this.currentValues != null && this.currentValues.Count > 0)
+            if (currentValues == null || currentValues.Count <= 0) return extraColumns;
+            
+            var cols = es.Meta.Columns;
+
+            foreach (var column in currentValues.Keys)
             {
-                esColumnMetadataCollection cols = this.es.Meta.Columns;
-
-                foreach (string column in this.currentValues.Keys)
+                if (cols.FindByColumnName(column) == null)
                 {
-                    if (cols.FindByColumnName(column) == null)
-                    {
-                        // Turn DBNull.Value into "null"
-                        object o = this.currentValues[column];
-                        extraColumns[column] = (o == DBNull.Value) ? null : o;
-                    }
+                    // Turn DBNull.Value into "null"
+                    var o = currentValues[column];
+                    extraColumns[column] = (o == DBNull.Value) ? null : o;
                 }
             }
 
@@ -714,16 +713,9 @@ namespace EntitySpaces.Core
         /// <returns>The serialized dictionary or null if there are no extra columns</returns>
         protected string GetExtraColumnsSerialized()
         {
-            Dictionary<string, object> ext = this.GetExtraColumns();
+            var ext = GetExtraColumns();
 
-            if (ext.Values.Count > 0)
-            {
-                return esDataContractSerializer.ToXml(ext);
-            }
-            else
-            {
-                return null;
-            }
+            return ext.Values.Count > 0 ? esDataContractSerializer.ToXml(ext) : null;
         }
 
         /// <summary>
@@ -734,7 +726,7 @@ namespace EntitySpaces.Core
         {
             if (extraColumns != null)
             {
-                foreach (string column in extraColumns.Keys)
+                foreach (var column in extraColumns.Keys)
                 {
                     SetColumn(column, extraColumns[column], true);
                 }
@@ -842,24 +834,24 @@ namespace EntitySpaces.Core
         [EditorBrowsable(EditorBrowsableState.Never)]
         virtual public int OnSort(esEntity other, esColumnMetadata esColumn, string propertyName)
         {
-            esSystemType esType = esSystemType.Unassigned;
+            var esType = esSystemType.Unassigned;
 
-            string columnName = string.Empty;
+            var columnName = string.Empty;
 
             if (esColumn == null)
             {
                 // This code will only be executed for extra or extended properties
-                object oThat = other.GetColumn(propertyName);
-                object oThis = GetColumn(propertyName);
+                var oThat = other.GetColumn(propertyName);
+                var oThis = GetColumn(propertyName);
 
                 if (oThat == null || oThis == null)
                 {
-                    return esEntity.Compare(oThis, oThat);
+                    return Compare(oThis, oThat);
                 }
 
                 columnName = propertyName;
 
-                Type t = oThis.GetType();
+                var t = oThis.GetType();
 
                 switch (t.Name)
                 {
@@ -892,121 +884,121 @@ namespace EntitySpaces.Core
             {
                 case esSystemType.Boolean:
                     {
-                        bool? oThat = other.GetSystemBoolean(columnName);
-                        bool? oThis = GetSystemBoolean(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemBoolean(columnName);
+                        var oThis = GetSystemBoolean(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.Byte:
                     {
-                        byte? oThat = other.GetSystemByte(columnName);
-                        byte? oThis = GetSystemByte(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemByte(columnName);
+                        var oThis = GetSystemByte(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.Char:
                     {
-                        char? oThat = other.GetSystemChar(columnName);
-                        char? oThis = GetSystemChar(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemChar(columnName);
+                        var oThis = GetSystemChar(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.DateTime:
                     {
-                        DateTime? oThat = other.GetSystemDateTime(columnName);
-                        DateTime? oThis = GetSystemDateTime(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemDateTime(columnName);
+                        var oThis = GetSystemDateTime(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.Decimal:
                     {
-                        decimal? oThat = other.GetSystemDecimal(columnName);
-                        decimal? oThis = GetSystemDecimal(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemDecimal(columnName);
+                        var oThis = GetSystemDecimal(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.Double:
                     {
-                        double? oThat = other.GetSystemDouble(columnName);
-                        double? oThis = GetSystemDouble(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemDouble(columnName);
+                        var oThis = GetSystemDouble(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.Guid:
                     {
-                        Guid? oThat = other.GetSystemGuid(columnName);
-                        Guid? oThis = GetSystemGuid(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemGuid(columnName);
+                        var oThis = GetSystemGuid(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.Int16:
                     {
-                        short? oThat = other.GetSystemInt16(columnName);
-                        short? oThis = GetSystemInt16(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemInt16(columnName);
+                        var oThis = GetSystemInt16(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.Int32:
                     {
-                        int? oThat = other.GetSystemInt32(columnName);
-                        int? oThis = GetSystemInt32(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemInt32(columnName);
+                        var oThis = GetSystemInt32(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.Int64:
                     {
-                        long? oThat = other.GetSystemInt64(columnName);
-                        long? oThis = GetSystemInt64(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemInt64(columnName);
+                        var oThis = GetSystemInt64(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.SByte:
                     {
-                        sbyte? oThat = other.GetSystemSByte(columnName);
-                        sbyte? oThis = GetSystemSByte(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemSByte(columnName);
+                        var oThis = GetSystemSByte(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.Single:
                     {
-                        float? oThat = other.GetSystemSingle(columnName);
-                        float? oThis = GetSystemSingle(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemSingle(columnName);
+                        var oThis = GetSystemSingle(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.String:
                     {
-                        string oThat = other.GetSystemString(columnName);
-                        string oThis = GetSystemString(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemString(columnName);
+                        var oThis = GetSystemString(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.CompareTo(oThat);
                     }
                 case esSystemType.TimeSpan:
                     {
-                        TimeSpan? oThat = other.GetSystemTimeSpan(columnName);
-                        TimeSpan? oThis = GetSystemTimeSpan(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemTimeSpan(columnName);
+                        var oThis = GetSystemTimeSpan(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.UInt16:
                     {
-                        ushort? oThat = other.GetSystemUInt16(columnName);
-                        ushort? oThis = GetSystemUInt16(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemUInt16(columnName);
+                        var oThis = GetSystemUInt16(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.UInt32:
                     {
-                        uint? oThat = other.GetSystemUInt32(columnName);
+                        var oThat = other.GetSystemUInt32(columnName);
                         uint? oThis = GetSystemUInt16(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
                 case esSystemType.UInt64:
                     {
-                        ulong? oThat = other.GetSystemUInt64(columnName);
-                        ulong? oThis = GetSystemUInt64(columnName);
-                        int result = esEntity.Compare(oThis, oThat);
+                        var oThat = other.GetSystemUInt64(columnName);
+                        var oThis = GetSystemUInt64(columnName);
+                        var result = Compare(oThis, oThat);
                         return (result != 2) ? result : oThis.Value.CompareTo(oThat.Value);
                     }
             }
@@ -1040,9 +1032,9 @@ namespace EntitySpaces.Core
         [EditorBrowsable(EditorBrowsableState.Never)]
         public List<string> GetCurrentListOfColumns()
         {
-            List<string> columns = new List<string>();
+            var columns = new List<string>();
 
-            foreach (string column in currentValues.Keys)
+            foreach (var column in currentValues.Keys)
             {
                 columns.Add(column);
             }
@@ -1068,7 +1060,7 @@ namespace EntitySpaces.Core
         /// <returns>The original value of the column</returns>
         public object GetOriginalColumnValue(string columnName)
         {
-            if (this.originalValues != null && this.originalValues.ContainsKey(columnName))
+            if (originalValues != null && originalValues.ContainsKey(columnName))
             {
                 return originalValues[columnName];
             }
@@ -1084,9 +1076,9 @@ namespace EntitySpaces.Core
         /// <param name="value">The value to set it to</param>
         protected void SetOriginalColumnValue(string columnName, object value)
         {
-            if (this.originalValues == null)
+            if (originalValues == null)
             {
-                this.originalValues = new esSmartDictionary();
+                originalValues = new esSmartDictionary();
             }
             
             originalValues[columnName] = value;
@@ -1168,7 +1160,7 @@ namespace EntitySpaces.Core
 
             if (!isVirtualColumn) //&& this.Meta.Columns[columnName] != null)
             {
-                this.MarkFieldAsModified(columnName);
+                MarkFieldAsModified(columnName);
             }
         }
 
@@ -1194,7 +1186,7 @@ namespace EntitySpaces.Core
             }
             else
             {
-                object o = currentValues[columnName];
+                var o = currentValues[columnName];
                 return (o == DBNull.Value) ? null : o;
             }
         }
@@ -1209,7 +1201,7 @@ namespace EntitySpaces.Core
         /// <returns>The column value, or the value of defaultIfNull if the column is null</returns>
         public object GetColumn(string columnName, object defaultIfNull)
         {
-            object temp = GetColumn(columnName);
+            var temp = GetColumn(columnName);
             if (temp == null)
             {
                 return defaultIfNull;
@@ -1224,14 +1216,14 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.Object GetSystemObject(string columnName)
+        protected object GetSystemObject(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
             if (currentValues.ContainsKey(columnName))
             {
-                object o = currentValues[columnName];
-                return (o == DBNull.Value) ? null : (System.Object)o;
+                var o = currentValues[columnName];
+                return (o == DBNull.Value) ? null : (object)o;
             }
             else return null;
         }
@@ -1241,7 +1233,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemObject(string columnName, System.Object data)
+        protected bool SetSystemObject(string columnName, object data)
         {
             return SetValue(columnName, data);
         }
@@ -1250,17 +1242,16 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.Int16? GetSystemInt16(string columnName)
+        protected short? GetSystemInt16(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
-            object o = null;
-            currentValues.TryGetValue(columnName, out o);
+            currentValues.TryGetValue(columnName, out var o);
 
             if (o == DBNull.Value)
                 return null;
             else
-                return (o is System.Int16) ? (System.Int16?)o : Convert.ToInt16(o);
+                return (o is short value) ? value : Convert.ToInt16(o);
         }
 
         /// <summary>
@@ -1268,14 +1259,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.Int16 GetSystemInt16Required(string columnName)
+        protected short GetSystemInt16Required(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.Int16) ? (System.Int16)o : Convert.ToInt16(o);
+            return (o is short) ? (short)o : Convert.ToInt16(o);
         }
 
         /// <summary>
@@ -1283,7 +1274,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemInt16(string columnName, System.Int16? data)
+        protected bool SetSystemInt16(string columnName, short? data)
         {
             return SetValue(columnName, data);
         }
@@ -1292,7 +1283,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.Int32? GetSystemInt32(string columnName)
+        protected int? GetSystemInt32(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
@@ -1302,7 +1293,7 @@ namespace EntitySpaces.Core
             if(o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.Int32) ? (System.Int32?)o : Convert.ToInt32(o);
+                return (o is int) ? (int?)o : Convert.ToInt32(o);
         }
 
         /// <summary>
@@ -1310,14 +1301,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.Int32 GetSystemInt32Required(string columnName)
+        protected int GetSystemInt32Required(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.Int32) ? (System.Int32)o : Convert.ToInt32(o);
+            return (o is int) ? (int)o : Convert.ToInt32(o);
         }
 
         /// <summary>
@@ -1325,7 +1316,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemInt32(string columnName, System.Int32? data)
+        protected bool SetSystemInt32(string columnName, int? data)
         {
             return SetValue(columnName, data);
         }
@@ -1334,7 +1325,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.Int64? GetSystemInt64(string columnName)
+        protected long? GetSystemInt64(string columnName)
         {
             if (!FieldsExists(this)) return null; ;
 
@@ -1344,7 +1335,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.Int64) ? (System.Int64?)o : Convert.ToInt64(o);
+                return (o is long) ? (long?)o : Convert.ToInt64(o);
         }
 
         /// <summary>
@@ -1352,14 +1343,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.Int64 GetSystemInt64Required(string columnName)
+        protected long GetSystemInt64Required(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.Int64) ? (System.Int64)o : Convert.ToInt64(o);
+            return (o is long) ? (long)o : Convert.ToInt64(o);
         }
 
         /// <summary>
@@ -1367,7 +1358,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemInt64(string columnName, System.Int64? data)
+        protected bool SetSystemInt64(string columnName, long? data)
         {
             return SetValue(columnName, data);
         }
@@ -1376,7 +1367,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.UInt16? GetSystemUInt16(string columnName)
+        protected ushort? GetSystemUInt16(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
@@ -1386,7 +1377,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.UInt16) ? (System.UInt16?)o : Convert.ToUInt16(o);
+                return (o is ushort) ? (ushort?)o : Convert.ToUInt16(o);
         }
 
         /// <summary>
@@ -1394,14 +1385,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.UInt16 GetSystemUInt16Required(string columnName)
+        protected ushort GetSystemUInt16Required(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.UInt16) ? (System.UInt16)o : Convert.ToUInt16(o);
+            return (o is ushort) ? (ushort)o : Convert.ToUInt16(o);
         }
 
         /// <summary>
@@ -1409,7 +1400,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemUInt16(string columnName, System.UInt16? data)
+        protected bool SetSystemUInt16(string columnName, ushort? data)
         {
             return SetValue(columnName, data);
         }
@@ -1419,7 +1410,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
        
-        protected System.UInt32? GetSystemUInt32(string columnName)
+        protected uint? GetSystemUInt32(string columnName)
         {
             if (!FieldsExists(this)) return null; ;
 
@@ -1429,7 +1420,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.UInt32) ? (System.UInt32?)o : Convert.ToUInt32(o);
+                return (o is uint) ? (uint?)o : Convert.ToUInt32(o);
         }
 
         /// <summary>
@@ -1437,14 +1428,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.UInt32 GetSystemUInt32Required(string columnName)
+        protected uint GetSystemUInt32Required(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.UInt32) ? (System.UInt32)o : Convert.ToUInt32(o);
+            return (o is uint) ? (uint)o : Convert.ToUInt32(o);
         }
 
         /// <summary>
@@ -1452,7 +1443,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemUInt32(string columnName, System.UInt32? data)
+        protected bool SetSystemUInt32(string columnName, uint? data)
         {
             return SetValue(columnName, data);
         }
@@ -1461,7 +1452,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.UInt64? GetSystemUInt64(string columnName)
+        protected ulong? GetSystemUInt64(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
@@ -1471,7 +1462,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.UInt64) ? (System.UInt64?)o : Convert.ToUInt64(o);
+                return (o is ulong) ? (ulong?)o : Convert.ToUInt64(o);
         }
 
         /// <summary>
@@ -1479,14 +1470,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.UInt64 GetSystemUInt64Required(string columnName)
+        protected ulong GetSystemUInt64Required(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.UInt64) ? (System.UInt64)o : Convert.ToUInt64(o);
+            return (o is ulong) ? (ulong)o : Convert.ToUInt64(o);
         }
 
         /// <summary>
@@ -1494,7 +1485,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemUInt64(string columnName, System.UInt64? data)
+        protected bool SetSystemUInt64(string columnName, ulong? data)
         {
             return SetValue(columnName, data);
         }
@@ -1503,7 +1494,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.Boolean? GetSystemBoolean(string columnName)
+        protected bool? GetSystemBoolean(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
@@ -1513,7 +1504,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.Boolean) ? (System.Boolean?)o : Convert.ToBoolean(o);
+                return (o is bool) ? (bool?)o : Convert.ToBoolean(o);
         }
 
         /// <summary>
@@ -1521,14 +1512,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.Boolean GetSystemBooleanRequired(string columnName)
+        protected bool GetSystemBooleanRequired(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.Boolean) ? (System.Boolean)o : Convert.ToBoolean(o);
+            return (o is bool) ? (bool)o : Convert.ToBoolean(o);
         }
 
         /// <summary>
@@ -1536,7 +1527,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemBoolean(string columnName, System.Boolean? data)
+        protected bool SetSystemBoolean(string columnName, bool? data)
         {
             return SetValue(columnName, data);
         }
@@ -1545,7 +1536,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.Char? GetSystemChar(string columnName)
+        protected char? GetSystemChar(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
@@ -1555,7 +1546,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.Char) ? (System.Char?)o : Convert.ToChar(o);
+                return (o is char) ? (char?)o : Convert.ToChar(o);
         }
 
         /// <summary>
@@ -1563,14 +1554,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.Char GetSystemCharRequired(string columnName)
+        protected char GetSystemCharRequired(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.Char) ? (System.Char)o : Convert.ToChar(o);
+            return (o is char) ? (char)o : Convert.ToChar(o);
         }
 
         /// <summary>
@@ -1578,7 +1569,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemChar(string columnName, System.Char? data)
+        protected bool SetSystemChar(string columnName, char? data)
         {
             return SetValueChar(columnName, data);
         }
@@ -1587,7 +1578,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.String GetSystemString(string columnName)
+        protected string GetSystemString(string columnName)
         {
             if(!FieldsExists(this)) return null;
 
@@ -1597,7 +1588,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.String) ? (System.String)o : o.ToString();
+                return (o is string) ? (string)o : o.ToString();
         }
 
         /// <summary>
@@ -1605,14 +1596,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.String GetSystemStringRequired(string columnName)
+        protected string GetSystemStringRequired(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.String) ? (System.String)o : o.ToString();
+            return (o is string) ? (string)o : o.ToString();
         }
 
         /// <summary>
@@ -1620,9 +1611,9 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemString(string columnName, System.String data)
+        protected bool SetSystemString(string columnName, string data)
         {
-            if (esEntity.ConvertEmptyStringToNull == true && data != null && data.Length == 0)
+            if (ConvertEmptyStringToNull == true && data != null && data.Length == 0)
             {
                 data = null;
             }
@@ -1635,7 +1626,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemString2(string columnName, System.String data)
+        protected bool SetSystemString2(string columnName, string data)
         {
             if (data != null && data.Length == 0)
                 data = null;
@@ -1647,7 +1638,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.Decimal? GetSystemDecimal(string columnName)
+        protected decimal? GetSystemDecimal(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
@@ -1657,7 +1648,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.Decimal) ? (System.Decimal?)o : Convert.ToDecimal(o);
+                return (o is decimal) ? (decimal?)o : Convert.ToDecimal(o);
         }
 
         /// <summary>
@@ -1665,11 +1656,11 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.Decimal GetSystemDecimalRequired(string columnName)
+        protected decimal GetSystemDecimalRequired(string columnName)
         {
             object o = null;
             currentValues.TryGetValue(columnName, out o);
-            return (o is System.Decimal) ? (System.Decimal)o : Convert.ToDecimal(o);
+            return (o is decimal) ? (decimal)o : Convert.ToDecimal(o);
         }
 
         /// <summary>
@@ -1677,7 +1668,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemDecimal(string columnName, System.Decimal? data)
+        protected bool SetSystemDecimal(string columnName, decimal? data)
         {
             return SetValue(columnName, data);
         }
@@ -1686,7 +1677,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.Double? GetSystemDouble(string columnName)
+        protected double? GetSystemDouble(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
@@ -1696,7 +1687,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.Double) ? (System.Double?)o : Convert.ToDouble(o);
+                return (o is double) ? (double?)o : Convert.ToDouble(o);
         }
 
         /// <summary>
@@ -1704,14 +1695,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.Double GetSystemDoubleRequired(string columnName)
+        protected double GetSystemDoubleRequired(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.Double) ? (System.Double)o : Convert.ToDouble(o);
+            return (o is double) ? (double)o : Convert.ToDouble(o);
         }
 
         /// <summary>
@@ -1719,7 +1710,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemDouble(string columnName, System.Double? data)
+        protected bool SetSystemDouble(string columnName, double? data)
         {
             return SetValue(columnName, data);
         }
@@ -1728,7 +1719,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.DateTime? GetSystemDateTime(string columnName)
+        protected DateTime? GetSystemDateTime(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
@@ -1738,7 +1729,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.DateTime) ? (System.DateTime?)o : Convert.ToDateTime(o);
+                return (o is DateTime) ? (DateTime?)o : Convert.ToDateTime(o);
         }
 
         /// <summary>
@@ -1746,14 +1737,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.DateTime GetSystemDateTimeRequired(string columnName)
+        protected DateTime GetSystemDateTimeRequired(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.DateTime) ? (System.DateTime)o : Convert.ToDateTime(o);
+            return (o is DateTime) ? (DateTime)o : Convert.ToDateTime(o);
         }
 
         /// <summary>
@@ -1761,7 +1752,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemDateTime(string columnName, System.DateTime? data)
+        protected bool SetSystemDateTime(string columnName, DateTime? data)
         {
             return SetValue(columnName, data);
         }
@@ -1770,7 +1761,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.DateTimeOffset? GetSystemDateTimeOffset(string columnName)
+        protected DateTimeOffset? GetSystemDateTimeOffset(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
@@ -1780,7 +1771,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (System.DateTimeOffset?)o;
+                return (DateTimeOffset?)o;
         }
 
         /// <summary>
@@ -1788,14 +1779,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.DateTimeOffset GetSystemDateTimeOffsetRequired(string columnName)
+        protected DateTimeOffset GetSystemDateTimeOffsetRequired(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (System.DateTimeOffset)o;
+            return (DateTimeOffset)o;
         }
 
         /// <summary>
@@ -1803,7 +1794,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemDateTimeOffset(string columnName, System.DateTimeOffset? data)
+        protected bool SetSystemDateTimeOffset(string columnName, DateTimeOffset? data)
         {
             return SetValue(columnName, data);
         }
@@ -1812,7 +1803,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.TimeSpan? GetSystemTimeSpan(string columnName)
+        protected TimeSpan? GetSystemTimeSpan(string columnName)
         {
             if (!FieldsExists(this)) return null; ;
 
@@ -1822,7 +1813,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (System.TimeSpan)o;
+                return (TimeSpan)o;
         }
 
         /// <summary>
@@ -1830,14 +1821,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.TimeSpan GetSystemTimeSpanRequired(string columnName)
+        protected TimeSpan GetSystemTimeSpanRequired(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (System.TimeSpan)o;
+            return (TimeSpan)o;
         }
 
         /// <summary>
@@ -1845,7 +1836,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemTimeSpan(string columnName, System.TimeSpan? data)
+        protected bool SetSystemTimeSpan(string columnName, TimeSpan? data)
         {
             return SetValue(columnName, data);
         }
@@ -1854,7 +1845,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.Byte? GetSystemByte(string columnName)
+        protected byte? GetSystemByte(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
@@ -1864,7 +1855,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.Byte) ? (System.Byte?)o : Convert.ToByte(o);
+                return (o is byte) ? (byte?)o : Convert.ToByte(o);
         }
 
         /// <summary>
@@ -1872,14 +1863,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.Byte GetSystemByteRequired(string columnName)
+        protected byte GetSystemByteRequired(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.Byte) ? (System.Byte)o : Convert.ToByte(o);
+            return (o is byte) ? (byte)o : Convert.ToByte(o);
         }
 
         /// <summary>
@@ -1887,7 +1878,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemByte(string columnName, System.Byte? data)
+        protected bool SetSystemByte(string columnName, byte? data)
         {
             return SetValue(columnName, data);
         }
@@ -1897,7 +1888,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
        
-        protected System.SByte? GetSystemSByte(string columnName)
+        protected sbyte? GetSystemSByte(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
@@ -1907,7 +1898,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.SByte) ? (System.SByte?)o : Convert.ToSByte(o);
+                return (o is sbyte) ? (sbyte?)o : Convert.ToSByte(o);
         }
 
         /// <summary>
@@ -1916,14 +1907,14 @@ namespace EntitySpaces.Core
         /// <param name="columnName"></param>
         /// <returns></returns>
        
-        protected System.SByte GetSystemSByteRequired(string columnName)
+        protected sbyte GetSystemSByteRequired(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.SByte) ? (System.SByte)o : Convert.ToSByte(o);
+            return (o is sbyte) ? (sbyte)o : Convert.ToSByte(o);
         }
 
         /// <summary>
@@ -1932,7 +1923,7 @@ namespace EntitySpaces.Core
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
        
-        protected bool SetSystemSByte(string columnName, System.SByte? data)
+        protected bool SetSystemSByte(string columnName, sbyte? data)
         {
             return SetValue(columnName, data);
         }
@@ -1941,7 +1932,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.Guid? GetSystemGuid(string columnName)
+        protected Guid? GetSystemGuid(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
@@ -1951,7 +1942,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.Guid) ? (System.Guid?)o : new Guid((string)o);
+                return (o is Guid) ? (Guid?)o : new Guid((string)o);
         }
 
         /// <summary>
@@ -1959,14 +1950,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        protected System.Guid GetSystemGuidRequired(string columnName)
+        protected Guid GetSystemGuidRequired(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.Guid) ? (System.Guid)o : new Guid((string)o);
+            return (o is Guid) ? (Guid)o : new Guid((string)o);
         }
 
         /// <summary>
@@ -1974,7 +1965,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemGuid(string columnName, System.Guid? data)
+        protected bool SetSystemGuid(string columnName, Guid? data)
         {
             return SetValue(columnName, data);
         }
@@ -1983,7 +1974,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.Single? GetSystemSingle(string columnName)
+        protected float? GetSystemSingle(string columnName)
         {
             if (!FieldsExists(this)) return null;
 
@@ -1993,7 +1984,7 @@ namespace EntitySpaces.Core
             if (o == null || o == DBNull.Value)
                 return null;
             else
-                return (o is System.Single) ? (System.Single?)o : Convert.ToSingle(o);
+                return (o is float) ? (float?)o : Convert.ToSingle(o);
         }
 
         /// <summary>
@@ -2001,14 +1992,14 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <returns></returns>
-        protected System.Single GetSystemSingleRequired(string columnName)
+        protected float GetSystemSingleRequired(string columnName)
         {
             object o = null;
             if (FieldsExistsRequired(this))
             {
                 currentValues.TryGetValue(columnName, out o);
             }
-            return (o is System.Single) ? (System.Single)o : Convert.ToSingle(o);
+            return (o is float) ? (float)o : Convert.ToSingle(o);
         }
 
         /// <summary>
@@ -2016,7 +2007,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        protected bool SetSystemSingle(string columnName, System.Single? data)
+        protected bool SetSystemSingle(string columnName, float? data)
         {
             return SetValue(columnName, data);
         }
@@ -2029,7 +2020,7 @@ namespace EntitySpaces.Core
         /// <returns>True if the value has truly changed</returns>
         private bool SetValueChar(string columnName, object data)
         {
-            bool changed = true;
+            var changed = true;
 
             if (rowState == esDataRowState.Deleted) throw new Exception("Cannot modifiy deleted records");
 
@@ -2062,13 +2053,13 @@ namespace EntitySpaces.Core
                 }
                 else
                 {
-                    object o = currentValues[columnName];
-                    bool isNull = (o == DBNull.Value || o == null);
+                    var o = currentValues[columnName];
+                    var isNull = (o == DBNull.Value || o == null);
 
                     // Char type hack, ADO.NET often returns them as a string
                     if (!isNull && data.GetType().ToString() == typeof(char).ToString() && typeof(string).ToString() == o.GetType().ToString())
                     {
-                        string str = o as string;
+                        var str = o as string;
 
                         if (str != null && str.Length == 1)
                         {
@@ -2077,7 +2068,7 @@ namespace EntitySpaces.Core
                     }
 
                     // Note that we grab this before we make the change
-                    esDataRowState state = rowState;
+                    var state = rowState;
 
                     if (data == null && isNull)
                     {
@@ -2091,7 +2082,7 @@ namespace EntitySpaces.Core
                             currentValues[columnName] = DBNull.Value;
                         else if (!o.Equals(data))
                         {
-                            this.currentValues[columnName] = data;
+                            currentValues[columnName] = data;
 
                             // Special logic to see if we have changed it back to it's original value, if 
                             // so we mark this column as no longer dirty, which if the only one could return
@@ -2131,7 +2122,7 @@ namespace EntitySpaces.Core
         /// <returns>True if the value has truly changed</returns>
         private bool SetValue(string columnName, object data)
         {
-            bool changed = true;
+            var changed = true;
 
             if (rowState == esDataRowState.Deleted) throw new Exception("Cannot modifiy deleted records");
 
@@ -2164,11 +2155,11 @@ namespace EntitySpaces.Core
                 }
                 else
                 {
-                    object o = currentValues[columnName];
-                    bool isNull = (o == DBNull.Value || o == null);
+                    var o = currentValues[columnName];
+                    var isNull = (o == DBNull.Value || o == null);
 
                     // Note that we grab this before we make the change
-                    esDataRowState state = rowState;
+                    var state = rowState;
 
                     if (data == null && isNull)
                     {
@@ -2183,7 +2174,7 @@ namespace EntitySpaces.Core
                             currentValues[columnName] = DBNull.Value;
                         else if (!o.Equals(data))
                         {
-                            this.currentValues[columnName] = data;
+                            currentValues[columnName] = data;
 
                             // Special logic to see if we have changed it back to it's original value, if 
                             // so we mark this column as no longer dirty, which if the only one could return
@@ -2261,7 +2252,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        protected System.Byte[] GetSystemByteArray(string columnName)
+        protected byte[] GetSystemByteArray(string columnName)
         {
             if (currentValues == null) return null;
 
@@ -2279,7 +2270,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="byteArray">The value to set the column in the row</param>
-        protected bool SetSystemByteArray(string columnName, System.Byte[] byteArray)
+        protected bool SetSystemByteArray(string columnName, byte[] byteArray)
         {
             MarkFieldAsModified(columnName);
             currentValues[columnName] = byteArray;
@@ -2297,7 +2288,7 @@ namespace EntitySpaces.Core
         /// <param name="columnName">The column name to mark dirty</param>
         protected void MarkFieldAsModified(string columnName)
         {
-            if (this.m_modifiedColumns == null)
+            if (m_modifiedColumns == null)
             {
                 m_modifiedColumns = new List<string>();
             }
@@ -2319,7 +2310,7 @@ namespace EntitySpaces.Core
         /// <param name="columnName">The column name who status you wish to clear</param>
         protected void MarkFieldAsUnchanged(string columnName)
         {
-            if (this.m_modifiedColumns == null) return;
+            if (m_modifiedColumns == null) return;
 
             if (m_modifiedColumns.Contains(columnName))
             {
@@ -2353,7 +2344,7 @@ namespace EntitySpaces.Core
         {
             (this as IEntity).RowState = state;
 
-            foreach (esColumnMetadata meta in this.Meta.Columns)
+            foreach (esColumnMetadata meta in Meta.Columns)
             {
                 MarkFieldAsModified(meta.Name);
             }
@@ -2368,27 +2359,27 @@ namespace EntitySpaces.Core
 
             if (collection != null)
             {
-                IList list = collection as IList;
+                var list = collection as IList;
                 if (list.Contains(this))
                 {
                     list.Remove(this);
                 }
 
-                if (this.RowState != esDataRowState.Added)
+                if (RowState != esDataRowState.Added)
                 {
                     collection.AddEntityToDeletedList(this);
                 }
             }
 
-            if (this.RowState == esDataRowState.Added)
+            if (RowState == esDataRowState.Added)
             {
                 try
                 {
-                    foreach (esColumnMetadata esCol in this.Meta.Columns)
+                    foreach (esColumnMetadata esCol in Meta.Columns)
                     {
                         if (!esCol.IsInPrimaryKey)
                         {
-                            this.SetColumn(esCol.Name, null);
+                            SetColumn(esCol.Name, null);
                         }
                     }
                 }
@@ -2468,8 +2459,8 @@ namespace EntitySpaces.Core
         /// <seealso cref="MarkAsDeleted"/>
         virtual public void Save()
         {
-            IEntity entity = this as IEntity;
-            this.Save(entity.Connection.SqlAccessType);
+            var entity = this as IEntity;
+            Save(entity.Connection.SqlAccessType);
         }
 
         /// <summary>
@@ -2497,48 +2488,48 @@ namespace EntitySpaces.Core
                 // Save modified or added rows only
                 if (rowState == esDataRowState.Modified || rowState == esDataRowState.Added)
                 {
-                    this.SaveToProvider(sqlAccessType);
+                    SaveToProvider(sqlAccessType);
                 }
 
                 // Save my deleted records on the way back up
                 if (rowState == esDataRowState.Deleted)
                 {
-                    this.SaveToProvider(sqlAccessType);
+                    SaveToProvider(sqlAccessType);
                 }
 
-                this.AcceptChanges();
+                AcceptChanges();
             }
             else
             {
-                esTransactionScopeOption txOption =
+                var txOption =
                     esTransactionScope.GetCurrentTransactionScopeOption() == esTransactionScopeOption.Suppress ?
                     esTransactionScopeOption.Suppress : esTransactionScopeOption.Required;
 
-                using (esTransactionScope scope = new esTransactionScope(txOption))
+                using (var scope = new esTransactionScope(txOption))
                 {
                     // 1) Commit the PreSaves
-                    this.CommitPreSaves();
-                    this.ApplyPreSaveKeys();
+                    CommitPreSaves();
+                    ApplyPreSaveKeys();
 
                     // 2) Save me ...  (modified or added rows only)
                     if (rowState == esDataRowState.Modified || rowState == esDataRowState.Added)
                     {
-                        this.SaveToProvider(sqlAccessType);
+                        SaveToProvider(sqlAccessType);
                     }
 
                     // 3) Commit the PostSaves
-                    this.ApplyPostSaveKeys();
-                    this.ApplyPostOneSaveKeys();
-                    this.CommitPostSaves();
-                    this.CommitPostOneSaves();
+                    ApplyPostSaveKeys();
+                    ApplyPostOneSaveKeys();
+                    CommitPostSaves();
+                    CommitPostOneSaves();
 
                     // 4) Save my deleted records on the way back up
                     if (rowState == esDataRowState.Deleted)
                     {
-                        this.SaveToProvider(sqlAccessType);
+                        SaveToProvider(sqlAccessType);
                     }
 
-                    this.AcceptChanges();
+                    AcceptChanges();
 
                     scope.Complete();
                 }
@@ -2579,43 +2570,43 @@ namespace EntitySpaces.Core
         /// <seealso cref="Save"/>
         virtual protected void SaveToProvider(esSqlAccessType sqlAccessType)
         {
-            esDataRequest request = CreateRequest();
+            var request = CreateRequest();
 
             #region Auditing fields
-            esColumnMetadataCollection cols = this.Meta.Columns;
+            var cols = Meta.Columns;
 
             if (rowState == esDataRowState.Added)
             {
                 if (cols.DateAdded != null && cols.DateAdded.Type == DateType.ClientSide)
                 {
-                    this.SetColumn(cols.DateAdded.ColumnName, cols.DateAdded.ClientType == ClientType.Now ? DateTime.Now : DateTime.UtcNow, false);
+                    SetColumn(cols.DateAdded.ColumnName, cols.DateAdded.ClientType == ClientType.Now ? DateTime.Now : DateTime.UtcNow, false);
                 }
 
                 if (cols.AddedBy != null && cols.AddedBy.UseEventHandler && AddedByEventHandler != null)
                 {
-                    this.SetColumn(cols.AddedBy.ColumnName, AddedByEventHandler(), false);
+                    SetColumn(cols.AddedBy.ColumnName, AddedByEventHandler(), false);
                 }
 
                 if (cols.DateModified != null && cols.DateModified.Type == DateType.ClientSide)
                 {
-                    this.SetColumn(cols.DateModified.ColumnName, cols.DateModified.ClientType == ClientType.Now ? DateTime.Now : DateTime.UtcNow, false);
+                    SetColumn(cols.DateModified.ColumnName, cols.DateModified.ClientType == ClientType.Now ? DateTime.Now : DateTime.UtcNow, false);
                 }
 
                 if (cols.ModifiedBy != null && cols.ModifiedBy.UseEventHandler && ModifiedByEventHandler != null)
                 {
-                    this.SetColumn(cols.ModifiedBy.ColumnName, ModifiedByEventHandler(), false);
+                    SetColumn(cols.ModifiedBy.ColumnName, ModifiedByEventHandler(), false);
                 }
             }
             else if (rowState == esDataRowState.Modified)
             {
                 if (cols.DateModified != null && cols.DateModified.Type == DateType.ClientSide)
                 {
-                    this.SetColumn(cols.DateModified.ColumnName, cols.DateModified.ClientType == ClientType.Now ? DateTime.Now : DateTime.UtcNow, false);
+                    SetColumn(cols.DateModified.ColumnName, cols.DateModified.ClientType == ClientType.Now ? DateTime.Now : DateTime.UtcNow, false);
                 }
 
                 if (cols.ModifiedBy != null && cols.ModifiedBy.UseEventHandler && ModifiedByEventHandler != null)
                 {
-                    this.SetColumn(cols.ModifiedBy.ColumnName, ModifiedByEventHandler(), false);
+                    SetColumn(cols.ModifiedBy.ColumnName, ModifiedByEventHandler(), false);
                 }
             }
             #endregion
@@ -2629,8 +2620,8 @@ namespace EntitySpaces.Core
             request.Columns = Meta.Columns;
             request.SqlAccessType = sqlAccessType;
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.esSaveDataTable(request, es.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.esSaveDataTable(request, es.Connection.ProviderSignature);
 
             if (response.IsException)
             {
@@ -2643,40 +2634,40 @@ namespace EntitySpaces.Core
 
         internal void PrepareSpecialFields()
         {
-            esColumnMetadataCollection cols = this.Meta.Columns;
+            var cols = Meta.Columns;
 
             if (rowState == esDataRowState.Added)
             {
                 if (cols.DateAdded != null && cols.DateAdded.Type == DateType.ClientSide)
                 {
-                    this.SetColumn(cols.DateAdded.ColumnName, cols.DateAdded.ClientType == ClientType.Now ? DateTime.Now : DateTime.UtcNow, false);
+                    SetColumn(cols.DateAdded.ColumnName, cols.DateAdded.ClientType == ClientType.Now ? DateTime.Now : DateTime.UtcNow, false);
                 }
 
                 if (cols.AddedBy != null && cols.AddedBy.UseEventHandler && AddedByEventHandler != null)
                 {
-                    this.SetColumn(cols.AddedBy.ColumnName, AddedByEventHandler(), false);
+                    SetColumn(cols.AddedBy.ColumnName, AddedByEventHandler(), false);
                 }
 
                 if (cols.DateModified != null && cols.DateModified.Type == DateType.ClientSide)
                 {
-                    this.SetColumn(cols.DateModified.ColumnName, cols.DateModified.ClientType == ClientType.Now ? DateTime.Now : DateTime.UtcNow, false);
+                    SetColumn(cols.DateModified.ColumnName, cols.DateModified.ClientType == ClientType.Now ? DateTime.Now : DateTime.UtcNow, false);
                 }
 
                 if (cols.ModifiedBy != null && cols.ModifiedBy.UseEventHandler && ModifiedByEventHandler != null)
                 {
-                    this.SetColumn(cols.ModifiedBy.ColumnName, ModifiedByEventHandler(), false);
+                    SetColumn(cols.ModifiedBy.ColumnName, ModifiedByEventHandler(), false);
                 }
             }
             else if (rowState == esDataRowState.Modified)
             {
                 if (cols.DateModified != null && cols.DateModified.Type == DateType.ClientSide)
                 {
-                    this.SetColumn(cols.DateModified.ColumnName, cols.DateModified.ClientType == ClientType.Now ? DateTime.Now : DateTime.UtcNow, false);
+                    SetColumn(cols.DateModified.ColumnName, cols.DateModified.ClientType == ClientType.Now ? DateTime.Now : DateTime.UtcNow, false);
                 }
 
                 if (cols.ModifiedBy != null && cols.ModifiedBy.UseEventHandler && ModifiedByEventHandler != null)
                 {
-                    this.SetColumn(cols.ModifiedBy.ColumnName, ModifiedByEventHandler(), false);
+                    SetColumn(cols.ModifiedBy.ColumnName, ModifiedByEventHandler(), false);
                 }
             }
         }
@@ -2817,18 +2808,18 @@ namespace EntitySpaces.Core
         /// <seealso cref="esParameters"/>/// 
         protected bool Load(esQueryType queryType, string query, esParameters parms)
         {
-            esDataRequest request = this.CreateRequest();
+            var request = CreateRequest();
 
             request.Parameters = parms;
             request.QueryText = query;
             request.QueryType = queryType;
 
-            esConnection conn = this.es.Connection;
+            var conn = es.Connection;
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.esLoadDataTable(request, conn.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.esLoadDataTable(request, conn.ProviderSignature);
 
-            return this.PopulateEntity(response.Table);
+            return PopulateEntity(response.Table);
         }
 
 
@@ -2847,9 +2838,9 @@ namespace EntitySpaces.Core
         /// <seealso cref="HasData"/>
         protected bool PopulateEntity(DataTable table)
         {
-            bool found = false;
+            var found = false;
 
-            int count = table.Rows.Count;
+            var count = table.Rows.Count;
 
             if (count > 1)
             {
@@ -2858,17 +2849,17 @@ namespace EntitySpaces.Core
 
             if (count == 1)
             {
-                esColumnMetadataCollection esCols = Meta.Columns;
+                var esCols = Meta.Columns;
                 esColumnMetadata esCol;
                 string columnName;
                 selectedColumns = new Dictionary<string, int>();
 
                 // Now let's actually created an esEntity for each DataRow and thereby populate
                 // the collection
-                DataRow row = table.Rows[0];
-                DataColumnCollection cols = table.Columns;
+                var row = table.Rows[0];
+                var cols = table.Columns;
 
-                Dictionary<string, int> ordinals = new Dictionary<string, int>(cols.Count);
+                var ordinals = new Dictionary<string, int>(cols.Count);
                 foreach (DataColumn col in cols)
                 {
                     // Let's make sure we use the Case in the Metadata Class, if they return "employeeid" in a proc
@@ -2884,7 +2875,7 @@ namespace EntitySpaces.Core
                     }
                 }
 
-                object[] values = row.ItemArray;
+                var values = row.ItemArray;
 
                 currentValues = new esSmartDictionary(ordinals, values);
                 originalValues = new esSmartDictionary(ordinals, values, true);
@@ -3005,14 +2996,14 @@ namespace EntitySpaces.Core
         /// <returns>The result of ExecuteNonQuery.</returns>
         protected int ExecuteNonQuery(esQueryType queryType, string query, esParameters parms)
         {
-            esDataRequest request = this.CreateRequest();
+            var request = CreateRequest();
 
             request.Parameters = parms;
             request.QueryText = query;
             request.QueryType = queryType;
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.ExecuteNonQuery(request, this.es.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.ExecuteNonQuery(request, es.Connection.ProviderSignature);
 
             return response.RowsEffected;
         }
@@ -3099,15 +3090,15 @@ namespace EntitySpaces.Core
         /// <returns>The result of ExecuteNonQuery.</returns>
         protected int ExecuteNonQuery(string schema, string storedProcedure, esParameters parameters)
         {
-            esDataRequest request = this.CreateRequest();
+            var request = CreateRequest();
 
             request.Parameters = parameters;
             request.Schema = schema;
             request.QueryText = storedProcedure;
             request.QueryType = esQueryType.StoredProcedure;
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.ExecuteNonQuery(request, this.es.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.ExecuteNonQuery(request, es.Connection.ProviderSignature);
 
             return response.RowsEffected;
         }
@@ -3179,14 +3170,14 @@ namespace EntitySpaces.Core
         /// <returns>The result of ExecuteReader.</returns>
         protected IDataReader ExecuteReader(esQueryType queryType, string query, esParameters parms)
         {
-            esDataRequest request = this.CreateRequest();
+            var request = CreateRequest();
 
             request.Parameters = parms;
             request.QueryText = query;
             request.QueryType = queryType;
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.ExecuteReader(request, this.es.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.ExecuteReader(request, es.Connection.ProviderSignature);
 
             return response.DataReader;
         }
@@ -3239,15 +3230,15 @@ namespace EntitySpaces.Core
         /// <returns>The result of ExecuteReader.</returns>
         protected IDataReader ExecuteReader(string schema, string storedProcedure, esParameters parameters)
         {
-            esDataRequest request = this.CreateRequest();
+            var request = CreateRequest();
 
             request.Parameters = parameters;
             request.Schema = schema;
             request.QueryText = storedProcedure;
             request.QueryType = esQueryType.StoredProcedure;
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.ExecuteReader(request, this.es.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.ExecuteReader(request, es.Connection.ProviderSignature);
 
             return response.DataReader;
         }
@@ -3304,14 +3295,14 @@ namespace EntitySpaces.Core
         /// <returns>The result of ExecuteScalar.</returns>
         protected object ExecuteScalar(esQueryType queryType, string query, esParameters parms)
         {
-            esDataRequest request = this.CreateRequest();
+            var request = CreateRequest();
 
             request.Parameters = parms;
             request.QueryText = query;
             request.QueryType = queryType;
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.ExecuteScalar(request, this.es.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.ExecuteScalar(request, es.Connection.ProviderSignature);
 
             return response.Scalar;
         }
@@ -3364,15 +3355,15 @@ namespace EntitySpaces.Core
         /// <returns>The result of ExecuteScalar.</returns>
         protected object ExecuteScalar(string schema, string storedProcedure, esParameters parameters)
         {
-            esDataRequest request = this.CreateRequest();
+            var request = CreateRequest();
 
             request.Parameters = parameters;
             request.Schema = schema;
             request.QueryText = storedProcedure;
             request.QueryType = esQueryType.StoredProcedure;
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.ExecuteScalar(request, this.es.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.ExecuteScalar(request, es.Connection.ProviderSignature);
 
             return response.Scalar;
         }
@@ -3429,14 +3420,14 @@ namespace EntitySpaces.Core
         /// <returns>The result of ExecuteScalar.</returns>
         protected T ExecuteScalar<T>(esQueryType queryType, string query, esParameters parms)
         {
-            esDataRequest request = this.CreateRequest();
+            var request = CreateRequest();
 
             request.Parameters = parms;
             request.QueryText = query;
             request.QueryType = queryType;
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.ExecuteScalar(request, this.es.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.ExecuteScalar(request, es.Connection.ProviderSignature);
 
             if (response.Scalar == DBNull.Value)
             {
@@ -3494,15 +3485,15 @@ namespace EntitySpaces.Core
         /// <returns>The result of ExecuteScalar.</returns>
         protected T ExecuteScalar<T>(string schema, string storedProcedure, esParameters parameters)
         {
-            esDataRequest request = this.CreateRequest();
+            var request = CreateRequest();
 
             request.Parameters = parameters;
             request.Schema = schema;
             request.QueryText = storedProcedure;
             request.QueryType = esQueryType.StoredProcedure;
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.ExecuteScalar(request, this.es.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.ExecuteScalar(request, es.Connection.ProviderSignature);
 
             if (response.Scalar == DBNull.Value)
             {
@@ -3613,7 +3604,7 @@ namespace EntitySpaces.Core
                 }
                 else if (!p.Node.Entity.es.IsDirty && !p.Node.Entity.es.IsGraphDirty)
                 {
-                    List<esEntity> list = p.Parent.UserState as List<esEntity>;
+                    var list = p.Parent.UserState as List<esEntity>;
                     list.Add(p.Node.Entity);
                 }
             }
@@ -3634,11 +3625,11 @@ namespace EntitySpaces.Core
         {
             if (p.Node.NodeType == esVisitableNodeType.Collection)
             {
-                esEntityCollectionBase coll = p.Node.Collection as esEntityCollectionBase;
+                var coll = p.Node.Collection as esEntityCollectionBase;
 
-                List<esEntity> list = p.Node.UserState as List<esEntity>;
+                var list = p.Node.UserState as List<esEntity>;
 
-                foreach (esEntity entity in list)
+                foreach (var entity in list)
                 {
                     coll.RemoveEntity(entity);
                 }
@@ -3670,7 +3661,7 @@ namespace EntitySpaces.Core
                 }
                 else if (MatchesState(p.Node.Entity.es.RowState, (esDataRowState)p.UserState))
                 {
-                    List<esEntity> list = p.Parent.UserState as List<esEntity>;
+                    var list = p.Parent.UserState as List<esEntity>;
                     list.Add(p.Node.Entity);
                 }
             }
@@ -3683,7 +3674,7 @@ namespace EntitySpaces.Core
                     p.Node.Collection.ClearDeletedEntries();
                 }
 
-                bool canSetToNull = true;
+                var canSetToNull = true;
                 foreach (esEntity entity in p.Node.Collection)
                 {
                     if (!MatchesState(entity.es.RowState, (esDataRowState)p.UserState))
@@ -3706,11 +3697,11 @@ namespace EntitySpaces.Core
         {
             if (p.Node.NodeType == esVisitableNodeType.Collection)
             {
-                esEntityCollectionBase coll = p.Node.Collection as esEntityCollectionBase;
+                var coll = p.Node.Collection as esEntityCollectionBase;
 
-                List<esEntity> list = p.Node.UserState as List<esEntity>;
+                var list = p.Node.UserState as List<esEntity>;
 
-                foreach (esEntity entity in list)
+                foreach (var entity in list)
                 {
                     coll.RemoveEntity(entity);
                 }
@@ -3797,36 +3788,36 @@ namespace EntitySpaces.Core
         {
             get
             {
-                if (this.connection == null)
+                if (connection == null)
                 {
-                    this.connection = new esConnection();
+                    connection = new esConnection();
 
                     if (esConnection.ConnectionService != null)
                     {
-                        this.connection.Name = esConnection.ConnectionService.GetName();
+                        connection.Name = esConnection.ConnectionService.GetName();
                     }
                     else
                     {
                         // Make it so if they access this they get the 
                         // Collections Connection info
-                        if (this.Collection != null)
+                        if (Collection != null)
                         {
-                            IEntityCollection ec = this.Collection as IEntityCollection;
-                            this.connection.Name = ec.Connection.Name;
+                            var ec = Collection as IEntityCollection;
+                            connection.Name = ec.Connection.Name;
                         }
                         else
                         {
-                            string connName = this.GetConnectionName();
+                            var connName = GetConnectionName();
                             if (connName != null)
                             {
-                                this.connection.Name = connName;
+                                connection.Name = connName;
                             }
                         }
                     }
                 }
-                return this.connection;
+                return connection;
             }
-            set { this.connection = value; }
+            set { connection = value; }
         }
 
         /// <summary>
@@ -3837,9 +3828,9 @@ namespace EntitySpaces.Core
         {
             get
             {
-                if (this.m_modifiedColumns == null)
+                if (m_modifiedColumns == null)
                 {
-                    this.m_modifiedColumns = new List<string>();
+                    m_modifiedColumns = new List<string>();
                 }
 
                 return m_modifiedColumns;
@@ -3854,10 +3845,10 @@ namespace EntitySpaces.Core
         {
             get
             {
-                if (this.es.Connection.Catalog != null)
-                    return this.es.Connection.Catalog;
+                if (es.Connection.Catalog != null)
+                    return es.Connection.Catalog;
                 else
-                    return this.GetProviderMetadata().Catalog;
+                    return GetProviderMetadata().Catalog;
             }
         }
 
@@ -3869,10 +3860,10 @@ namespace EntitySpaces.Core
         {
             get
             {
-                if (this.es.Connection.Schema != null)
-                    return this.es.Connection.Schema;
+                if (es.Connection.Schema != null)
+                    return es.Connection.Schema;
                 else
-                    return this.GetProviderMetadata().Schema;
+                    return GetProviderMetadata().Schema;
             }
         }
 
@@ -3882,7 +3873,7 @@ namespace EntitySpaces.Core
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string IEntity.Destination
         {
-            get { return this.GetProviderMetadata().Destination; }
+            get { return GetProviderMetadata().Destination; }
         }
 
         /// <summary>
@@ -3891,7 +3882,7 @@ namespace EntitySpaces.Core
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string IEntity.Source
         {
-            get { return this.GetProviderMetadata().Source; }
+            get { return GetProviderMetadata().Source; }
         }
 
         /// <summary>
@@ -3900,7 +3891,7 @@ namespace EntitySpaces.Core
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string IEntity.spInsert
         {
-            get { return this.GetProviderMetadata().spInsert; }
+            get { return GetProviderMetadata().spInsert; }
         }
 
         /// <summary>
@@ -3909,7 +3900,7 @@ namespace EntitySpaces.Core
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string IEntity.spUpdate
         {
-            get { return this.GetProviderMetadata().spUpdate; }
+            get { return GetProviderMetadata().spUpdate; }
         }
 
         /// <summary>
@@ -3918,7 +3909,7 @@ namespace EntitySpaces.Core
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string IEntity.spDelete
         {
-            get { return this.GetProviderMetadata().spDelete; }
+            get { return GetProviderMetadata().spDelete; }
         }
 
         /// <summary>
@@ -3927,7 +3918,7 @@ namespace EntitySpaces.Core
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string IEntity.spLoadAll
         {
-            get { return this.GetProviderMetadata().spLoadAll; }
+            get { return GetProviderMetadata().spLoadAll; }
         }
 
         /// <summary>
@@ -3936,7 +3927,7 @@ namespace EntitySpaces.Core
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string IEntity.spLoadByPrimaryKey
         {
-            get { return this.GetProviderMetadata().spLoadByPrimaryKey; }
+            get { return GetProviderMetadata().spLoadByPrimaryKey; }
         }
 
         /// <summary>
@@ -3990,7 +3981,7 @@ namespace EntitySpaces.Core
         {
             get
             {
-                if (this.es.IsDirty) return true; 
+                if (es.IsDirty) return true; 
 
                 return !esVisitor.Visit(this, IsGraphDirtyCallback);
             }
@@ -3998,7 +3989,7 @@ namespace EntitySpaces.Core
 
         private bool IsGraphDirtyCallback(esVisitParameters p)
         {
-            bool isClean = true;
+            var isClean = true;
 
             if (p.Node.NodeType == esVisitableNodeType.Entity)
             {
@@ -4105,7 +4096,7 @@ namespace EntitySpaces.Core
         /// </summary>
         IMetadata IEntity.Meta
         {
-            get { return this.Meta; }
+            get { return Meta; }
         }
 
         /// <summary>
@@ -4113,8 +4104,8 @@ namespace EntitySpaces.Core
         /// </summary>
         bool IEntity.IsLazyLoadDisabled
         {
-            get { return this._isLazyLoadDisabled; }
-            set { this._isLazyLoadDisabled = value; }
+            get { return _isLazyLoadDisabled; }
+            set { _isLazyLoadDisabled = value; }
         }
 
         /// <summary>
@@ -4124,7 +4115,7 @@ namespace EntitySpaces.Core
         /// <returns></returns>
         esEntityCollectionBase IEntity.CreateCollection(string name)
         {
-            return this.CreateCollectionForPrefetch(name);
+            return CreateCollectionForPrefetch(name);
         }
 
         #endregion
@@ -4230,10 +4221,10 @@ namespace EntitySpaces.Core
         /// <returns></returns>
         private bool NeedsTransactionDuringSave()
         {
-            bool needsTx = this.preSaves != null && this.preSaves.Count > 0;
+            var needsTx = preSaves != null && preSaves.Count > 0;
 
-            needsTx |= this.postSaves != null && this.postSaves.Count > 0;
-            needsTx |= this.postOneSaves != null && this.postOneSaves.Count > 0;
+            needsTx |= postSaves != null && postSaves.Count > 0;
+            needsTx |= postOneSaves != null && postOneSaves.Count > 0;
 
             return needsTx;
         }
@@ -4294,9 +4285,9 @@ namespace EntitySpaces.Core
         /// </summary>
         internal protected void CommitPreSaves()
         {
-            if (this.preSaves != null)
+            if (preSaves != null)
             {
-                foreach (esEntity entity in this.preSaves.Values)
+                foreach (var entity in preSaves.Values)
                 {
                     entity.Save();
                 }
@@ -4362,7 +4353,7 @@ namespace EntitySpaces.Core
         {
             if (postSaves != null)
             {
-                foreach (esEntityCollectionBase coll in this.postSaves.Values)
+                foreach (var coll in postSaves.Values)
                 {
                     coll.Save();
                 }
@@ -4428,7 +4419,7 @@ namespace EntitySpaces.Core
         {
             if (postOneSaves != null)
             {
-                foreach (esEntity entity in this.postOneSaves.Values)
+                foreach (var entity in postOneSaves.Values)
                 {
                     entity.Save();
                 }
@@ -4458,25 +4449,25 @@ namespace EntitySpaces.Core
         {
             get
             {
-                string result = string.Empty;
+                var result = string.Empty;
 
                 // First let's assume this is the property name
-                esColumnMetadata columnMeta = this.Meta.Columns.FindByPropertyName(columnName);
+                var columnMeta = Meta.Columns.FindByPropertyName(columnName);
 
                 if (columnMeta == null)
                 {
                     // nope, it must be the column name
-                    columnMeta = this.Meta.Columns.FindByColumnName(columnName);
+                    columnMeta = Meta.Columns.FindByColumnName(columnName);
                 }
 
-                if (this.onValidateDelegate != null)
+                if (onValidateDelegate != null)
                 {
                     result = onValidateDelegate(columnName, this, columnMeta);
                 }
 
                 if (string.IsNullOrEmpty(result))
                 {
-                    result = this.Validate(columnName, this, columnMeta);
+                    result = Validate(columnName, this, columnMeta);
                 }
 
                 return result;
@@ -4542,18 +4533,18 @@ namespace EntitySpaces.Core
 
         esVisitableNode[] IVisitable.GetGraph(object state)
         {
-            Type type = this.GetType();
+            var type = GetType();
 
-            FieldInfo[] fields = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            var fields = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             FieldInfo field = null;
 
-            List<esVisitableNode> references = new List<esVisitableNode>();
+            var references = new List<esVisitableNode>();
 
-            for (int i = 0; i < fields.Length; i++)
+            for (var i = 0; i < fields.Length; i++)
             {
                 field = fields[i];
 
-                object o = field.GetValue(this);
+                var o = field.GetValue(this);
 
                 if (o != null)
                 {

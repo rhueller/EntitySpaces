@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 
@@ -100,9 +101,9 @@ namespace EntitySpaces.MySQLProvider
 
         protected static string GetFromStatement(StandardProviderParameters std, esDynamicQuery query)
         {
-            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
+            var iQuery = query as IDynamicQueryInternal;
 
-            string sql = String.Empty;
+            var sql = String.Empty;
 
             if (iQuery.InternalFromQuery == null)
             {
@@ -115,7 +116,7 @@ namespace EntitySpaces.MySQLProvider
             }
             else
             {
-                IDynamicQueryInternal iSubQuery = iQuery.InternalFromQuery as IDynamicQueryInternal;
+                var iSubQuery = iQuery.InternalFromQuery as IDynamicQueryInternal;
 
                 iSubQuery.IsInSubQuery = true;
 
@@ -136,11 +137,11 @@ namespace EntitySpaces.MySQLProvider
 
         protected static string GetSelectStatement(StandardProviderParameters std, esDynamicQuery query)
         {
-            bool selectAll = true;
-            string sql = String.Empty;
-            string comma = String.Empty;
+            var selectAll = true;
+            var sql = String.Empty;
+            var comma = String.Empty;
 
-            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
+            var iQuery = query as IDynamicQueryInternal;
 
             sql += String.Empty;
 
@@ -150,11 +151,11 @@ namespace EntitySpaces.MySQLProvider
             {
                 selectAll = false;
 
-                foreach (esExpression expressionItem in iQuery.InternalSelectColumns)
+                foreach (var expressionItem in iQuery.InternalSelectColumns)
                 {
                     if (expressionItem.Query != null)
                     {
-                        IDynamicQueryInternal iSubQuery = expressionItem.Query as IDynamicQueryInternal;
+                        var iSubQuery = expressionItem.Query as IDynamicQueryInternal;
 
                         sql += comma;
 
@@ -165,7 +166,7 @@ namespace EntitySpaces.MySQLProvider
                         else
                         {
                             iSubQuery.IsInSubQuery = true;
-                            sql += " (" + BuildQuery(std, expressionItem.Query as esDynamicQuery) + ") AS " + iSubQuery.SubQueryAlias;
+                            sql += " (" + BuildQuery(std, expressionItem.Query) + ") AS " + iSubQuery.SubQueryAlias;
                             iSubQuery.IsInSubQuery = false;
                         }
 
@@ -175,7 +176,7 @@ namespace EntitySpaces.MySQLProvider
                     {
                         sql += comma;
 
-                        string columnName = expressionItem.Column.Name;
+                        var columnName = expressionItem.Column.Name;
 
                         if (columnName != null && columnName[0] == '<')
                             sql += columnName.Substring(1, columnName.Length - 2);
@@ -212,15 +213,15 @@ namespace EntitySpaces.MySQLProvider
 
         protected static string GetJoinStatement(StandardProviderParameters std, esDynamicQuery query)
         {
-            string sql = String.Empty;
+            var sql = String.Empty;
 
-            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
+            var iQuery = query as IDynamicQueryInternal;
 
             if (iQuery.InternalJoinItems != null)
             {
-                foreach (esJoinItem joinItem in iQuery.InternalJoinItems)
+                foreach (var joinItem in iQuery.InternalJoinItems)
                 {
-                    esJoinItem.esJoinItemData joinData = (esJoinItem.esJoinItemData)joinItem;
+                    var joinData = (esJoinItem.esJoinItemData)joinItem;
 
                     switch (joinData.JoinType)
                     {
@@ -238,7 +239,7 @@ namespace EntitySpaces.MySQLProvider
                             break;
                     }
 
-                    IDynamicQueryInternal iSubQuery = joinData.Query as IDynamicQueryInternal;
+                    var iSubQuery = joinData.Query as IDynamicQueryInternal;
 
                     sql += Shared.CreateFullName(std.request, joinData.Query);
 
@@ -254,7 +255,6 @@ namespace EntitySpaces.MySQLProvider
         private static string GetComparisonStatement(StandardProviderParameters std, esDynamicQuery query, List<esComparison> items, string prefix)
         {
             var sql = string.Empty;
-            var iQuery = query as IDynamicQueryInternal;
 
             //=======================================
             // WHERE
@@ -263,13 +263,13 @@ namespace EntitySpaces.MySQLProvider
             
             sql += prefix;
 
-            foreach (esComparison comparisonItem in items)
+            foreach (var comparisonItem in items)
             {
-                esComparison.esComparisonData comparisonData = (esComparison.esComparisonData)comparisonItem;
+                var comparisonData = (esComparison.esComparisonData)comparisonItem;
                 esDynamicQuery subQuery = null;
 
-                bool requiresParam = true;
-                bool needsStringParameter = false;
+                var requiresParam = true;
+                var needsStringParameter = false;
                 std.needsStringParameter = false;
 
                 if (comparisonData.IsParenthesis)
@@ -297,7 +297,7 @@ namespace EntitySpaces.MySQLProvider
                 Dictionary<string, MySqlParameter> types = null;
                 if (comparisonData.Column.Query != null)
                 {
-                    IDynamicQueryInternal iLocalQuery = comparisonData.Column.Query as IDynamicQueryInternal;
+                    var iLocalQuery = comparisonData.Column.Query as IDynamicQueryInternal;
                     types = Cache.GetParameters(iLocalQuery.DataID, (esProviderSpecificMetadata)iLocalQuery.ProviderMetadata, (esColumnMetadataCollection)iLocalQuery.Columns);
                 }
 
@@ -323,8 +323,8 @@ namespace EntitySpaces.MySQLProvider
                     {
                         if (comparisonData.Column.Name != null)
                         {
-                            IDynamicQueryInternal iColQuery = comparisonData.Column.Query as IDynamicQueryInternal;
-                            esColumnMetadataCollection columns = (esColumnMetadataCollection)iColQuery.Columns;
+                            var iColQuery = comparisonData.Column.Query as IDynamicQueryInternal;
+                            var columns = (esColumnMetadataCollection)iColQuery.Columns;
                             compareTo = Delimiters.Param + columns[comparisonData.Column.Name].PropertyName + (++std.pindex).ToString();
                         }
                         else
@@ -395,7 +395,7 @@ namespace EntitySpaces.MySQLProvider
                         break;
 
                     case esComparisonOperand.Like:
-                        string esc = comparisonData.LikeEscape.ToString();
+                        var esc = comparisonData.LikeEscape.ToString();
                         if (string.IsNullOrEmpty(esc) || esc == "\0")
                         {
                             sql += ApplyWhereSubOperations(std, query, comparisonData) + " LIKE " + compareTo;
@@ -457,30 +457,26 @@ namespace EntitySpaces.MySQLProvider
                                 sql += ApplyWhereSubOperations(std, query, comparisonData) + " NOT IN (";
                             }
 
-                            foreach (object oin in comparisonData.Values)
+                            foreach (var oin in comparisonData.Values)
                             {
-                                string str = oin as string;
-                                if (str != null)
+                                if (oin is string str)
                                 {
                                     // STRING
                                     sql += comma + Delimiters.StringOpen + str + Delimiters.StringClose;
                                     comma = ",";
                                 }
-                                else if (null != oin as System.Collections.IEnumerable)
+                                else if (null != oin as IEnumerable)
                                 {
                                     // LIST OR COLLECTION OF SOME SORT
-                                    System.Collections.IEnumerable enumer = oin as System.Collections.IEnumerable;
-                                    if (enumer != null)
+                                    if (oin is IEnumerable enumer)
                                     {
-                                        System.Collections.IEnumerator iter = enumer.GetEnumerator();
+                                        var iter = enumer.GetEnumerator();
 
                                         while (iter.MoveNext())
                                         {
-                                            object o = iter.Current;
+                                            var o = iter.Current;
 
-                                            string soin = o as string;
-
-                                            if (soin != null)
+                                            if (o is string soin)
                                                 sql += comma + Delimiters.StringOpen + soin + Delimiters.StringClose;
                                             else
                                                 sql += comma + Convert.ToString(o);
@@ -504,7 +500,7 @@ namespace EntitySpaces.MySQLProvider
 
                     case esComparisonOperand.Between:
 
-                        MySqlCommand sqlCommand = std.cmd as MySqlCommand;
+                        var sqlCommand = std.cmd as MySqlCommand;
 
                         sql += ApplyWhereSubOperations(std, query, comparisonData) + " BETWEEN ";
                         sql += compareTo;
@@ -515,8 +511,8 @@ namespace EntitySpaces.MySQLProvider
 
                         if (comparisonData.ComparisonColumn2.Name == null)
                         {
-                            IDynamicQueryInternal iColQuery = comparisonData.Column.Query as IDynamicQueryInternal;
-                            esColumnMetadataCollection columns = (esColumnMetadataCollection)iColQuery.Columns;
+                            var iColQuery = comparisonData.Column.Query as IDynamicQueryInternal;
+                            var columns = (esColumnMetadataCollection)iColQuery.Columns;
                             compareTo = Delimiters.Param + columns[comparisonData.Column.Name].PropertyName + (++std.pindex).ToString();
 
                             sql += " AND " + compareTo;
@@ -565,22 +561,22 @@ namespace EntitySpaces.MySQLProvider
 
         protected static string GetOrderByStatement(StandardProviderParameters std, esDynamicQuery query)
         {
-            string sql = String.Empty;
-            string comma = String.Empty;
+            var sql = String.Empty;
+            var comma = String.Empty;
 
-            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
+            var iQuery = query as IDynamicQueryInternal;
 
             if (iQuery.InternalOrderByItems != null)
             {
                 sql += " ORDER BY ";
 
-                foreach (esOrderByItem orderByItem in iQuery.InternalOrderByItems)
+                foreach (var orderByItem in iQuery.InternalOrderByItems)
                 {
-                    bool literal = false;
+                    var literal = false;
 
                     sql += comma;
 
-                    string columnName = orderByItem.Expression.Column.Name;
+                    var columnName = orderByItem.Expression.Column.Name;
 
                     if (columnName != null && columnName[0] == '<')
                     {
@@ -596,7 +592,7 @@ namespace EntitySpaces.MySQLProvider
                         // Is in Set Operation (kind of a tricky workaround)
                         if (iQuery.HasSetOperation)
                         {
-                            string joinAlias = iQuery.JoinAlias;
+                            var joinAlias = iQuery.JoinAlias;
                             iQuery.JoinAlias = " ";
                             sql += GetExpressionColumn(std, query, orderByItem.Expression, false, false);
                             iQuery.JoinAlias = joinAlias;
@@ -624,20 +620,20 @@ namespace EntitySpaces.MySQLProvider
 
         protected static string GetGroupByStatement(StandardProviderParameters std, esDynamicQuery query)
         {
-            string sql = String.Empty;
-            string comma = String.Empty;
+            var sql = String.Empty;
+            var comma = String.Empty;
 
-            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
+            var iQuery = query as IDynamicQueryInternal;
 
             if (iQuery.InternalGroupByItems != null)
             {
                 sql += " GROUP BY ";
 
-                foreach (esGroupByItem groupBy in iQuery.InternalGroupByItems)
+                foreach (var groupBy in iQuery.InternalGroupByItems)
                 {
                     sql += comma;
 
-                    string columnName = groupBy.Expression.Column.Name;
+                    var columnName = groupBy.Expression.Column.Name;
 
                     if (columnName != null && columnName[0] == '<')
                         sql += columnName.Substring(1, columnName.Length - 2);
@@ -658,13 +654,13 @@ namespace EntitySpaces.MySQLProvider
 
         protected static string GetSetOperationStatement(StandardProviderParameters std, esDynamicQuery query)
         {
-            string sql = String.Empty;
+            var sql = String.Empty;
 
-            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
+            var iQuery = query as IDynamicQueryInternal;
 
             if (iQuery.InternalSetOperations != null)
             {
-                foreach (esSetOperation setOperation in iQuery.InternalSetOperations)
+                foreach (var setOperation in iQuery.InternalSetOperations)
                 {
                     switch (setOperation.SetOperationType)
                     {
@@ -683,7 +679,7 @@ namespace EntitySpaces.MySQLProvider
 
         protected static string GetExpressionColumn(StandardProviderParameters std, esDynamicQuery query, esExpression expression, bool inExpression, bool useAlias)
         {
-            string sql = String.Empty;
+            var sql = String.Empty;
 
             if (expression.CaseWhen != null)
             {
@@ -724,17 +720,15 @@ namespace EntitySpaces.MySQLProvider
 
         protected static string GetCaseWhenThenEnd(StandardProviderParameters std, esDynamicQuery query, esCase caseWhenThen)
         {
-            string sql = string.Empty;
+            var sql = string.Empty;
 
-            EntitySpaces.DynamicQuery.esCase.esSimpleCaseData caseStatement = caseWhenThen;
+            esCase.esSimpleCaseData caseStatement = caseWhenThen;
 
             esColumnItem column = caseStatement.QueryItem;
 
             sql += "CASE ";
 
-            List<esComparison> list = new List<esComparison>();
-
-            foreach (EntitySpaces.DynamicQuery.esCase.esSimpleCaseData.esCaseClause caseClause in caseStatement.Cases)
+            foreach (var caseClause in caseStatement.Cases)
             {
                 sql += " WHEN ";
                 if (!caseClause.When.IsExpression)
@@ -816,9 +810,9 @@ namespace EntitySpaces.MySQLProvider
 
         protected static string GetMathmaticalExpressionColumn(StandardProviderParameters std, esDynamicQuery query, esMathmaticalExpression mathmaticalExpression)
         {
-            bool isConcat = false;
+            bool isConcat;
 
-            string sql = "(";
+            var sql = "(";
 
             if (mathmaticalExpression.ItemFirst)
             {
@@ -906,7 +900,7 @@ namespace EntitySpaces.MySQLProvider
 
         protected static string ApplyWhereSubOperations(StandardProviderParameters std, esDynamicQuery query, esComparison.esComparisonData comparisonData)
         {
-            string sql = string.Empty;
+            var sql = string.Empty;
 
             if (comparisonData.HasExpression)
             {
@@ -920,7 +914,7 @@ namespace EntitySpaces.MySQLProvider
                 return sql;
             }
 
-            string delimitedColumnName = GetColumnName(comparisonData.Column);
+            var delimitedColumnName = GetColumnName(comparisonData.Column);
 
             if (comparisonData.SubOperators != null)
             {
@@ -936,179 +930,176 @@ namespace EntitySpaces.MySQLProvider
 
         protected static string BuildSubOperationsSql(StandardProviderParameters std, string columnName, List<esQuerySubOperator> subOperators)
         {
-            string sql = string.Empty;
+            var sql = string.Empty;
 
             subOperators.Reverse();
 
-            Stack<object> stack = new Stack<object>();
+            var stack = new Stack<object>();
 
-            if (subOperators != null)
+            foreach (var op in subOperators)
             {
-                foreach (esQuerySubOperator op in subOperators)
+                switch (op.SubOperator)
                 {
-                    switch (op.SubOperator)
-                    {
-                        case esQuerySubOperatorType.ToLower:
-                            sql += "LOWER(";
-                            stack.Push(")");
-                            break;
+                    case esQuerySubOperatorType.ToLower:
+                        sql += "LOWER(";
+                        stack.Push(")");
+                        break;
 
-                        case esQuerySubOperatorType.ToUpper:
-                            sql += "UPPER(";
-                            stack.Push(")");
-                            break;
+                    case esQuerySubOperatorType.ToUpper:
+                        sql += "UPPER(";
+                        stack.Push(")");
+                        break;
 
-                        case esQuerySubOperatorType.LTrim:
-                            sql += "LTRIM(";
-                            stack.Push(")");
-                            break;
+                    case esQuerySubOperatorType.LTrim:
+                        sql += "LTRIM(";
+                        stack.Push(")");
+                        break;
 
-                        case esQuerySubOperatorType.RTrim:
-                            sql += "RTRIM(";
-                            stack.Push(")");
-                            break;
+                    case esQuerySubOperatorType.RTrim:
+                        sql += "RTRIM(";
+                        stack.Push(")");
+                        break;
 
-                        case esQuerySubOperatorType.Trim:
-                            sql += "LTRIM(RTRIM(";
-                            stack.Push("))");
-                            break;
+                    case esQuerySubOperatorType.Trim:
+                        sql += "LTRIM(RTRIM(";
+                        stack.Push("))");
+                        break;
 
-                        case esQuerySubOperatorType.SubString:
+                    case esQuerySubOperatorType.SubString:
 
-                            sql += "SUBSTRING(";
+                        sql += "SUBSTRING(";
 
-                            stack.Push(")");
-                            stack.Push(op.Parameters["length"]);
+                        stack.Push(")");
+                        stack.Push(op.Parameters["length"]);
+                        stack.Push(",");
+
+                        if (op.Parameters.ContainsKey("start"))
+                        {
+                            stack.Push(op.Parameters["start"]);
                             stack.Push(",");
+                        }
+                        else
+                        {
+                            // They didn't pass in start so we start
+                            // at the beginning
+                            stack.Push(1);
+                            stack.Push(",");
+                        }
+                        break;
 
-                            if (op.Parameters.ContainsKey("start"))
+                    case esQuerySubOperatorType.Coalesce:
+                        sql += "COALESCE(";
+
+                        stack.Push(")");
+                        stack.Push(op.Parameters["expressions"]);
+                        stack.Push(",");
+                        break;
+
+                    case esQuerySubOperatorType.Date:
+                        sql += "STR_TO_DATE(DATE_FORMAT(";
+
+                        stack.Push(", '%Y-%m-%d %H:%i:%s')");
+                        stack.Push(", '%Y-%m-%d')");
+                        break;
+
+                    case esQuerySubOperatorType.Length:
+                        sql += "CHAR_LENGTH(";
+                        stack.Push(")");
+                        break;
+
+                    case esQuerySubOperatorType.Round:
+                        sql += "ROUND(";
+
+                        stack.Push(")");
+                        stack.Push(op.Parameters["SignificantDigits"]);
+                        stack.Push(",");
+                        break;
+
+                    case esQuerySubOperatorType.DatePart:
+                        std.needsIntegerParameter = true;
+                        sql += "EXTRACT(";
+                        sql += op.Parameters["DatePart"];
+                        sql += " FROM ";
+
+                        stack.Push(")");
+                        break;
+
+                    case esQuerySubOperatorType.Avg:
+                        sql += "AVG(";
+
+                        stack.Push(")");
+                        break;
+
+                    case esQuerySubOperatorType.Count:
+                        sql += "COUNT(";
+
+                        stack.Push(")");
+                        break;
+
+                    case esQuerySubOperatorType.Max:
+                        sql += "MAX(";
+
+                        stack.Push(")");
+                        break;
+
+                    case esQuerySubOperatorType.Min:
+                        sql += "MIN(";
+
+                        stack.Push(")");
+                        break;
+
+                    case esQuerySubOperatorType.StdDev:
+                        sql += "STDDEV(";
+
+                        stack.Push(")");
+                        break;
+
+                    case esQuerySubOperatorType.Sum:
+                        sql += "SUM(";
+
+                        stack.Push(")");
+                        break;
+
+                    case esQuerySubOperatorType.Var:
+                        sql += "VARIANCE(";
+
+                        stack.Push(")");
+                        break;
+
+                    case esQuerySubOperatorType.Cast:
+                        sql += "CAST(";
+                        stack.Push(")");
+
+                        if (op.Parameters.Count > 1)
+                        {
+                            stack.Push(")");
+
+                            if (op.Parameters.Count == 2)
                             {
-                                stack.Push(op.Parameters["start"]);
-                                stack.Push(",");
+                                stack.Push(op.Parameters["length"].ToString());
                             }
                             else
                             {
-                                // They didn't pass in start so we start
-                                // at the beginning
-                                stack.Push(1);
+                                stack.Push(op.Parameters["scale"].ToString());
                                 stack.Push(",");
-                            }
-                            break;
-
-                        case esQuerySubOperatorType.Coalesce:
-                            sql += "COALESCE(";
-
-                            stack.Push(")");
-                            stack.Push(op.Parameters["expressions"]);
-                            stack.Push(",");
-                            break;
-
-                        case esQuerySubOperatorType.Date:
-                            sql += "STR_TO_DATE(DATE_FORMAT(";
-
-                            stack.Push(", '%Y-%m-%d %H:%i:%s')");
-                            stack.Push(", '%Y-%m-%d')");
-                            break;
-
-                        case esQuerySubOperatorType.Length:
-                            sql += "CHAR_LENGTH(";
-                            stack.Push(")");
-                            break;
-
-                        case esQuerySubOperatorType.Round:
-                            sql += "ROUND(";
-
-                            stack.Push(")");
-                            stack.Push(op.Parameters["SignificantDigits"]);
-                            stack.Push(",");
-                            break;
-
-                        case esQuerySubOperatorType.DatePart:
-                            std.needsIntegerParameter = true;
-                            sql += "EXTRACT(";
-                            sql += op.Parameters["DatePart"];
-                            sql += " FROM ";
-
-                            stack.Push(")");
-                            break;
-
-                        case esQuerySubOperatorType.Avg:
-                            sql += "AVG(";
-
-                            stack.Push(")");
-                            break;
-
-                        case esQuerySubOperatorType.Count:
-                            sql += "COUNT(";
-
-                            stack.Push(")");
-                            break;
-
-                        case esQuerySubOperatorType.Max:
-                            sql += "MAX(";
-
-                            stack.Push(")");
-                            break;
-
-                        case esQuerySubOperatorType.Min:
-                            sql += "MIN(";
-
-                            stack.Push(")");
-                            break;
-
-                        case esQuerySubOperatorType.StdDev:
-                            sql += "STDDEV(";
-
-                            stack.Push(")");
-                            break;
-
-                        case esQuerySubOperatorType.Sum:
-                            sql += "SUM(";
-
-                            stack.Push(")");
-                            break;
-
-                        case esQuerySubOperatorType.Var:
-                            sql += "VARIANCE(";
-
-                            stack.Push(")");
-                            break;
-
-                        case esQuerySubOperatorType.Cast:
-                            sql += "CAST(";
-                            stack.Push(")");
-
-                            if (op.Parameters.Count > 1)
-                            {
-                                stack.Push(")");
-
-                                if (op.Parameters.Count == 2)
-                                {
-                                    stack.Push(op.Parameters["length"].ToString());
-                                }
-                                else
-                                {
-                                    stack.Push(op.Parameters["scale"].ToString());
-                                    stack.Push(",");
-                                    stack.Push(op.Parameters["precision"].ToString());
-                                }
-
-                                stack.Push("(");
+                                stack.Push(op.Parameters["precision"].ToString());
                             }
 
+                            stack.Push("(");
+                        }
 
-                            stack.Push(GetCastSql((esCastType)op.Parameters["esCastType"]));
-                            stack.Push(" AS ");
-                            break;
-                    }
+
+                        stack.Push(GetCastSql((esCastType)op.Parameters["esCastType"]));
+                        stack.Push(" AS ");
+                        break;
                 }
+            }
 
-                sql += columnName;
+            sql += columnName;
 
-                while (stack.Count > 0)
-                {
-                    sql += stack.Pop().ToString();
-                }
+            while (stack.Count > 0)
+            {
+                sql += stack.Pop().ToString();
             }
             return sql;
         }
@@ -1139,7 +1130,7 @@ namespace EntitySpaces.MySQLProvider
             }
             else
             {
-                IDynamicQueryInternal iQuery = column.Query as IDynamicQueryInternal;
+                var iQuery = column.Query as IDynamicQueryInternal;
 
                 if (iQuery.IsInSubQuery)
                 {
@@ -1147,7 +1138,7 @@ namespace EntitySpaces.MySQLProvider
                 }
                 else
                 {
-                    string alias = iQuery.SubQueryAlias == string.Empty ? iQuery.JoinAlias : iQuery.SubQueryAlias;
+                    var alias = iQuery.SubQueryAlias == string.Empty ? iQuery.JoinAlias : iQuery.SubQueryAlias;
                     return alias + "." + Delimiters.ColumnOpen + column.Name + Delimiters.ColumnClose;
                 }
             }
@@ -1160,9 +1151,9 @@ namespace EntitySpaces.MySQLProvider
 
         private static string GetSubquerySearchCondition(esDynamicQuery query)
         {
-            string searchCondition = String.Empty;
+            var searchCondition = String.Empty;
 
-            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
+            var iQuery = query as IDynamicQueryInternal;
 
             switch (iQuery.SubquerySearchCondition)
             {

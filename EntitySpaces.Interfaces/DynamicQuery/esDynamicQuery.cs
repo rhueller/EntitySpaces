@@ -31,10 +31,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
 using System.Data;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 using EntitySpaces.DynamicQuery;
 using EntitySpaces.Core;
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable InconsistentNaming
 
 namespace EntitySpaces.Interfaces
 {
@@ -58,6 +61,7 @@ namespace EntitySpaces.Interfaces
         /// <summary>
         /// Used by the prefetch logic, alias = "a" + Alias++.ToString()
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public int Alias = 1;
 
         public string NextAlias()
@@ -179,9 +183,9 @@ namespace EntitySpaces.Interfaces
         /// <returns>The collection, Count is zero if no data was loaded</returns>
         public T ToCollection<T>() where T : esEntityCollectionBase, new()
         {
-            T coll = new T();
+            var coll = new T();
             coll.HookupQuery(this);
-            this.Load();
+            Load();
 
             return coll;
         }
@@ -193,10 +197,10 @@ namespace EntitySpaces.Interfaces
         /// <returns>Null if no record found</returns>
         public T ToEntity<T>() where T : esEntity, new()
         {
-            T entity = new T();
+            var entity = new T();
             entity.HookupQuery(this);
 
-            if (this.Load())
+            if (Load())
                 return entity;
             else
                 return default(T);
@@ -207,7 +211,7 @@ namespace EntitySpaces.Interfaces
         {
             get
             {
-                return this.QueryItemFromName(propertyName);
+                return QueryItemFromName(propertyName);
             }
         }
 
@@ -221,16 +225,16 @@ namespace EntitySpaces.Interfaces
 
             beenThere.Add(query);
 
-            esDynamicQuery theQuery = query as esDynamicQuery;
-            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
+            var theQuery = query as esDynamicQuery;
+            var iQuery = query as IDynamicQueryInternal;
 
             if (theQuery != null)
             {
-                esConnection conn = theQuery.es2.Connection;
+                var conn = theQuery.es2.Connection;
 
                 if (iQuery.ProviderMetadata == null)
                 {
-                    esProviderSpecificMetadata providerMetadata = theQuery.Meta.GetProviderMetadata(conn.ProviderMetadataKey);
+                    var providerMetadata = theQuery.Meta.GetProviderMetadata(conn.ProviderMetadataKey);
                     iQuery.DataID = theQuery.Meta.DataID;
                     iQuery.Columns = theQuery.Meta.Columns;
                     iQuery.ProviderMetadata = providerMetadata;
@@ -246,21 +250,21 @@ namespace EntitySpaces.Interfaces
             {
                 foreach (esColumnMetadata col in (esColumnMetadataCollection)iQuery.Columns)
                 {
-                    esQueryItem item = new esQueryItem(this, col.Name, col.esType);
+                    var item = new esQueryItem(this, col.Name, col.esType);
                     query.Select(item);
                 }
             }
             else 
             {
-                List<esQueryItem> columns = iQuery.SelectAllExcept;
+                var columns = iQuery.SelectAllExcept;
 
                 if (columns != null)
                 {
                     foreach (esColumnMetadata col in (esColumnMetadataCollection)iQuery.Columns)
                     {
-                        bool found = false;
+                        var found = false;
 
-                        for (int i = 0; i < columns.Count; i++)
+                        for (var i = 0; i < columns.Count; i++)
                         {
                             if (col.Name == (string)columns[i])
                             {
@@ -277,14 +281,14 @@ namespace EntitySpaces.Interfaces
                 }
             }
 
-            foreach (esDynamicQuery subQuery in iQuery.queries.Values)
+            foreach (var subQuery in iQuery.queries.Values)
             {
                 AssignProviderMetadata(subQuery, beenThere);
             }
 
             if (iQuery.InternalSetOperations != null)
             {
-                foreach (esSetOperation setOperation in iQuery.InternalSetOperations)
+                foreach (var setOperation in iQuery.InternalSetOperations)
                 {
                     AssignProviderMetadata(setOperation.Query, beenThere);
                 }
@@ -317,20 +321,20 @@ namespace EntitySpaces.Interfaces
         /// <param name="request">The request to populate.</param>
         protected void PopulateRequest(esDataRequest request)
         {
-            IMetadata meta = this.Meta;
+            var meta = Meta;
 
-            esConnection conn = this.es2.Connection;
-            esProviderSpecificMetadata providerMetadata = meta.GetProviderMetadata(conn.ProviderMetadataKey);
+            var conn = es2.Connection;
+            var providerMetadata = meta.GetProviderMetadata(conn.ProviderMetadataKey);
 
-            IDynamicQueryInternal iQuery = this as IDynamicQueryInternal;
+            var iQuery = this as IDynamicQueryInternal;
 
-            if ((this.queries != null && this.queries.Count > 0) || iQuery.InternalSetOperations != null)
+            if ((queries != null && queries.Count > 0) || iQuery.InternalSetOperations != null)
             {
                 AssignProviderMetadata(this, new List<esDynamicQuery>());
             }
 
-            string catalog = conn.Catalog;
-            string schema = conn.Schema;
+            var catalog = conn.Catalog;
+            var schema = conn.Schema;
 
             iData.Catalog = catalog;
             iData.Schema = schema;
@@ -349,14 +353,14 @@ namespace EntitySpaces.Interfaces
             request.Schema = schema;
             request.Columns = meta.Columns;
 
-            if (this.m_selectAll)
+            if (m_selectAll)
             {
                 _selectAll();
             }
 
-            if (this.querySource == null || this.querySource.Length == 0)
+            if (querySource == null || querySource.Length == 0)
             {
-                this.es.QuerySource(providerMetadata.Source);
+                es.QuerySource(providerMetadata.Source);
             }
         }
 
@@ -364,15 +368,15 @@ namespace EntitySpaces.Interfaces
 
         private void _selectAll()
         {
-            if (this.m_selectAll)
+            if (m_selectAll)
             {
-                foreach (esColumnMetadata col in this.Meta.Columns)
+                foreach (esColumnMetadata col in Meta.Columns)
                 {
-                    esQueryItem item = new esQueryItem(this, col.Name, col.esType);
-                    this.Select(item);
+                    var item = new esQueryItem(this, col.Name, col.esType);
+                    Select(item);
                 }
 
-                this.m_selectAll = false;
+                m_selectAll = false;
             }
         }
 
@@ -408,30 +412,30 @@ namespace EntitySpaces.Interfaces
         /// </code>
         /// </remarks>
         /// <returns>True if at least one record was loaded</returns>
-        virtual public bool Load()
+        public virtual bool Load()
         {
-            bool loaded = false;
+            var loaded = false;
 
             DataTable table = null;
 
             FixupSerializedQueries();
 
-            esDataRequest request = new esDataRequest();
-            this.PopulateRequest(request);
+            var request = new esDataRequest();
+            PopulateRequest(request);
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.esLoadDataTable(request, this.es2.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.esLoadDataTable(request, es2.Connection.ProviderSignature);
 
             table = response.Table;
 
             if (prefetchMaps != null)
             {
-                foreach (esPrefetchMap map in prefetchMaps)
+                foreach (var map in prefetchMaps)
                 {
                     // Give our Prefetch Queries the proper connection strings
                     if (!map.Query.es2.HasConnection)
                     {
-                        string generatedName = this.GetConnectionName();
+                        var generatedName = GetConnectionName();
 
                         if (generatedName != null)
                         {
@@ -443,7 +447,7 @@ namespace EntitySpaces.Interfaces
                         {
                             // Use the connection from the Collection/Entity at the time they
                             // call Load()
-                            map.Query.es2.Connection.Name = this.connection.Name;
+                            map.Query.es2.Connection.Name = connection.Name;
                         }
                     }
 
@@ -451,7 +455,7 @@ namespace EntitySpaces.Interfaces
                 }
             }
 
-            if (this.OnLoadDelegate != null)
+            if (OnLoadDelegate != null)
             {
                 loaded = OnLoadDelegate(this, table);
             }
@@ -470,16 +474,16 @@ namespace EntitySpaces.Interfaces
         /// </code>
         /// </remarks>
         /// <returns>The SQL Syntax, the same as query.es.LastQuery when a query is executed.</returns>
-        virtual public string Parse()
+        public virtual string Parse()
         {
             FixupSerializedQueries();
 
-            esDataRequest request = new esDataRequest();
-            this.PopulateRequest(request);
+            var request = new esDataRequest();
+            PopulateRequest(request);
             request.QueryType = esQueryType.DynamicQueryParseOnly;
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.esLoadDataTable(request, this.es2.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.esLoadDataTable(request, es2.Connection.ProviderSignature);
 
             return response.LastQuery;
         }
@@ -488,17 +492,17 @@ namespace EntitySpaces.Interfaces
         /// Execute the Query and load a DataTable. 
         /// </summary>
         /// <returns>A DataTable containing the loaded records.</returns>
-        virtual public DataTable LoadDataTable()
+        public virtual DataTable LoadDataTable()
         {
             DataTable table = null;
 
             FixupSerializedQueries();
 
-            esDataRequest request = new esDataRequest();
-            this.PopulateRequest(request);
+            var request = new esDataRequest();
+            PopulateRequest(request);
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.esLoadDataTable(request, this.es2.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.esLoadDataTable(request, es2.Connection.ProviderSignature);
 
             table = response.Table;
 
@@ -510,15 +514,15 @@ namespace EntitySpaces.Interfaces
         /// when finished with it.
         /// </summary>
         /// <returns>The DataReader</returns>
-        virtual public IDataReader ExecuteReader()
+        public virtual IDataReader ExecuteReader()
         {
             FixupSerializedQueries();
 
-            esDataRequest request = new esDataRequest();
-            this.PopulateRequest(request);
+            var request = new esDataRequest();
+            PopulateRequest(request);
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.ExecuteReader(request, this.es2.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.ExecuteReader(request, es2.Connection.ProviderSignature);
 
             return response.DataReader;
         }
@@ -527,15 +531,15 @@ namespace EntitySpaces.Interfaces
         /// Execute the query and return a single value. 
         /// </summary>
         /// <returns>The value</returns>
-        virtual public object ExecuteScalar()
+        public virtual object ExecuteScalar()
         {
             FixupSerializedQueries();
 
-            esDataRequest request = new esDataRequest();
-            this.PopulateRequest(request);
+            var request = new esDataRequest();
+            PopulateRequest(request);
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.ExecuteScalar(request, this.es2.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.ExecuteScalar(request, es2.Connection.ProviderSignature);
 
             return response.Scalar;
         }
@@ -544,15 +548,15 @@ namespace EntitySpaces.Interfaces
         /// Execute the query and return a single value. 
         /// </summary>
         /// <returns>The value</returns>
-        virtual public T ExecuteScalar<T>()
+        public virtual T ExecuteScalar<T>()
         {
             FixupSerializedQueries();
 
-            esDataRequest request = new esDataRequest();
-            this.PopulateRequest(request);
+            var request = new esDataRequest();
+            PopulateRequest(request);
 
-            esDataProvider provider = new esDataProvider();
-            esDataResponse response = provider.ExecuteScalar(request, this.es2.Connection.ProviderSignature);
+            var provider = new esDataProvider();
+            var response = provider.ExecuteScalar(request, es2.Connection.ProviderSignature);
 
             return (T)response.Scalar;
         }
@@ -592,11 +596,11 @@ namespace EntitySpaces.Interfaces
         /// <returns>The esDynamicQuery for the Type of query you intend to load</returns>
         public T Prefetch<T>(params esPrefetchMap[] maps) where T : esDynamicQuery
         {
-            return this.Prefetch<T>(true, maps);
+            return Prefetch<T>(true, maps);
         }
 
         /// <summary>
-        /// This Prefetch allows you to fill in the Select() statement for the query to control what columns are brought back
+        /// This Prefetch allows you to fill in the Select() statement for the query to control what paraColumns are brought back
         /// </summary>
         /// <typeparam name="T">The Type of the esDynamicQuery returned</typeparam> 
         /// <param name="provideSelect">If true then you must fill in the Query.Select() clause</param>
@@ -611,23 +615,23 @@ namespace EntitySpaces.Interfaces
                     prefetchMaps = new List<esPrefetchMap>();
                 }
 
-                esPrefetchParameters data = new esPrefetchParameters();
+                var data = new esPrefetchParameters();
 
                 // Create the query, we do so in reverse order
-                for (int i = maps.Length - 1; i >= 0; i--)
+                for (var i = maps.Length - 1; i >= 0; i--)
                 {
-                    esPrefetchDelegate prefetchDelegate = maps[i].PrefetchDelegate;
+                    var prefetchDelegate = maps[i].PrefetchDelegate;
                     prefetchDelegate(data);
                 }
 
                 // The path is the next to the last PropertyName
-                string path = string.Empty;
+                var path = string.Empty;
                 if (maps.Length > 1)
                 {
                     path = maps[maps.Length - 2].PropertyName;
                 }
 
-                esPrefetchMap rootMap = maps[maps.Length - 1];
+                var rootMap = maps[maps.Length - 1];
                 rootMap.Query = data.Root;
                 rootMap.Path = path;
                 prefetchMaps.Add(rootMap);
@@ -656,23 +660,23 @@ namespace EntitySpaces.Interfaces
                     prefetchMaps = new List<esPrefetchMap>();
                 }
 
-                esPrefetchParameters data = new esPrefetchParameters();
+                var data = new esPrefetchParameters();
 
                 // Create the query, we do so in reverse order
-                for (int i = maps.Length - 1; i >= 0; i--)
+                for (var i = maps.Length - 1; i >= 0; i--)
                 {
-                    esPrefetchDelegate prefetchDelegate = maps[i].PrefetchDelegate;
+                    var prefetchDelegate = maps[i].PrefetchDelegate;
                     prefetchDelegate(data);
                 }
 
                 // The path is the next to the last PropertyName
-                string path = string.Empty;
+                var path = string.Empty;
                 if (maps.Length > 1)
                 {
                     path = maps[maps.Length - 2].PropertyName;
                 }
 
-                esPrefetchMap rootMap = maps[maps.Length - 1];
+                var rootMap = maps[maps.Length - 1];
                 rootMap.Query = data.Root;
                 rootMap.Path = path;
                 prefetchMaps.Add(rootMap);
@@ -686,46 +690,36 @@ namespace EntitySpaces.Interfaces
         #region Overloads
 
         /// <summary>
-        /// This method will create a Select statement for all of the columns in the entity except for the ones passed in.
+        /// This method will create a Select statement for all of the paraColumns in the entity except for the ones passed in.
         /// This is very useful when you want to eliminate blobs and other fields for performance.
         /// </summary>
-        /// <param name="columns">The columns which you wish to exclude from the Select statement</param>
+        /// <param name="paraColumns">The paraColumns which you wish to exclude from the Select statement</param>
         /// <returns></returns>
-        public esDynamicQuery SelectAllExcept(params esQueryItem[] columns)
+        public esDynamicQuery SelectAllExcept(params esQueryItem[] paraColumns)
         {
-            foreach (esColumnMetadata col in this.Meta.Columns)
+            foreach (esColumnMetadata col in Meta.Columns)
             {
-                bool found = false;
-
-                for (int i = 0; i < columns.Length; i++)
-                {
-                    if (col.Name == (string)columns[i])
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-
+                var found = paraColumns.Any(t => col.Name == (string)t);
                 if (found) continue;
 
-                esExpression item = new esQueryItem(this, col.Name, col.esType);
-                this.Select(item);
+                var item = new esQueryItem(this, col.Name, col.esType);
+                Select(item);
             }
 
             return this;
         }
 
         /// <summary>
-        /// This method will select all of the columns that were present when you generated your
+        /// This method will select all of the paraColumns that were present when you generated your
         /// classes as opposed to doing a SELECT*
         /// </summary>
         /// <returns></returns>
         public esDynamicQuery SelectAll()
         {
-            foreach (esColumnMetadata col in this.Meta.Columns)
+            foreach (esColumnMetadata col in Meta.Columns)
             {
-                esQueryItem item = new esQueryItem(this, col.Name, col.esType);
-                this.Select(item);
+                var item = new esQueryItem(this, col.Name, col.esType);
+                Select(item);
             }
 
             return this;
@@ -799,12 +793,12 @@ namespace EntitySpaces.Interfaces
         {
             get
             {
-                if (this.props2 == null)
+                if (props2 == null)
                 {
-                    this.props2 = new DynamicQueryProps2(this);
+                    props2 = new DynamicQueryProps2(this);
                 }
 
-                return this.props2;
+                return props2;
             }
         }
 
@@ -822,7 +816,7 @@ namespace EntitySpaces.Interfaces
             /// <param name="query">The esDynamicQuery's properties.</param>
             public DynamicQueryProps2(esDynamicQuery query)
             {
-                this.dynamicQuery = query;
+                dynamicQuery = query;
             }
 
             /// <summary>
@@ -832,7 +826,7 @@ namespace EntitySpaces.Interfaces
             {
                 get
                 {
-                    return this.dynamicQuery.connection != null;
+                    return dynamicQuery.connection != null;
                 }
             }
 
@@ -843,27 +837,27 @@ namespace EntitySpaces.Interfaces
             {
                 get
                 {
-                    if (this.dynamicQuery.connection == null)
+                    if (dynamicQuery.connection == null)
                     {
-                        this.dynamicQuery.connection = new esConnection();
+                        dynamicQuery.connection = new esConnection();
 
                         if (esConnection.ConnectionService != null)
                         {
-                            this.dynamicQuery.connection.Name = esConnection.ConnectionService.GetName();
+                            dynamicQuery.connection.Name = esConnection.ConnectionService.GetName();
                         }
                         else
                         {
-                            string connName = this.dynamicQuery.GetConnectionName();
+                            var connName = dynamicQuery.GetConnectionName();
                             if (connName != null)
                             {
-                                this.dynamicQuery.connection.Name = connName;
+                                dynamicQuery.connection.Name = connName;
                             }
                         }
                     }
 
-                    return this.dynamicQuery.connection;
+                    return dynamicQuery.connection;
                 }
-                set { this.dynamicQuery.connection = value; }
+                set { dynamicQuery.connection = value; }
             }
 
             /// <summary>
@@ -873,7 +867,7 @@ namespace EntitySpaces.Interfaces
             {
                 get
                 {
-                    return this.dynamicQuery.prefetchMaps;
+                    return dynamicQuery.prefetchMaps;
                 }
             }
 

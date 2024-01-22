@@ -155,7 +155,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esComparison returned to DynamicQuery</returns>
         public static esComparison operator >(esQueryItem item, esQueryItem value)
         {
-            esComparison wi = new esComparison(item.query);
+            var wi = new esComparison(item.query);
             wi.Operand = esComparisonOperand.GreaterThan;
 
             wi.data.Column = item.Column;
@@ -167,7 +167,7 @@ namespace EntitySpaces.DynamicQuery
 
         private static esComparison GreaterThan(esQueryItem queryItem, object literal, esSystemType literalType, bool itemFirst)
         {
-            esComparison wi = new esComparison(queryItem.query);
+            var wi = new esComparison(queryItem.query);
             wi.Operand = esComparisonOperand.GreaterThan;
 
             wi.data.Column = queryItem.Column;
@@ -391,7 +391,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esComparison returned to DynamicQuery</returns>
         public static esComparison operator <(esQueryItem item, esQueryItem value)
         {
-            esComparison wi = new esComparison(item.query);
+            var wi = new esComparison(item.query);
             wi.Operand = esComparisonOperand.LessThan;
 
             wi.data.Column = item.Column;
@@ -403,7 +403,7 @@ namespace EntitySpaces.DynamicQuery
 
         private static esComparison LessThan(esQueryItem queryItem, object literal, esSystemType literalType, bool itemFirst)
         {
-            esComparison wi = new esComparison(queryItem.query);
+            var wi = new esComparison(queryItem.query);
             wi.Operand = esComparisonOperand.LessThan;
 
             wi.data.Column = queryItem.Column;
@@ -627,7 +627,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esComparison returned to DynamicQuery</returns>
         public static esComparison operator <=(esQueryItem item, esQueryItem value)
         {
-            esComparison wi = new esComparison(item.query);
+            var wi = new esComparison(item.query);
             wi.Operand = esComparisonOperand.LessThanOrEqual;
 
             wi.data.Column = item.Column;
@@ -639,7 +639,7 @@ namespace EntitySpaces.DynamicQuery
 
         private static esComparison LessThanOrEqual(esQueryItem queryItem, object literal, esSystemType literalType, bool itemFirst)
         {
-            esComparison wi = new esComparison(queryItem.query);
+            var wi = new esComparison(queryItem.query);
             wi.Operand = esComparisonOperand.LessThanOrEqual;
 
             wi.data.Column = queryItem.Column;
@@ -863,7 +863,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esComparison returned to DynamicQuery</returns>
         public static esComparison operator >=(esQueryItem item, esQueryItem value)
         {
-            esComparison wi = new esComparison(item.query);
+            var wi = new esComparison(item.query);
             wi.Operand = esComparisonOperand.GreaterThanOrEqual;
 
             wi.data.Column = item.Column;
@@ -875,7 +875,7 @@ namespace EntitySpaces.DynamicQuery
 
         private static esComparison GreaterThanOrEqual(esQueryItem queryItem, object literal, esSystemType literalType, bool itemFirst)
         {
-            esComparison wi = new esComparison(queryItem.query);
+            var wi = new esComparison(queryItem.query);
             wi.Operand = esComparisonOperand.GreaterThanOrEqual;
 
             wi.data.Column = queryItem.Column;
@@ -1087,7 +1087,7 @@ namespace EntitySpaces.DynamicQuery
 
         public static esComparison operator ==(esQueryItem item, esQueryItem value)
         {
-            esComparison wi = new esComparison(item.query);
+            var wi = new esComparison(item.query);
             wi.Operand = esComparisonOperand.Equal;
 
             wi.data.Column = item.Column;
@@ -1099,7 +1099,7 @@ namespace EntitySpaces.DynamicQuery
 
         private static esComparison EqualOperator(esQueryItem queryItem, object literal, esSystemType literalType, bool itemFirst)
         {
-            esComparison wi = new esComparison(queryItem.query);
+            var wi = new esComparison(queryItem.query);
             wi.Operand = esComparisonOperand.Equal;
 
             wi.data.Column = queryItem.Column;
@@ -1311,7 +1311,7 @@ namespace EntitySpaces.DynamicQuery
 
         public static esComparison operator !=(esQueryItem item, esQueryItem value)
         {
-            esComparison wi = new esComparison(item.query);
+            var wi = new esComparison(item.query);
             wi.Operand = esComparisonOperand.NotEqual;
 
             wi.data.Column = item.Column;
@@ -1324,7 +1324,7 @@ namespace EntitySpaces.DynamicQuery
 
         private static esComparison NotEqualOperator(esQueryItem queryItem, object literal, esSystemType literalType, bool itemFirst)
         {
-            esComparison wi = new esComparison(queryItem.query);
+            var wi = new esComparison(queryItem.query);
             wi.Operand = esComparisonOperand.NotEqual;
 
             wi.data.Column = queryItem.Column;
@@ -1536,7 +1536,7 @@ namespace EntitySpaces.DynamicQuery
 
         public static esQueryItem operator +(esQueryItem item1, esQueryItem item2)
         {
-            esQueryItem qi = new esQueryItem();
+            var qi = new esQueryItem();
             qi.Expression.SelectItem1 = item1;
             qi.Expression.Operator = esArithmeticOperator.Add;
             qi.Expression.SelectItem2 = item2;
@@ -1547,7 +1547,7 @@ namespace EntitySpaces.DynamicQuery
 
         private static esQueryItem AddOperator(esQueryItem queryItem, object literal, esSystemType literalType, bool itemFirst)
         {
-            esQueryItem qi = new esQueryItem();
+            var qi = new esQueryItem();
             qi.Expression.SelectItem1 = queryItem;
             qi.Expression.Operator = esArithmeticOperator.Add;
             qi.Expression.Literal = literal;
@@ -1754,7 +1754,7 @@ namespace EntitySpaces.DynamicQuery
 
         public static esQueryItem operator -(esQueryItem item1, esQueryItem item2)
         {
-            esQueryItem qi = new esQueryItem();
+            var qi = new esQueryItem();
             qi.Expression.SelectItem1 = item1;
             qi.Expression.Operator = esArithmeticOperator.Subtract;
             qi.Expression.SelectItem2 = item2;
@@ -1765,7 +1765,7 @@ namespace EntitySpaces.DynamicQuery
 
         private static esQueryItem SubtractOperator(esQueryItem queryItem, object literal, esSystemType literalType, bool itemFirst)
         {
-            esQueryItem qi = new esQueryItem();
+            var qi = new esQueryItem();
             qi.Expression.SelectItem1 = queryItem;
             qi.Expression.Operator = esArithmeticOperator.Subtract;
             qi.Expression.Literal = literal;
@@ -1972,7 +1972,7 @@ namespace EntitySpaces.DynamicQuery
 
         public static esQueryItem operator *(esQueryItem item1, esQueryItem item2)
         {
-            esQueryItem qi = new esQueryItem();
+            var qi = new esQueryItem();
             qi.Expression.SelectItem1 = item1;
             qi.Expression.Operator = esArithmeticOperator.Multiply;
             qi.Expression.SelectItem2 = item2;
@@ -1983,7 +1983,7 @@ namespace EntitySpaces.DynamicQuery
 
         private static esQueryItem MultiplyOperator(esQueryItem queryItem, object literal, esSystemType literalType, bool itemFirst)
         {
-            esQueryItem qi = new esQueryItem();
+            var qi = new esQueryItem();
             qi.Expression.SelectItem1 = queryItem;
             qi.Expression.Operator = esArithmeticOperator.Multiply;
             qi.Expression.Literal = literal;
@@ -2190,7 +2190,7 @@ namespace EntitySpaces.DynamicQuery
 
         public static esQueryItem operator /(esQueryItem item1, esQueryItem item2)
         {
-            esQueryItem qi = new esQueryItem();
+            var qi = new esQueryItem();
             qi.Expression.SelectItem1 = item1;
             qi.Expression.Operator = esArithmeticOperator.Divide;
             qi.Expression.SelectItem2 = item2;
@@ -2201,7 +2201,7 @@ namespace EntitySpaces.DynamicQuery
 
         private static esQueryItem DivideOperator(esQueryItem queryItem, object literal, esSystemType literalType, bool itemFirst)
         {
-            esQueryItem qi = new esQueryItem();
+            var qi = new esQueryItem();
             qi.Expression.SelectItem1 = queryItem;
             qi.Expression.Operator = esArithmeticOperator.Divide;
             qi.Expression.Literal = literal;
@@ -2408,7 +2408,7 @@ namespace EntitySpaces.DynamicQuery
 
         public static esQueryItem operator %(esQueryItem item1, esQueryItem item2)
         {
-            esQueryItem qi = new esQueryItem();
+            var qi = new esQueryItem();
             qi.Expression.SelectItem1 = item1;
             qi.Expression.Operator = esArithmeticOperator.Modulo;
             qi.Expression.SelectItem2 = item2;
@@ -2419,7 +2419,7 @@ namespace EntitySpaces.DynamicQuery
 
         private static esQueryItem ModuloOperator(esQueryItem queryItem, object literal, esSystemType literalType, bool itemFirst)
         {
-            esQueryItem qi = new esQueryItem();
+            var qi = new esQueryItem();
             qi.Expression.SelectItem1 = queryItem;
             qi.Expression.Operator = esArithmeticOperator.Modulo;
             qi.Expression.Literal = literal;
@@ -4578,7 +4578,7 @@ namespace EntitySpaces.DynamicQuery
         {
             esComparison comparison = null;
 
-            esQueryItem qi = value as esQueryItem;
+            var qi = value as esQueryItem;
             if (Object.Equals(qi, null))
             {
                 comparison = new esComparison(this.query);
@@ -4607,7 +4607,7 @@ namespace EntitySpaces.DynamicQuery
 
         private esComparison CreateComparisonParameter(esComparisonOperand operand)
         {
-            esComparison comparison = new esComparison(this.query);
+            var comparison = new esComparison(this.query);
 
             comparison.Operand = operand;
 
@@ -4880,13 +4880,13 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esComparison returned to DynamicQuery.</returns>
         public esComparison Like(object value, char escapeCharacter)
         {
-            esComparison comparison = new esComparison(this.query);
+            var comparison = new esComparison(this.query);
             comparison.data.Column = this.Column;
             comparison.data.LikeEscape = escapeCharacter;
             comparison.Operand = esComparisonOperand.Like;
             comparison.SubOperators = this.SubOperators;
 
-            esQueryItem qi = value as esQueryItem;
+            var qi = value as esQueryItem;
             if (Object.Equals(qi, null))
             {
                 comparison.data.Value = value;
@@ -4933,13 +4933,13 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esComparison returned to DynamicQuery.</returns>
         public esComparison NotLike(object value, char escapeCharacter)
         {
-            esComparison comparison = new esComparison(this.query);
+            var comparison = new esComparison(this.query);
             comparison.data.Column = this.Column;
             comparison.data.LikeEscape = escapeCharacter;
             comparison.Operand = esComparisonOperand.NotLike;
             comparison.SubOperators = this.SubOperators;
 
-            esQueryItem qi = value as esQueryItem;
+            var qi = value as esQueryItem;
             if (Object.Equals(qi, null))
             {
                 comparison.data.Value = value;
@@ -5033,13 +5033,13 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esComparison returned to DynamicQuery.</returns>
         public esComparison Between(object start, object end)
         {
-            esComparison comparison = new esComparison(this.query);
+            var comparison = new esComparison(this.query);
             comparison.Operand = esComparisonOperand.Between;
             comparison.SubOperators = this.SubOperators;
 
             comparison.data.Column = this.Column;
 
-            esQueryItem qi = start as esQueryItem;
+            var qi = start as esQueryItem;
             if (Object.Equals(qi, null))
             {
                 comparison.BetweenBegin = start;
@@ -5077,15 +5077,15 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esComparison returned to DynamicQuery.</returns>
         public esComparison In(params object[] value)
         {
-            List<object> values = new List<object>();
+            var values = new List<object>();
 
             #region Convert object[] into a List<object>
 
-            object[] oValues = (object[])value;
+            var oValues = (object[])value;
 
-            foreach (object o in oValues)
+            foreach (var o in oValues)
             {
-                string str = o as string;
+                var str = o as string;
                 if (str != null)
                 {
                     // String supports IEnumerable and we don't want to break
@@ -5094,10 +5094,10 @@ namespace EntitySpaces.DynamicQuery
                 }
                 else
                 {
-                    IEnumerable enumer = o as IEnumerable;
+                    var enumer = o as IEnumerable;
                     if (enumer != null)
                     {
-                        foreach (object oo in enumer)
+                        foreach (var oo in enumer)
                         {
                             values.Add(oo);
                         }
@@ -5110,7 +5110,7 @@ namespace EntitySpaces.DynamicQuery
             }
             #endregion
 
-            esComparison comparison = new esComparison(this.query);
+            var comparison = new esComparison(this.query);
             comparison.Operand = esComparisonOperand.In;
             comparison.data.Column = this.Column;
             comparison.SubOperators = this.SubOperators;
@@ -5126,7 +5126,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns></returns>
         public esComparison In(esDynamicQuery subQuery)
         {
-            esComparison comparison = new esComparison(this.query);
+            var comparison = new esComparison(this.query);
             comparison.Operand = esComparisonOperand.In;
             comparison.data.Column = this.Column;
             comparison.SubOperators = this.SubOperators;
@@ -5144,7 +5144,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns></returns>
         public esComparison In(Func<esDynamicQuery> func)
         {
-            esComparison comparison = new esComparison(this.query);
+            var comparison = new esComparison(this.query);
             comparison.Operand = esComparisonOperand.In;
             comparison.data.Column = this.Column;
             comparison.SubOperators = this.SubOperators;
@@ -5168,15 +5168,15 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esComparison returned to DynamicQuery.</returns>
         public esComparison NotIn(params object[] value)
         {
-            List<object> values = new List<object>();
+            var values = new List<object>();
 
             #region Convert object[] into a List<object>
 
-            object[] oValues = (object[])value;
+            var oValues = (object[])value;
 
-            foreach (object o in oValues)
+            foreach (var o in oValues)
             {
-                string str = o as string;
+                var str = o as string;
                 if (str != null)
                 {
                     // String supports IEnumerable and we don't want to break
@@ -5185,10 +5185,10 @@ namespace EntitySpaces.DynamicQuery
                 }
                 else
                 {
-                    IEnumerable enumer = o as IEnumerable;
+                    var enumer = o as IEnumerable;
                     if (enumer != null)
                     {
-                        foreach (object oo in enumer)
+                        foreach (var oo in enumer)
                         {
                             values.Add(oo);
                         }
@@ -5201,7 +5201,7 @@ namespace EntitySpaces.DynamicQuery
             }
             #endregion
 
-            esComparison comparison = new esComparison(this.query);
+            var comparison = new esComparison(this.query);
             comparison.Operand = esComparisonOperand.NotIn;
             comparison.data.Column = this.Column;
             comparison.SubOperators = this.SubOperators;
@@ -5216,7 +5216,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns></returns>
         public esComparison NotIn(esDynamicQuery subQuery)
         {
-            esComparison comparison = new esComparison(this.query);
+            var comparison = new esComparison(this.query);
             comparison.Operand = esComparisonOperand.NotIn;
             comparison.data.Column = this.Column;
             comparison.SubOperators = this.SubOperators;
@@ -5234,7 +5234,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns></returns>
         public esComparison NotIn(Func<esDynamicQuery> func)
         {
-            esComparison comparison = new esComparison(this.query);
+            var comparison = new esComparison(this.query);
             comparison.Operand = esComparisonOperand.NotIn;
             comparison.data.Column = this.Column;
             comparison.SubOperators = this.SubOperators;
@@ -5274,7 +5274,7 @@ namespace EntitySpaces.DynamicQuery
         {
             get 
             {
-                esOrderByItem item = new esOrderByItem();
+                var item = new esOrderByItem();
                 item.Direction = esOrderByDirection.Descending;
                 item.Expression = this;
                 item.Expression.Query = this.query;
@@ -5296,7 +5296,7 @@ namespace EntitySpaces.DynamicQuery
         {
             get
             {
-                esOrderByItem item = new esOrderByItem();
+                var item = new esOrderByItem();
                 item.Direction = esOrderByDirection.Ascending;
                 item.Expression = this;
                 item.Expression.Query = this.query;
@@ -5318,7 +5318,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The very same esQueryItem now with Cast instructions</returns>
         public esQueryItem Cast(esCastType castType)
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.Cast;
             subOp.Parameters["esCastType"] = castType;
             this.AddSubOperator(subOp);
@@ -5337,7 +5337,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The very same esQueryItem now with Cast instructions</returns>
         public esQueryItem Cast(esCastType castType, int length)
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.Cast;
             subOp.Parameters["esCastType"] = castType;
             subOp.Parameters["length"] = length;
@@ -5357,7 +5357,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The very same esQueryItem now with Cast instructions</returns>
         public esQueryItem Cast(esCastType castType, int precision, int scale)
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.Cast;
             subOp.Parameters["esCastType"] = castType;
             subOp.Parameters["precision"] = precision;
@@ -5390,7 +5390,7 @@ namespace EntitySpaces.DynamicQuery
         {
             aliasFunc = () =>
             {
-                esQueryItem aliasedItem = new esQueryItem(null, alias, this.Column.Datatype);
+                var aliasedItem = new esQueryItem(null, alias, this.Column.Datatype);
                 aliasedItem.Column.IsOutVar = true;
                 return aliasedItem;
             };
@@ -5406,7 +5406,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         public esQueryItem ToUpper()
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.ToUpper;
             this.AddSubOperator(subOp);
 
@@ -5418,7 +5418,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         public esQueryItem ToLower()
         {    
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.ToLower;
             this.AddSubOperator(subOp);
 
@@ -5430,7 +5430,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         public esQueryItem LTrim()
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.LTrim;
             this.AddSubOperator(subOp);
 
@@ -5442,7 +5442,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         public  esQueryItem RTrim()
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.RTrim;
             this.AddSubOperator(subOp);
 
@@ -5454,7 +5454,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         public esQueryItem Trim()
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.Trim;
             this.AddSubOperator(subOp);
 
@@ -5468,7 +5468,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="length">How many characters to return</param>
         public esQueryItem Substring(System.Int64 start, System.Int64 length)
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.SubString;
             subOp.Parameters["start"] = start;
             subOp.Parameters["length"] = length;
@@ -5483,7 +5483,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="length">How many characters to return</param>
         public esQueryItem Substring(System.Int64 length)
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.SubString;
             subOp.Parameters["length"] = length;
             this.AddSubOperator(subOp);
@@ -5498,7 +5498,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="length">How many characters to return</param>
         public esQueryItem Substring(int start, int length)
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.SubString;
             subOp.Parameters["start"] = start;
             subOp.Parameters["length"] = length;
@@ -5513,7 +5513,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="length">How many characters to return</param>
         public esQueryItem Substring(int length)
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.SubString;
             subOp.Parameters["length"] = length;
             this.AddSubOperator(subOp);
@@ -5535,7 +5535,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="expresssions">The value to return if null</param>
         public esQueryItem Coalesce(string expresssions)
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.Coalesce;
             subOp.Parameters["expressions"] = expresssions;
             this.AddSubOperator(subOp);
@@ -5549,7 +5549,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns></returns>
         public esQueryItem Date()
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.Date;
             this.AddSubOperator(subOp);
 
@@ -5561,7 +5561,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         public esQueryItem Length()
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.Length;
             this.AddSubOperator(subOp);
 
@@ -5574,7 +5574,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="significantDigits">Round to the number of significant digits</param>
         public esQueryItem Round(int significantDigits)
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.Round;
             subOp.Parameters["SignificantDigits"] = significantDigits;
             this.AddSubOperator(subOp);
@@ -5588,7 +5588,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="datePart"></param>
         public esQueryItem DatePart(string datePart)
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.DatePart;
             subOp.Parameters["DatePart"] = datePart;
             this.AddSubOperator(subOp);
@@ -5609,7 +5609,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esAggregateItem returned to DynamicQuery.</returns>
         public esQueryItem Sum()
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.Sum;
             this.AddSubOperator(subOp);
 
@@ -5629,7 +5629,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esAggregateItem returned to DynamicQuery.</returns>
         public esQueryItem Avg()
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.Avg;
             this.AddSubOperator(subOp);
 
@@ -5649,7 +5649,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esAggregateItem returned to DynamicQuery.</returns>
         public esQueryItem Max()
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.Max;
             this.AddSubOperator(subOp);
 
@@ -5669,7 +5669,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esAggregateItem returned to DynamicQuery.</returns>
         public esQueryItem Min()
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.Min;
             this.AddSubOperator(subOp);
 
@@ -5689,7 +5689,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esAggregateItem returned to DynamicQuery.</returns>
         public esQueryItem StdDev()
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.StdDev;
             this.AddSubOperator(subOp);
 
@@ -5709,7 +5709,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esAggregateItem returned to DynamicQuery.</returns>
         public esQueryItem Var()
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.Var;
             this.AddSubOperator(subOp);
            
@@ -5729,7 +5729,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The esAggregateItem returned to DynamicQuery.</returns>
         public esQueryItem Count()
         {
-            esQuerySubOperator subOp = new esQuerySubOperator();
+            var subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.Count;
             this.AddSubOperator(subOp);
 
@@ -5860,7 +5860,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         public static implicit operator esExpression(esQueryItem item)
         {
-            esExpression sItem = new esExpression();
+            var sItem = new esExpression();
             sItem.Column = item.Column;
             sItem.CaseWhen = item.CaseWhen;
             sItem.SubOperators = item.SubOperators;

@@ -29,6 +29,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 using System.Data;
+// ReSharper disable InconsistentNaming
+// ReSharper disable CheckNamespace
 
 namespace EntitySpaces.Interfaces
 {
@@ -90,12 +92,6 @@ namespace EntitySpaces.Interfaces
         /// <summary>
         /// True if the <see cref="Exception"/> property is non-null.
         /// </summary>
-        public bool IsException
-        {
-            get
-            {
-                return (this.Exception == null) ? false : true;
-            }
-        }
+        public bool IsException => Exception != null;
     }
 }
