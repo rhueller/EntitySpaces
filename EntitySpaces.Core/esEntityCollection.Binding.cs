@@ -73,7 +73,7 @@ namespace EntitySpaces.Core
     void IList<T>.RemoveAt(int index)
     {
 #if TRACE
-            Console.WriteLine("void IList<T>.RemoveAt(int index)");
+        Console.WriteLine("void IList<T>.RemoveAt(int index)");
 #endif
       esEntity entity = ((IList)entities)[index] as esEntity;
 
