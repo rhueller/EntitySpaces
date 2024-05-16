@@ -47,1074 +47,1074 @@ using EntitySpaces.DynamicQuery;
 
 namespace EntitySpaces.Core
 {
-    abstract public partial class esEntityCollection<T> : esEntityCollectionBase, IList<T>, ITypedList, IBindingList, ICancelAddNew, IRaiseItemChangedEvents
-        where T : esEntity, new()
-    {
-        #region IList<T> Members
+  abstract public partial class esEntityCollection<T> : esEntityCollectionBase, IList<T>, ITypedList, IBindingList, ICancelAddNew, IRaiseItemChangedEvents
+      where T : esEntity, new()
+  {
+    #region IList<T> Members
 
-        int IList<T>.IndexOf(T item)
-        {
-#if (TRACE)
+    int IList<T>.IndexOf(T item)
+    {
+#if TRACE
             Console.WriteLine("int IList<T>.IndexOf(T item)");
 #endif
-            IList<T> i = entities as IList<T>;
-            return i.IndexOf(item);
-        }
+      IList<T> i = entities as IList<T>;
+      return i.IndexOf(item);
+    }
 
-        void IList<T>.Insert(int index, T item)
-        {
-#if (TRACE)
+    void IList<T>.Insert(int index, T item)
+    {
+#if TRACE
             Console.WriteLine("void IList<T>.Insert(int index, T item)");
 #endif
-            IList<T> i = entities as IList<T>;
-            i.Insert(index, item);
-        }
+      IList<T> i = entities as IList<T>;
+      i.Insert(index, item);
+    }
 
-        void IList<T>.RemoveAt(int index)
-        {
-#if (TRACE)
+    void IList<T>.RemoveAt(int index)
+    {
+#if TRACE
             Console.WriteLine("void IList<T>.RemoveAt(int index)");
 #endif
-            esEntity entity = ((IList)entities)[index] as esEntity;
+      esEntity entity = ((IList)entities)[index] as esEntity;
 
-            entities.Remove((T)entity);
+      entities.Remove((T)entity);
 
-            entity.MarkAsDeleted();
+      entity.MarkAsDeleted();
 
-            if (entitiesFilterBackup != null)
-            {
-                IList i = entitiesFilterBackup as IList;
-                i.Remove(entity);
-            }
+      if (entitiesFilterBackup != null)
+      {
+        IList i = entitiesFilterBackup as IList;
+        i.Remove(entity);
+      }
 
-            if (updateViewNotification != null)
-            {
-                OnUpdateViewNotification(this, ListChangedType.ItemDeleted, entity);
-            }
-        }
+      if (updateViewNotification != null)
+      {
+        OnUpdateViewNotification(this, ListChangedType.ItemDeleted, entity);
+      }
+    }
 
-        T IList<T>.this[int index]
-        {
-            get
-            {
-#if (TRACE)
+    T IList<T>.this[int index]
+    {
+      get
+      {
+#if TRACE
                 Console.WriteLine("T IList<T>.this[int index] - GET");
 #endif
-                IList<T> i = entities as IList<T>;
-                return i[index];
-            }
+        IList<T> i = entities as IList<T>;
+        return i[index];
+      }
 
-            set
-            {
-#if (TRACE)
+      set
+      {
+#if TRACE
                 Console.WriteLine("T IList<T>.this[int index] - SET");
 #endif
-                IList<T> i = entities as IList<T>;
-                i[index] = value;
+        IList<T> i = entities as IList<T>;
+        i[index] = value;
 
-                if (updateViewNotification != null)
-                {
-                    OnUpdateViewNotification(this, ListChangedType.ItemChanged, (esEntity)value);
-                }
-            }
-        }
-
-        #endregion
-
-        #region ICollection<T> Members
-
-//      void ICollection<T>.Add(T item)
-        public void Add(T item)
+        if (updateViewNotification != null)
         {
-#if (TRACE)
+          OnUpdateViewNotification(this, ListChangedType.ItemChanged, (esEntity)value);
+        }
+      }
+    }
+
+    #endregion
+
+    #region ICollection<T> Members
+
+    //      void ICollection<T>.Add(T item)
+    public void Add(T item)
+    {
+#if TRACE
             Console.WriteLine("void ICollection<T>.Add(T item)");
 #endif
-            item.Collection = this;
+      item.Collection = this;
 
-            if (item.RowState == esDataRowState.Deleted)
-            {
-                if (deletedEntities == null)
-                {
-                    deletedEntities = new BindingList<T>();
-                }
-
-                this.deletedEntities.Add(item);
-            }
-            else
-            {
-                ICollection<T> i = entities as ICollection<T>;
-                i.Add(item);
-
-                if (updateViewNotification != null)
-                {
-                    OnUpdateViewNotification(this, ListChangedType.ItemAdded, item);
-                }
-            }
+      if (item.RowState == esDataRowState.Deleted)
+      {
+        if (deletedEntities == null)
+        {
+          deletedEntities = new BindingList<T>();
         }
 
-        void ICollection<T>.Clear()
+        this.deletedEntities.Add(item);
+      }
+      else
+      {
+        ICollection<T> i = entities as ICollection<T>;
+        i.Add(item);
+
+        if (updateViewNotification != null)
         {
-#if (TRACE)
+          OnUpdateViewNotification(this, ListChangedType.ItemAdded, item);
+        }
+      }
+    }
+
+    void ICollection<T>.Clear()
+    {
+#if TRACE
             Console.WriteLine("void ICollection<T>.Clear()");
 #endif
-            ICollection<T> i = entities as ICollection<T>;
-            i.Clear();
-        }
+      ICollection<T> i = entities as ICollection<T>;
+      i.Clear();
+    }
 
-        bool ICollection<T>.Contains(T item)
-        {
-#if (TRACE)
+    bool ICollection<T>.Contains(T item)
+    {
+#if TRACE
             Console.WriteLine("bool ICollection<T>.Contains(T item)");
 #endif
-            ICollection<T> i = entities as ICollection<T>;
-            return i.Contains(item);
-        }
+      ICollection<T> i = entities as ICollection<T>;
+      return i.Contains(item);
+    }
 
-        void ICollection<T>.CopyTo(T[] array, int arrayIndex)
-        {
-#if (TRACE)
+    void ICollection<T>.CopyTo(T[] array, int arrayIndex)
+    {
+#if TRACE
             Console.WriteLine("void ICollection<T>.CopyTo(T[] array, int arrayIndex)");
 #endif
-            ICollection<T> i = entities as ICollection<T>;
-            i.CopyTo(array, arrayIndex);
-        }
+      ICollection<T> i = entities as ICollection<T>;
+      i.CopyTo(array, arrayIndex);
+    }
 
-        int ICollection<T>.Count
-        {
-            get
-            {
-#if (TRACE)
+    int ICollection<T>.Count
+    {
+      get
+      {
+#if TRACE
                 Console.WriteLine("int ICollection<T>.Count");
 #endif
-                ICollection<T> i = entities as ICollection<T>;
-                return i.Count;
-            }
-        }
+        ICollection<T> i = entities as ICollection<T>;
+        return i.Count;
+      }
+    }
 
-        bool ICollection<T>.IsReadOnly
-        {
-            get
-            {
-#if (TRACE)
+    bool ICollection<T>.IsReadOnly
+    {
+      get
+      {
+#if TRACE
                 Console.WriteLine("bool ICollection<T>.IsReadOnly");
 #endif
-                ICollection<T> i = entities as ICollection<T>;
-                return i.IsReadOnly;
-            }
-        }
+        ICollection<T> i = entities as ICollection<T>;
+        return i.IsReadOnly;
+      }
+    }
 
-        bool ICollection<T>.Remove(T item)
-        {
-#if (TRACE)
+    bool ICollection<T>.Remove(T item)
+    {
+#if TRACE
             Console.WriteLine("bool ICollection<T>.Remove(T item)");
 #endif
-            esEntity entity = item as esEntity;
+      esEntity entity = item as esEntity;
 
-            bool removed = entities.Remove((T)entity);
+      bool removed = entities.Remove((T)entity);
 
-            entity.MarkAsDeleted();
+      entity.MarkAsDeleted();
 
-            if (entitiesFilterBackup != null)
+      if (entitiesFilterBackup != null)
+      {
+        IList i = entitiesFilterBackup as IList;
+        i.Remove(entity);
+      }
+
+      if (updateViewNotification != null)
+      {
+        OnUpdateViewNotification(this, ListChangedType.ItemDeleted, entity);
+      }
+
+      return removed;
+    }
+
+    #endregion
+
+    #region IEnumerable<T> Members
+
+    IEnumerator<T> IEnumerable<T>.GetEnumerator()
+    {
+      return entities.GetEnumerator();
+    }
+
+    #endregion
+
+    #region IEnumerable Members
+
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    {
+      IEnumerator enumerator = ((ICollection)entities).GetEnumerator();
+      return enumerator;
+    }
+
+    #endregion
+
+    #region ITypedList Members
+
+    PropertyDescriptorCollection ITypedList.GetItemProperties(PropertyDescriptor[] listAccessors)
+    {
+      // We are binding so we turn this on ...
+      entities.RaiseListChangedEvents = true;
+
+      PropertyDescriptorCollection props = null;
+      Type type = null;
+
+      if (listAccessors == null || listAccessors.Length == 0)
+      {
+        esEntity e = null;
+
+        // It wants "this" object and so we can use this technique
+        if (this.Count > 0)
+        {
+          e = entities[0] as esEntity;
+        }
+        else
+        {
+          e = new T();
+        }
+
+        type = e.GetType();
+
+        //------------------------------------
+        // Check to see if it's in the cached
+        //------------------------------------
+        if (this.BindingPropertyCache.ContainsKey(type))
+        {
+          return this.BindingPropertyCache[type];
+        }
+
+        props = this.GetProperties(e, this);
+
+        this.BindingPropertyCache[type] = props;
+      }
+      else
+      {
+        if (this.EnableHierarchicalBinding == false) return null;
+
+        // We should not enter this else statement if hierarchical binding is false
+        PropertyDescriptor prop = listAccessors[listAccessors.Length - 1];
+
+        //------------------------------------
+        // Check to see if it's in the cached
+        //------------------------------------
+        if (this.BindingPropertyCache.ContainsKey(prop.PropertyType))
+        {
+          return this.BindingPropertyCache[prop.PropertyType];
+        }
+
+        esPropertyDescriptor esProp = prop as esPropertyDescriptor;
+
+        if (esProp != null)
+        {
+          // Nope, not in the cache, let's get the info
+          props = this.GetProperties(esProp.ContainedEntity, null);
+        }
+        else
+        {
+          // I give up, go get the raw properties
+          props = TypeDescriptor.GetProperties(prop.PropertyType);
+        }
+
+        this.BindingPropertyCache[prop.PropertyType] = props;
+      }
+
+      return props;
+    }
+
+    string ITypedList.GetListName(PropertyDescriptor[] listAccessors)
+    {
+      return GetCollectionName();
+    }
+
+    internal override PropertyDescriptorCollection GetProperties(esEntity entity, esEntityCollectionBase baseCollection)
+    {
+      bool weHaveData = false;
+      int lastOrdinal = 0;
+
+      esColumnMetadataCollection esMetaCols = entity.es.Meta.Columns;
+
+      esEntityCollectionBase theBaseCollection = baseCollection != null ? baseCollection : entity.Collection;
+
+      bool enableHierarchcialBinding = theBaseCollection != null ? theBaseCollection.EnableHierarchicalBinding : true;
+
+      if (theBaseCollection != null)
+      {
+        if (theBaseCollection.GetList() != null)
+        {
+          // Do we have any entities?
+          weHaveData = theBaseCollection.GetList().Count > 0;
+
+          if (weHaveData == false)
+          {
+            // If selectedColumns has data then they attempted a load and we know the columns based on thier select statement
+            weHaveData = theBaseCollection.selectedColumns != null && theBaseCollection.selectedColumns.Keys.Count > 0;
+          }
+        }
+      }
+
+      //------------------------------------------------------------
+      // First we deal with Properties from the DataTable.Columns
+      // or from the esColumnMetadataCollection.
+      //------------------------------------------------------------
+      ArrayList collNested = new ArrayList();
+      SortedList<int, PropertyDescriptor> coll = new SortedList<int, PropertyDescriptor>();
+
+      PropertyDescriptorCollection props = TypeDescriptor.GetProperties(entity, true);
+
+      // Note, we check for selectedColumns because we might be a deserialized collection in which
+      // case there will not be any selectedColumns
+      if (weHaveData && theBaseCollection.selectedColumns != null)
+      {
+        SortedList list = GetSortedListOfProperties(entity, baseCollection);
+
+        for (int i = 0; i < list.Count; i++)
+        {
+          string column = (string)list.GetByIndex(i);
+
+          if (column == "ESRN") continue;
+
+          esColumnMetadata esCol = entity.es.Meta.Columns.FindByColumnName(column);
+
+          if (esCol != null)
+          {
+            PropertyDescriptor prop = props[esCol.PropertyName];
+
+            if (prop != null)
             {
-                IList i = entitiesFilterBackup as IList;
-                i.Remove(entity);
+              coll.Add(lastOrdinal++, prop);
             }
+          }
+          else
+          {
+            esCol = theBaseCollection.extraColumnMetadata[column];
 
-            if (updateViewNotification != null)
+            if (esCol != null)
             {
-                OnUpdateViewNotification(this, ListChangedType.ItemDeleted, entity);
+              // Extra or Extended Properties
+              esPropertyDescriptor dpd = new esPropertyDescriptor
+              (
+                  typeof(T),
+                  column,
+                  esCol != null ? esCol.Type : typeof(string),
+                  delegate (object p)
+                  {
+                    return ((esEntity)p).currentValues[column];
+                  },
+                  delegate (object p, object data)
+                  {
+                    ((esEntity)p).currentValues[column] = data;
+                    ((esEntity)p).OnPropertyChanged(column);
+                  }
+              );
+
+              coll.Add(lastOrdinal++, dpd);
             }
-
-            return removed;
+          }
         }
-
-        #endregion
-
-        #region IEnumerable<T> Members
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+      }
+      else
+      {
+        foreach (esColumnMetadata esCol in esMetaCols)
         {
-            return entities.GetEnumerator();
+          coll.Add(lastOrdinal++, props[esCol.PropertyName]);
         }
+      }
 
-        #endregion
-
-        #region IEnumerable Members
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+      //------------------------------------------------------------
+      // Now we deal with extended properties that are using the
+      // esExtendedPropertyAttribute technique
+      //------------------------------------------------------------
+      foreach (PropertyDescriptor prop in props)
+      {
+        if (prop.Attributes.Contains(esEntityCollection<T>.extendedPropertyAttribute))
         {
-            IEnumerator enumerator = ((ICollection)entities).GetEnumerator();
-            return enumerator;
+          coll.Add(lastOrdinal++, prop);
         }
+      }
 
-        #endregion
-
-        #region ITypedList Members
-
-        PropertyDescriptorCollection ITypedList.GetItemProperties(PropertyDescriptor[] listAccessors)
+      //------------------------------------------------------------
+      // Now we deal with any local properties. Local properties are
+      // properties that users may want to bind with that are
+      // NOT backed by data in the DataTable
+      //------------------------------------------------------------
+      List<esPropertyDescriptor> localProps = entity.GetLocalBindingProperties();
+      if (localProps != null)
+      {
+        foreach (esPropertyDescriptor esProp in localProps)
         {
-            // We are binding so we turn this on ...
-            entities.RaiseListChangedEvents = true;
+          // We check this incase they add a local based property for a DataColumn
+          // based property, they would do this so it appears in design time, and 
+          // we don't want to add a duplicate
+          bool exists = coll.ContainsValue(props[esProp.Name]);
 
-            PropertyDescriptorCollection props = null;
-            Type type = null;
-
-            if (listAccessors == null || listAccessors.Length == 0)
+          if (!exists)
+          {
+            if (props[esProp.Name] != null)
             {
-                esEntity e = null;
-
-                // It wants "this" object and so we can use this technique
-                if (this.Count > 0)
-                {
-                    e = entities[0] as esEntity;
-                }
-                else
-                {
-                    e = new T();
-                }
-
-                type = e.GetType();
-
-                //------------------------------------
-                // Check to see if it's in the cached
-                //------------------------------------
-                if (this.BindingPropertyCache.ContainsKey(type))
-                {
-                    return this.BindingPropertyCache[type];
-                }
-
-                props = this.GetProperties(e, this);
-
-                this.BindingPropertyCache[type] = props;
+              coll.Add(lastOrdinal++, props[esProp.Name]);
             }
             else
             {
-                if (this.EnableHierarchicalBinding == false) return null;
-
-                // We should not enter this else statement if hierarchical binding is false
-                PropertyDescriptor prop = listAccessors[listAccessors.Length - 1];
-
-                //------------------------------------
-                // Check to see if it's in the cached
-                //------------------------------------
-                if (this.BindingPropertyCache.ContainsKey(prop.PropertyType))
-                {
-                    return this.BindingPropertyCache[prop.PropertyType];
-                }
-
-                esPropertyDescriptor esProp = prop as esPropertyDescriptor;
-
-                if (esProp != null)
-                {
-                    // Nope, not in the cache, let's get the info
-                    props = this.GetProperties(esProp.ContainedEntity, null);
-                }
-                else
-                {
-                    // I give up, go get the raw properties
-                    props = TypeDescriptor.GetProperties(prop.PropertyType);
-                }
-
-                this.BindingPropertyCache[prop.PropertyType] = props;
+              coll.Add(lastOrdinal++, esProp);
             }
+          }
+        }
+      }
 
-            return props;
+      ArrayList tempColl = new ArrayList();
+
+      if (enableHierarchcialBinding)
+      {
+        List<esPropertyDescriptor> hierProps = entity.GetHierarchicalProperties();
+        if (hierProps != null)
+        {
+          foreach (esPropertyDescriptor esProp in hierProps)
+          {
+            esProp.TrueDescriptor = props[esProp.Name];
+            //  coll.Add(lastOrdinal++, esProp);
+
+            tempColl.Add(esProp);
+          }
+        }
+      }
+
+      // Create the collection
+      foreach (PropertyDescriptor p in coll.Values)
+      {
+        tempColl.Add(p);
+      }
+      tempColl.AddRange(collNested);
+
+      PropertyDescriptorCollection theProps =
+          new PropertyDescriptorCollection((PropertyDescriptor[])tempColl.ToArray(typeof(PropertyDescriptor)));
+
+      return theProps;
+    }
+
+    private SortedList GetSortedListOfProperties(esEntity entity, esEntityCollectionBase baseCollection)
+    {
+      SortedList list = new SortedList();
+
+      esEntityCollectionBase theBaseCollection = baseCollection != null ? baseCollection : entity.Collection;
+
+      if (theBaseCollection != null)
+      {
+        if (theBaseCollection.selectedColumns != null)
+        {
+          foreach (KeyValuePair<string, int> selectedColumn in theBaseCollection.selectedColumns)
+          {
+            list.Add(selectedColumn.Value, selectedColumn.Key);
+          }
         }
 
-        string ITypedList.GetListName(PropertyDescriptor[] listAccessors)
+        if (theBaseCollection.extraColumnMetadata != null)
         {
-            return GetCollectionName();
+          foreach (KeyValuePair<string, esColumnMetadata> extraColumn in theBaseCollection.extraColumnMetadata)
+          {
+            list.Add(extraColumn.Value.Ordinal, extraColumn.Key);
+          }
         }
+      }
 
-        internal override PropertyDescriptorCollection GetProperties(esEntity entity, esEntityCollectionBase baseCollection)
-        {
-            bool weHaveData = false;
-            int lastOrdinal = 0;
+      return list;
+    }
 
-            esColumnMetadataCollection esMetaCols = entity.es.Meta.Columns;
+    #endregion
 
-            esEntityCollectionBase theBaseCollection = baseCollection != null ? baseCollection : entity.Collection;
+    #region IBindingList Members
 
-            bool enableHierarchcialBinding = theBaseCollection != null ? theBaseCollection.EnableHierarchicalBinding : true;
-
-            if (theBaseCollection != null)
-            {
-                if (theBaseCollection.GetList() != null)
-                {
-                    // Do we have any entities?
-                    weHaveData = theBaseCollection.GetList().Count > 0;
-
-                    if (weHaveData == false)
-                    {
-                        // If selectedColumns has data then they attempted a load and we know the columns based on thier select statement
-                        weHaveData = theBaseCollection.selectedColumns != null && theBaseCollection.selectedColumns.Keys.Count > 0;
-                    }
-                }
-            }
-
-            //------------------------------------------------------------
-            // First we deal with Properties from the DataTable.Columns
-            // or from the esColumnMetadataCollection.
-            //------------------------------------------------------------
-            ArrayList collNested = new ArrayList();
-            SortedList<int, PropertyDescriptor> coll = new SortedList<int, PropertyDescriptor>();
-
-            PropertyDescriptorCollection props = TypeDescriptor.GetProperties(entity, true);
-
-            // Note, we check for selectedColumns because we might be a deserialized collection in which
-            // case there will not be any selectedColumns
-            if (weHaveData && theBaseCollection.selectedColumns != null)
-            {
-                SortedList list = GetSortedListOfProperties(entity, baseCollection);
-
-                for (int i = 0; i < list.Count; i++)
-                {
-                    string column = (string)list.GetByIndex(i);
-
-                    if (column == "ESRN") continue;
-
-                    esColumnMetadata esCol = entity.es.Meta.Columns.FindByColumnName(column);
-
-                    if (esCol != null)
-                    {
-                        PropertyDescriptor prop = props[esCol.PropertyName];
-
-                        if (prop != null)
-                        {
-                            coll.Add(lastOrdinal++, prop);
-                        }
-                    }
-                    else
-                    {
-                        esCol = theBaseCollection.extraColumnMetadata[column];
-
-                        if (esCol != null)
-                        {
-                            // Extra or Extended Properties
-                            esPropertyDescriptor dpd = new esPropertyDescriptor
-                            (
-                                typeof(T),
-                                column,
-                                esCol != null ? esCol.Type : typeof(string),
-                                delegate(object p)
-                                {
-                                    return ((esEntity)p).currentValues[column];
-                                },
-                                delegate(object p, object data)
-                                {
-                                    ((esEntity)p).currentValues[column] = data;
-                                    ((esEntity)p).OnPropertyChanged(column);
-                                }
-                            );
-
-                            coll.Add(lastOrdinal++, dpd);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                foreach (esColumnMetadata esCol in esMetaCols)
-                {
-                    coll.Add(lastOrdinal++, props[esCol.PropertyName]);
-                }
-            }
-
-            //------------------------------------------------------------
-            // Now we deal with extended properties that are using the
-            // esExtendedPropertyAttribute technique
-            //------------------------------------------------------------
-            foreach (PropertyDescriptor prop in props)
-            {
-                if (prop.Attributes.Contains(esEntityCollection<T>.extendedPropertyAttribute))
-                {
-                    coll.Add(lastOrdinal++, prop);
-                }
-            }
-
-            //------------------------------------------------------------
-            // Now we deal with any local properties. Local properties are
-            // properties that users may want to bind with that are
-            // NOT backed by data in the DataTable
-            //------------------------------------------------------------
-            List<esPropertyDescriptor> localProps = entity.GetLocalBindingProperties();
-            if (localProps != null)
-            {
-                foreach (esPropertyDescriptor esProp in localProps)
-                {
-                    // We check this incase they add a local based property for a DataColumn
-                    // based property, they would do this so it appears in design time, and 
-                    // we don't want to add a duplicate
-                    bool exists = coll.ContainsValue(props[esProp.Name]);
-
-                    if (!exists)
-                    {
-                        if (props[esProp.Name] != null)
-                        {
-                            coll.Add(lastOrdinal++, props[esProp.Name]);
-                        }
-                        else
-                        {
-                            coll.Add(lastOrdinal++, esProp);
-                        }
-                    }
-                }
-            }
-
-            ArrayList tempColl = new ArrayList();
-
-            if (enableHierarchcialBinding)
-            {
-                List<esPropertyDescriptor> hierProps = entity.GetHierarchicalProperties();
-                if (hierProps != null)
-                {
-                    foreach (esPropertyDescriptor esProp in hierProps)
-                    {
-                        esProp.TrueDescriptor = props[esProp.Name];
-                    //  coll.Add(lastOrdinal++, esProp);
-
-                        tempColl.Add(esProp);
-                    }
-                }
-            }
-
-            // Create the collection
-            foreach (PropertyDescriptor p in coll.Values)
-            {
-                tempColl.Add(p);
-            }
-            tempColl.AddRange(collNested);
-
-            PropertyDescriptorCollection theProps =
-                new PropertyDescriptorCollection((PropertyDescriptor[])tempColl.ToArray(typeof(PropertyDescriptor)));
-
-            return theProps;
-        }
-
-        private SortedList GetSortedListOfProperties(esEntity entity, esEntityCollectionBase baseCollection)
-        {
-            SortedList list = new SortedList();
-
-            esEntityCollectionBase theBaseCollection = baseCollection != null ? baseCollection : entity.Collection;
-
-            if (theBaseCollection != null)
-            {
-                if (theBaseCollection.selectedColumns != null)
-                {
-                    foreach (KeyValuePair<string, int> selectedColumn in theBaseCollection.selectedColumns)
-                    {
-                        list.Add(selectedColumn.Value, selectedColumn.Key);
-                    }
-                }
-
-                if (theBaseCollection.extraColumnMetadata != null)
-                {
-                    foreach (KeyValuePair<string, esColumnMetadata> extraColumn in theBaseCollection.extraColumnMetadata)
-                    {
-                        list.Add(extraColumn.Value.Ordinal, extraColumn.Key);
-                    }
-                }
-            }
-
-            return list;
-        }
-
-        #endregion
-
-        #region IBindingList Members
-
-        void IBindingList.AddIndex(PropertyDescriptor property)
-        {
-#if(TRACE)
+    void IBindingList.AddIndex(PropertyDescriptor property)
+    {
+#if (TRACE)
             Console.WriteLine("object IBindingList.AddNew()");
 #endif
-            IBindingList i = entities as IBindingList;
-            i.AddIndex(property);
-        }
+      IBindingList i = entities as IBindingList;
+      i.AddIndex(property);
+    }
 
-        object IBindingList.AddNew()
-        {
-#if(TRACE)
+    object IBindingList.AddNew()
+    {
+#if (TRACE)
             //Console.WriteLine("object IBindingList.AddNew()");
 #endif
-            T o = (T)objectCreator.CreateInstance();
-            o.Collection = this;
-            lastNewIndex = entities.Count;
-            entities.Add(o);
+      T o = (T)objectCreator.CreateInstance();
+      o.Collection = this;
+      lastNewIndex = entities.Count;
+      entities.Add(o);
 
-            if (entitiesFilterBackup != null)
-            {
-                IBindingList i = entitiesFilterBackup as IBindingList;
-                i.Add(o);
-            }
+      if (entitiesFilterBackup != null)
+      {
+        IBindingList i = entitiesFilterBackup as IBindingList;
+        i.Add(o);
+      }
 
-            if (updateViewNotification != null)
-            {
-                OnUpdateViewNotification(this, ListChangedType.ItemAdded, o);
-            }
+      if (updateViewNotification != null)
+      {
+        OnUpdateViewNotification(this, ListChangedType.ItemAdded, o);
+      }
 
-            return o;
-        }
+      return o;
+    }
 
-        /// <summary>
-        /// True if list items can be edited; otherwise, false. The default is true. If you set this value you are also setting IBindingList.AllowEdit.
-        /// </summary>
-        public bool AllowEdit
+    /// <summary>
+    /// True if list items can be edited; otherwise, false. The default is true. If you set this value you are also setting IBindingList.AllowEdit.
+    /// </summary>
+    public bool AllowEdit
+    {
+      get
+      {
+        if (this.allowEdit.HasValue)
         {
-            get
-            {
-                if (this.allowEdit.HasValue)
-                {
-                    return this.allowEdit.Value;
-                }
-                else
-                {
-                    IBindingList i = entities as IBindingList;
-                    return i.AllowEdit;
-                }
-            }
-
-            set
-            {
-                this.allowEdit = value;
-            }
+          return this.allowEdit.Value;
         }
-
-        bool IBindingList.AllowEdit
+        else
         {
-            get
-            {
-                if (this.allowEdit.HasValue)
-                {
-                    return this.allowEdit.Value;
-                }
-                else
-                {
-                    IBindingList i = entities as IBindingList;
-                    return i.AllowEdit;
-                }
-            }
+          IBindingList i = entities as IBindingList;
+          return i.AllowEdit;
         }
+      }
 
-        /// <summary>
-        /// True if you can add items to the list with the AddNew method; otherwise, false. The default depends on the underlying type contained in the list. If you set this value you are also setting IBindingList.AllowNew.
-        /// </summary>
-        public bool AllowNew
+      set
+      {
+        this.allowEdit = value;
+      }
+    }
+
+    bool IBindingList.AllowEdit
+    {
+      get
+      {
+        if (this.allowEdit.HasValue)
         {
-            get
-            {
-                if (this.allowNew.HasValue)
-                {
-                    return this.allowNew.Value;
-                }
-                else
-                {
-                    IBindingList i = entities as IBindingList;
-                    return i.AllowNew;
-                }
-            }
-
-            set
-            {
-                this.allowNew = value;
-            }
+          return this.allowEdit.Value;
         }
-
-        bool IBindingList.AllowNew
+        else
         {
-            get
-            {
-                if (this.allowNew.HasValue)
-                {
-                    return this.allowNew.Value;
-                }
-                else
-                {
-                    IBindingList i = entities as IBindingList;
-                    return i.AllowNew;
-                }
-            }
+          IBindingList i = entities as IBindingList;
+          return i.AllowEdit;
         }
+      }
+    }
 
-        /// <summary>
-        /// True if you can add items to the list with the AddNew method; otherwise, false. The default depends on the underlying type contained in the list. 
-        /// If you set this value you are also setting IBindingList.AllowRemove.
-        /// </summary>
-        public bool AllowDelete
+    /// <summary>
+    /// True if you can add items to the list with the AddNew method; otherwise, false. The default depends on the underlying type contained in the list. If you set this value you are also setting IBindingList.AllowNew.
+    /// </summary>
+    public bool AllowNew
+    {
+      get
+      {
+        if (this.allowNew.HasValue)
         {
-            get
-            {
-                if (this.allowDelete.HasValue)
-                {
-                    return this.allowDelete.Value;
-                }
-                else
-                {
-                    IBindingList i = entities as IBindingList;
-                    return i.AllowRemove;
-                }
-            }
-
-            set
-            {
-                this.allowDelete = value;
-            }
+          return this.allowNew.Value;
         }
-
-        bool IBindingList.AllowRemove
+        else
         {
-            get
-            {
-                if (this.allowDelete.HasValue)
-                {
-                    return this.allowDelete.Value;
-                }
-                else
-                {
-                    IBindingList i = entities as IBindingList;
-                    return i.AllowRemove;
-                }
-            }
+          IBindingList i = entities as IBindingList;
+          return i.AllowNew;
         }
+      }
 
-        void IBindingList.ApplySort(PropertyDescriptor property, ListSortDirection direction)
+      set
+      {
+        this.allowNew = value;
+      }
+    }
+
+    bool IBindingList.AllowNew
+    {
+      get
+      {
+        if (this.allowNew.HasValue)
         {
-#if(TRACE)
+          return this.allowNew.Value;
+        }
+        else
+        {
+          IBindingList i = entities as IBindingList;
+          return i.AllowNew;
+        }
+      }
+    }
+
+    /// <summary>
+    /// True if you can add items to the list with the AddNew method; otherwise, false. The default depends on the underlying type contained in the list. 
+    /// If you set this value you are also setting IBindingList.AllowRemove.
+    /// </summary>
+    public bool AllowDelete
+    {
+      get
+      {
+        if (this.allowDelete.HasValue)
+        {
+          return this.allowDelete.Value;
+        }
+        else
+        {
+          IBindingList i = entities as IBindingList;
+          return i.AllowRemove;
+        }
+      }
+
+      set
+      {
+        this.allowDelete = value;
+      }
+    }
+
+    bool IBindingList.AllowRemove
+    {
+      get
+      {
+        if (this.allowDelete.HasValue)
+        {
+          return this.allowDelete.Value;
+        }
+        else
+        {
+          IBindingList i = entities as IBindingList;
+          return i.AllowRemove;
+        }
+      }
+    }
+
+    void IBindingList.ApplySort(PropertyDescriptor property, ListSortDirection direction)
+    {
+#if (TRACE)
             Console.WriteLine("void IBindingList.ApplySort(PropertyDescriptor property, ListSortDirection direction)");
 #endif
-            isSorted = true;
+      isSorted = true;
 
-            IBindingList i = entities as IBindingList;
+      IBindingList i = entities as IBindingList;
 
-            this.sortProperty = property;
+      this.sortProperty = property;
 
-            esEntityComparer<T> comparer = new esEntityComparer<T>(this.sortProperty, this.sortDirection);
+      esEntityComparer<T> comparer = new esEntityComparer<T>(this.sortProperty, this.sortDirection);
 
-            List<T> sortList = new List<T>(entities);
-            sortList.Sort(comparer);
+      List<T> sortList = new List<T>(entities);
+      sortList.Sort(comparer);
 
-            if (sortDirection == ListSortDirection.Descending)
-            {
-                sortList.Reverse();
-            }
+      if (sortDirection == ListSortDirection.Descending)
+      {
+        sortList.Reverse();
+      }
 
-            RaiseListChangeEvents_Disable();
-            entities.Clear();
+      RaiseListChangeEvents_Disable();
+      entities.Clear();
 
-            foreach (T obj in sortList)
-            {
-                entities.Add(obj);
-            }
-            RaiseListChangeEvents_Restore();
+      foreach (T obj in sortList)
+      {
+        entities.Add(obj);
+      }
+      RaiseListChangeEvents_Restore();
 
-            OnListChanged(this, new ListChangedEventArgs(ListChangedType.Reset, 0));
+      OnListChanged(this, new ListChangedEventArgs(ListChangedType.Reset, 0));
 
-            sortDirection = (sortDirection == ListSortDirection.Ascending) ? ListSortDirection.Descending : ListSortDirection.Ascending;
-        }
+      sortDirection = (sortDirection == ListSortDirection.Ascending) ? ListSortDirection.Descending : ListSortDirection.Ascending;
+    }
 
-        int IBindingList.Find(PropertyDescriptor property, object key)
-        {
-#if(TRACE)
+    int IBindingList.Find(PropertyDescriptor property, object key)
+    {
+#if (TRACE)
             Console.WriteLine("int IBindingList.Find(PropertyDescriptor property, object key)");
 #endif
-            int index = -1;
+      int index = -1;
 
-            try
-            {
-                int tempIndex = -1;
+      try
+      {
+        int tempIndex = -1;
 
-                object value = null;
+        object value = null;
 
-                foreach (esEntity entity in this)
-                {
-                    tempIndex++;
-
-                    value = entity.GetColumn(property.Name);
-
-                    if (value != null && value.Equals(key))
-                    {
-                        index = tempIndex;
-                        break;
-                    }
-                    else if (value == null && key == null)
-                    {
-                        index = tempIndex;
-                        break;
-                    }
-                }
-            }
-            catch { }
-
-            return index;
-        }
-
-        bool IBindingList.IsSorted
+        foreach (esEntity entity in this)
         {
-            get
-            {
-                return isSorted;
-            }
-        }
+          tempIndex++;
 
-        event ListChangedEventHandler IBindingList.ListChanged
-        {
-            add
-            {
-#if(TRACE)
+          value = entity.GetColumn(property.Name);
+
+          if (value != null && value.Equals(key))
+          {
+            index = tempIndex;
+            break;
+          }
+          else if (value == null && key == null)
+          {
+            index = tempIndex;
+            break;
+          }
+        }
+      }
+      catch { }
+
+      return index;
+    }
+
+    bool IBindingList.IsSorted
+    {
+      get
+      {
+        return isSorted;
+      }
+    }
+
+    event ListChangedEventHandler IBindingList.ListChanged
+    {
+      add
+      {
+#if (TRACE)
                 Console.WriteLine("event ListChangedEventHandler IBindingList.ListChanged - ADD");
 #endif
-                listChangedEventHandlerCount++;
-                onListChangedEvent += value;
+        listChangedEventHandlerCount++;
+        onListChangedEvent += value;
 
-                if (entities.RaiseListChangedEvents == false)
-                {
-                    entities.RaiseListChangedEvents = true;
-                }
-            }
-            remove
-            {
-#if(TRACE)
+        if (entities.RaiseListChangedEvents == false)
+        {
+          entities.RaiseListChangedEvents = true;
+        }
+      }
+      remove
+      {
+#if (TRACE)
                 Console.WriteLine("event ListChangedEventHandler IBindingList.ListChanged - REMOVE");
 #endif
-                listChangedEventHandlerCount = Math.Max(0, --listChangedEventHandlerCount);
-                onListChangedEvent -= value;
+        listChangedEventHandlerCount = Math.Max(0, --listChangedEventHandlerCount);
+        onListChangedEvent -= value;
 
-                if (listChangedEventHandlerCount == 0)
-                {
-                    entities.RaiseListChangedEvents = false;
-                }
-            }
-        }
-
-        void IBindingList.RemoveIndex(PropertyDescriptor property)
+        if (listChangedEventHandlerCount == 0)
         {
-#if(TRACE)
+          entities.RaiseListChangedEvents = false;
+        }
+      }
+    }
+
+    void IBindingList.RemoveIndex(PropertyDescriptor property)
+    {
+#if (TRACE)
             Console.WriteLine("void IBindingList.RemoveIndex(PropertyDescriptor property)");
 #endif
-            IBindingList i = entities as IBindingList;
-            i.RemoveIndex(property);
-        }
+      IBindingList i = entities as IBindingList;
+      i.RemoveIndex(property);
+    }
 
-        void IBindingList.RemoveSort()
-        {
-#if(TRACE)
+    void IBindingList.RemoveSort()
+    {
+#if (TRACE)
             Console.WriteLine("void IBindingList.RemoveSort()");
 #endif
-            IBindingList i = entities as IBindingList;
-            i.RemoveSort();
-        }
+      IBindingList i = entities as IBindingList;
+      i.RemoveSort();
+    }
 
-        ListSortDirection IBindingList.SortDirection
-        {
-            get
-            {
-                return sortDirection;
-            }
-        }
+    ListSortDirection IBindingList.SortDirection
+    {
+      get
+      {
+        return sortDirection;
+      }
+    }
 
-        PropertyDescriptor IBindingList.SortProperty
-        {
-            get
-            {
-                return sortProperty;
-            }
-        }
+    PropertyDescriptor IBindingList.SortProperty
+    {
+      get
+      {
+        return sortProperty;
+      }
+    }
 
-        bool IBindingList.SupportsChangeNotification
-        {
-            get
-            {
-                IBindingList i = entities as IBindingList;
-                return i.SupportsChangeNotification;
-            }
-        }
+    bool IBindingList.SupportsChangeNotification
+    {
+      get
+      {
+        IBindingList i = entities as IBindingList;
+        return i.SupportsChangeNotification;
+      }
+    }
 
-        bool IBindingList.SupportsSearching
-        {
-            get
-            {
-                IBindingList i = entities as IBindingList;
-                return i.SupportsSearching;
-            }
-        }
+    bool IBindingList.SupportsSearching
+    {
+      get
+      {
+        IBindingList i = entities as IBindingList;
+        return i.SupportsSearching;
+      }
+    }
 
-        bool IBindingList.SupportsSorting
-        {
-            get
-            {
-                return true;
-            }
-        }
+    bool IBindingList.SupportsSorting
+    {
+      get
+      {
+        return true;
+      }
+    }
 
-        #endregion
+    #endregion
 
-        #region IList Members
+    #region IList Members
 
-        int IList.Add(object value)
-        {
-#if(TRACE)
+    int IList.Add(object value)
+    {
+#if (TRACE)
             Console.WriteLine("int IList.Add(object value)");
 #endif
-            T entity = (T)value;
+      T entity = (T)value;
 
-            entity.Collection = this;
+      entity.Collection = this;
 
-            if (entity.RowState == esDataRowState.Deleted)
-            {
-                if (deletedEntities == null)
-                {
-                    deletedEntities = new BindingList<T>();
-                }
-                this.deletedEntities.Add(entity);
-                return -1;
-            }
-            else
-            {
+      if (entity.RowState == esDataRowState.Deleted)
+      {
+        if (deletedEntities == null)
+        {
+          deletedEntities = new BindingList<T>();
+        }
+        this.deletedEntities.Add(entity);
+        return -1;
+      }
+      else
+      {
 
-                int index = ((IList)entities).Add(value);
+        int index = ((IList)entities).Add(value);
 
-                if (updateViewNotification != null)
-                {
-                    OnUpdateViewNotification(this, ListChangedType.ItemAdded, (esEntity)value);
-                }
-
-                return index;
-            }
+        if (updateViewNotification != null)
+        {
+          OnUpdateViewNotification(this, ListChangedType.ItemAdded, (esEntity)value);
         }
 
-        void IList.Clear()
-        {
-#if(TRACE)
+        return index;
+      }
+    }
+
+    void IList.Clear()
+    {
+#if (TRACE)
             Console.WriteLine("void IList.Clear()");
 #endif
-            ((IList)entities).Clear();
-        }
+      ((IList)entities).Clear();
+    }
 
-        bool IList.Contains(object value)
-        {
-#if(TRACE)
+    bool IList.Contains(object value)
+    {
+#if (TRACE)
             Console.WriteLine("bool IList.Contains(object value)");
 #endif
-            return ((IList)entities).Contains(value);
-        }
+      return ((IList)entities).Contains(value);
+    }
 
-        int IList.IndexOf(object value)
-        {
-#if(TRACE)
+    int IList.IndexOf(object value)
+    {
+#if (TRACE)
             Console.WriteLine("int IList.IndexOf(object value)");
 #endif
-            return ((IList)entities).IndexOf(value);
-        }
+      return ((IList)entities).IndexOf(value);
+    }
 
-        void IList.Insert(int index, object value)
-        {
-#if(TRACE)
+    void IList.Insert(int index, object value)
+    {
+#if (TRACE)
             Console.WriteLine("void IList.Insert(int index, object value)");
 #endif
-            ((IList)entities).Insert(index, value);
-        }
+      ((IList)entities).Insert(index, value);
+    }
 
-        bool IList.IsFixedSize
-        {
-            get { return ((IList)entities).IsFixedSize; }
-        }
+    bool IList.IsFixedSize
+    {
+      get { return ((IList)entities).IsFixedSize; }
+    }
 
-        bool IList.IsReadOnly
-        {
-            get { return ((IList)entities).IsReadOnly; }
-        }
+    bool IList.IsReadOnly
+    {
+      get { return ((IList)entities).IsReadOnly; }
+    }
 
-        void IList.Remove(object value)
-        {
-#if(TRACE)
+    void IList.Remove(object value)
+    {
+#if (TRACE)
             Console.WriteLine("void IList.Remove(object value)");
 #endif
-            esEntity entity = value as esEntity;
+      esEntity entity = value as esEntity;
 
-            entities.Remove((T)entity);
+      entities.Remove((T)entity);
 
-            if (entity.RowState != esDataRowState.Deleted && entity.RowState != esDataRowState.Added)
-            {
-                entity.MarkAsDeleted();
-            }
+      if (entity.RowState != esDataRowState.Deleted && entity.RowState != esDataRowState.Added)
+      {
+        entity.MarkAsDeleted();
+      }
 
-            if (entitiesFilterBackup != null)
-            {
-                IList i = entitiesFilterBackup as IList;
-                i.Remove(entity);
-            }
+      if (entitiesFilterBackup != null)
+      {
+        IList i = entitiesFilterBackup as IList;
+        i.Remove(entity);
+      }
 
-            if (updateViewNotification != null)
-            {
-                OnUpdateViewNotification(this, ListChangedType.ItemDeleted, entity);
-            }
-        }
+      if (updateViewNotification != null)
+      {
+        OnUpdateViewNotification(this, ListChangedType.ItemDeleted, entity);
+      }
+    }
 
-        void IList.RemoveAt(int index)
-        {
-#if(TRACE)
+    void IList.RemoveAt(int index)
+    {
+#if (TRACE)
             Console.WriteLine("void IList.RemoveAt(int index)");
 #endif
-            esEntity entity = ((IList)entities)[index] as esEntity;
+      esEntity entity = ((IList)entities)[index] as esEntity;
 
-            entities.Remove((T)entity);
+      entities.Remove((T)entity);
 
-            entity.MarkAsDeleted();
+      entity.MarkAsDeleted();
 
-            if (entitiesFilterBackup != null)
-            {
-                IList i = entitiesFilterBackup as IList;
-                i.Remove(entity);
-            }
+      if (entitiesFilterBackup != null)
+      {
+        IList i = entitiesFilterBackup as IList;
+        i.Remove(entity);
+      }
 
-            if (updateViewNotification != null)
-            {
-                OnUpdateViewNotification(this, ListChangedType.ItemDeleted, entity);
-            }
-        }
+      if (updateViewNotification != null)
+      {
+        OnUpdateViewNotification(this, ListChangedType.ItemDeleted, entity);
+      }
+    }
 
-        object IList.this[int index]
+    object IList.this[int index]
+    {
+      get
+      {
+        return ((IList)entities)[index];
+      }
+
+      set
+      {
+        ((IList)entities)[index] = value;
+
+        if (updateViewNotification != null)
         {
-            get
-            {
-                return ((IList)entities)[index];
-            }
-
-            set
-            {
-                ((IList)entities)[index] = value;
-
-                if (updateViewNotification != null)
-                {
-                    OnUpdateViewNotification(this, ListChangedType.ItemChanged, (esEntity)value);
-                }
-            }
+          OnUpdateViewNotification(this, ListChangedType.ItemChanged, (esEntity)value);
         }
+      }
+    }
 
-        #endregion
+    #endregion
 
-        #region ICollection Members
+    #region ICollection Members
 
-        void ICollection.CopyTo(Array array, int index)
-        {
-            ((ICollection)entities).CopyTo(array, index);
-        }
+    void ICollection.CopyTo(Array array, int index)
+    {
+      ((ICollection)entities).CopyTo(array, index);
+    }
 
-        int ICollection.Count
-        {
-            get { return ((ICollection)entities).Count; }
-        }
+    int ICollection.Count
+    {
+      get { return ((ICollection)entities).Count; }
+    }
 
-        bool ICollection.IsSynchronized
-        {
-            get { return ((ICollection)entities).IsSynchronized; }
-        }
+    bool ICollection.IsSynchronized
+    {
+      get { return ((ICollection)entities).IsSynchronized; }
+    }
 
-        object ICollection.SyncRoot
-        {
-            get { return ((ICollection)entities).SyncRoot; }
-        }
+    object ICollection.SyncRoot
+    {
+      get { return ((ICollection)entities).SyncRoot; }
+    }
 
-        #endregion
+    #endregion
 
-        #region ICancelAddNew Members
+    #region ICancelAddNew Members
 
-        void ICancelAddNew.CancelNew(int itemIndex)
-        {
-#if (TRACE)
+    void ICancelAddNew.CancelNew(int itemIndex)
+    {
+#if TRACE
             Console.WriteLine("void ICancelAddNew.CancelNew(int itemIndex)");
 #endif
-            if (itemIndex == lastNewIndex)
-            {
-                T obj = entities[itemIndex];
+      if (itemIndex == lastNewIndex)
+      {
+        T obj = entities[itemIndex];
 
-                ICancelAddNew i = entities as ICancelAddNew;
-                i.CancelNew(itemIndex);
+        ICancelAddNew i = entities as ICancelAddNew;
+        i.CancelNew(itemIndex);
 
-                if (!obj.es.IsAdded) return;
+        if (!obj.es.IsAdded) return;
 
-                if (entitiesFilterBackup != null)
-                {
-                    IList list = entitiesFilterBackup as IList;
-                    int index = list.IndexOf(obj);
-                    list.Remove(obj);
-                }
-
-                // Clicking around bug fix
-                entities.Remove(obj);
-
-                lastNewIndex = -1;
-
-                OnUpdateViewNotification(this, ListChangedType.ItemDeleted, obj);
-            }
-        }
-
-        internal bool CollectionViewCancelNew(T obj)
+        if (entitiesFilterBackup != null)
         {
-            IList iList = this as IList;
-            int itemIndex = iList.IndexOf(obj);
-
-            if (itemIndex == lastNewIndex)
-            {
-                ICancelAddNew i = entities as ICancelAddNew;
-                i.CancelNew(itemIndex);
-
-                if (!obj.es.IsAdded) return false;
-
-                if (entitiesFilterBackup != null)
-                {
-                    IList list = entitiesFilterBackup as IList;
-                    int index = list.IndexOf(obj);
-                    list.Remove(obj);
-                }
-
-                // Clicking around bug fix
-                entities.Remove(obj);
-
-                lastNewIndex = -1;
-
-                OnUpdateViewNotification(this, ListChangedType.ItemDeleted, obj);
-
-                return true;
-            }
-
-            return false;
+          IList list = entitiesFilterBackup as IList;
+          int index = list.IndexOf(obj);
+          list.Remove(obj);
         }
 
-        void ICancelAddNew.EndNew(int itemIndex)
-        {
-            ICancelAddNew i = entities as ICancelAddNew;
-            i.EndNew(itemIndex);
+        // Clicking around bug fix
+        entities.Remove(obj);
 
-            if (entitiesFilterBackup != null)
-            {
-                i = entitiesFilterBackup as ICancelAddNew;
-                i.EndNew(itemIndex);
-            }
-        }
+        lastNewIndex = -1;
 
-        #endregion
-
-        #region IRaiseItemChangedEvents Members
-
-        bool IRaiseItemChangedEvents.RaisesItemChangedEvents
-        {
-            get
-            {
-                IRaiseItemChangedEvents i = entities as IRaiseItemChangedEvents;
-                return i.RaisesItemChangedEvents;
-            }
-        }
-
-        #endregion
-
-        private int lastNewIndex = -1;
-
-        [NonSerialized]
-        private bool? allowNew;
-        [NonSerialized]
-        private bool? allowEdit;
-        [NonSerialized]
-        private bool? allowDelete;
+        OnUpdateViewNotification(this, ListChangedType.ItemDeleted, obj);
+      }
     }
+
+    internal bool CollectionViewCancelNew(T obj)
+    {
+      IList iList = this as IList;
+      int itemIndex = iList.IndexOf(obj);
+
+      if (itemIndex == lastNewIndex)
+      {
+        ICancelAddNew i = entities as ICancelAddNew;
+        i.CancelNew(itemIndex);
+
+        if (!obj.es.IsAdded) return false;
+
+        if (entitiesFilterBackup != null)
+        {
+          IList list = entitiesFilterBackup as IList;
+          int index = list.IndexOf(obj);
+          list.Remove(obj);
+        }
+
+        // Clicking around bug fix
+        entities.Remove(obj);
+
+        lastNewIndex = -1;
+
+        OnUpdateViewNotification(this, ListChangedType.ItemDeleted, obj);
+
+        return true;
+      }
+
+      return false;
+    }
+
+    void ICancelAddNew.EndNew(int itemIndex)
+    {
+      ICancelAddNew i = entities as ICancelAddNew;
+      i.EndNew(itemIndex);
+
+      if (entitiesFilterBackup != null)
+      {
+        i = entitiesFilterBackup as ICancelAddNew;
+        i.EndNew(itemIndex);
+      }
+    }
+
+    #endregion
+
+    #region IRaiseItemChangedEvents Members
+
+    bool IRaiseItemChangedEvents.RaisesItemChangedEvents
+    {
+      get
+      {
+        IRaiseItemChangedEvents i = entities as IRaiseItemChangedEvents;
+        return i.RaisesItemChangedEvents;
+      }
+    }
+
+    #endregion
+
+    private int lastNewIndex = -1;
+
+    [NonSerialized]
+    private bool? allowNew;
+    [NonSerialized]
+    private bool? allowEdit;
+    [NonSerialized]
+    private bool? allowDelete;
+  }
 }
