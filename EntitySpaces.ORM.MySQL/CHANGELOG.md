@@ -1,4 +1,9 @@
-# EntitySpaces - CHANGES
+# EntitySpaces - CHANGELOG
+
+## 2024.1.8
+
+- Update MySqlConnector v2.3.7 -> v2.4.0
+- Upgrade to .NET 4.8
 
 ## 2024.1.7
 
